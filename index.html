@@ -2425,10 +2425,11 @@
     }
 
 
-      // Función mejorada para manejar ENTER en los formularios de login
+          // Función mejorada para manejar ENTER en los formularios de login
     function handleLoginEnter(event, type, field) {
         if (event.key === 'Enter') {
             event.preventDefault();
+            event.stopPropagation(); // ← AGREGAR ESTO
             
             if (type === 'user') {
                 const userModal = document.getElementById('loginModal');
@@ -2446,18 +2447,8 @@
                 if (field === 'user') {
                     document.getElementById('secretAdminPass').focus();
                 } else if (field === 'pass') {
-                    const user = document.getElementById('secretAdminUser').value.trim();
-                    const pass = document.getElementById('secretAdminPass').value;
-                    
-                    if (user === ADMIN_USER && pass === ADMIN_PASS) {
-                        currentUser = { name: 'Administrador' };
-                        isAdmin = true;
-                        updateUserInterface();
-                        closeSecretModal();
-                        document.getElementById('secretAdminPass').blur();
-                    } else {
-                        document.getElementById('secretError').innerText = 'Credenciales incorrectas';
-                    }
+                    // Llamar directamente a la función original
+                    loginAsAdminFromSecret();
                 }
             }
         }
@@ -2595,6 +2586,8 @@
             isAdmin = true;
             updateUserInterface();
             closeSecretModal();
+            document.getElementById('secretAdminPass').blur(); // ← IMPORTANTE
+            document.getElementById('secretAdminUser').blur(); // ← AGREGAR ESTO TAMBIÉN
         } else {
             document.getElementById('secretError').innerText = 'Credenciales incorrectas';
         }
