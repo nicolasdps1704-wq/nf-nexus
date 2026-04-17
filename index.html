@@ -2425,7 +2425,7 @@
     }
 
 
-  // Función mejorada para manejar ENTER en los formularios de login
+      // Función mejorada para manejar ENTER en los formularios de login
     function handleLoginEnter(event, type, field) {
         if (event.key === 'Enter') {
             event.preventDefault();
@@ -2435,10 +2435,8 @@
                 if (!userModal.classList.contains('show')) return;
                 
                 if (field === 'name') {
-                    // Saltar al campo de email
                     document.getElementById('modalUserEmail').focus();
                 } else if (field === 'email') {
-                    // Ejecutar login
                     registerUser();
                 }
             } else if (type === 'admin') {
@@ -2446,10 +2444,8 @@
                 if (!adminModal.classList.contains('show')) return;
                 
                 if (field === 'user') {
-                    // Saltar al campo de contraseña
                     document.getElementById('secretAdminPass').focus();
                 } else if (field === 'pass') {
-                    // Ejecutar login de admin y forzar cierre
                     const user = document.getElementById('secretAdminUser').value.trim();
                     const pass = document.getElementById('secretAdminPass').value;
                     
@@ -2458,13 +2454,14 @@
                         isAdmin = true;
                         updateUserInterface();
                         closeSecretModal();
-                        // Forzar que el foco se quite del input
                         document.getElementById('secretAdminPass').blur();
                     } else {
                         document.getElementById('secretError').innerText = 'Credenciales incorrectas';
                     }
                 }
             }
+        }
+    }
 
     function updateUserInterface() {
         if (currentUser) {
@@ -2486,7 +2483,6 @@
             isAdmin = false;
         }
     }
-
 
     function logout() {
         currentUser = null;
