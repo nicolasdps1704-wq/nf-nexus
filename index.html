@@ -719,15 +719,15 @@
 
 
         /* ===== PANEL ADMIN DASHBOARD ===== */
-                .admin-dashboard {
+        .admin-dashboard {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a2a 50%, #0d0d0d 100%);
-            z-index: 9999 !important; /* ← MÁS ALTO QUE TODO */
+            background: rgba(0,0,0,0.95);
+            z-index: 2000;
             overflow-y: auto;
             padding: 20px;
         }
@@ -1087,9 +1087,8 @@
             position: fixed;
             bottom: 30px;
             right: 30px;
-           background: linear-gradient(135deg, #ff6b35, #ff2e2e);
+            background: linear-gradient(135deg, #25D366, #128C7E);
             color: white;
-            animation-delay: 0.4s;
             width: 55px;
             height: 55px;
             border-radius: 50%;
@@ -1510,12 +1509,6 @@
             animation-delay: 0.2s;
         }
 
-        .whatsapp-float-new {
-            background: linear-gradient(135deg, #25D366, #128C7E);
-            color: white;
-            animation-delay: 0.4s;
-        }
-
         /* Ajuste para móviles */
         @media (max-width: 640px) {
             .social-float {
@@ -1826,243 +1819,7 @@
             .product-grid { grid-template-columns: 1fr; }
             .newsletter-form input { width: 100%; }
         }
-
-                /* ===== MEJORAS VISUALES PANEL ADMIN ===== */
-        .admin-dashboard {
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a2a 50%, #0d0d0d 100%);
-        }
-
-        .dashboard-header {
-            background: linear-gradient(135deg, #1a0a0a, #2d1000, #1a0a2a);
-            border: 2px solid #f7c948;
-            box-shadow: 0 0 30px rgba(247,201,72,0.3);
-        }
-
-        .dashboard-header h2 {
-            background: linear-gradient(135deg, #f7c948, #ff6b35);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .stat-card {
-            background: linear-gradient(145deg, #1a1a2e, #0f0f1a);
-            border: 1px solid #ff6b35;
-            transition: all 0.3s;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(255,107,53,0.3);
-            border-color: #f7c948;
-        }
-
-        .stat-card i {
-            background: linear-gradient(135deg, #f7c948, #ff6b35);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .dashboard-section {
-            background: linear-gradient(145deg, #1a1a2e, #0f0f1a);
-            border: 1px solid #ff6b35;
-            border-radius: 20px;
-        }
-
-        .dashboard-section h3 {
-            background: linear-gradient(135deg, #f7c948, #ff6b35);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            display: inline-block;
-        }
-
-        .sales-table {
-            border-radius: 15px;
-            overflow: hidden;
-        }
-
-        .sales-table th {
-            background: linear-gradient(135deg, #ff6b35, #b91c1c);
-            color: white;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 0.8rem;
-        }
-
-        .sales-table tr:hover {
-            background: rgba(255,107,53,0.1);
-        }
-
-        .sales-table td {
-            border-bottom: 1px solid #333;
-        }
-
-        .close-dashboard {
-            background: linear-gradient(135deg, #ff2e2e, #991b1b);
-            border: 2px solid white;
-            font-weight: 700;
-            transition: all 0.3s;
-        }
-
-        .close-dashboard:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px #ff2e2e;
-        }
-
-                /* ===== AJUSTE DE TABLAS ===== */
-        .sales-table {
-            width: 100%;
-            max-width: 100%;
-            table-layout: fixed;
-        }
-
-        .sales-table th:first-child,
-        .sales-table td:first-child {
-            width: 40%;
-        }
-
-        .sales-table th:nth-child(2),
-        .sales-table td:nth-child(2) {
-            width: 20%;
-            text-align: center;
-        }
-
-        .sales-table th:nth-child(3),
-        .sales-table td:nth-child(3) {
-            width: 40%;
-            text-align: right;
-        }
-
-        /* Para tablas de 4 columnas (Historial de Ventas) */
-        .sales-table th:nth-child(4),
-        .sales-table td:nth-child(4) {
-            text-align: right;
-        }
-
-        #salesHistoryTable th:first-child,
-        #salesHistoryTable td:first-child {
-            width: 20%;
-        }
-
-        #salesHistoryTable th:nth-child(2),
-        #salesHistoryTable td:nth-child(2) {
-            width: 35%;
-            text-align: left;
-        }
-
-        #salesHistoryTable th:nth-child(3),
-        #salesHistoryTable td:nth-child(3) {
-            width: 15%;
-            text-align: center;
-        }
-
-        #salesHistoryTable th:nth-child(4),
-        #salesHistoryTable td:nth-child(4) {
-            width: 30%;
-            text-align: right;
-        }
-
-                /* ===== BOTÓN RÁPIDO ADMIN ===== */
-        .admin-quick-btn {
-            background: linear-gradient(135deg, #ff6b35, #ff2e2e);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 40px;
-            font-weight: 700;
-            font-size: 0.9rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s;
-            border: 2px solid rgba(255,255,255,0.3);
-            margin-left: 15px;
-        }
-
-        .admin-quick-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px #ff6b35;
-        }
-
-        .admin-quick-btn i {
-            font-size: 1rem;
-        }
-
-           /* ===== BOTÓN FLOTANTE EXCLUSIVO PARA ADMIN ===== */
-        .admin-panel-float {
-            position: fixed;
-            bottom: 160px;
-            right: 30px;
-            width: 55px;
-            height: 55px;
-            background: linear-gradient(135deg, #f7c948, #ff6b35, #ff2e2e);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            cursor: pointer;
-            z-index: 990;
-            box-shadow: 0 0 25px rgba(247, 201, 72, 0.6);
-            border: 3px solid white;
-            transition: all 0.3s;
-            animation: adminFloatPulse 2s ease-in-out infinite;
-        }
-
-        @keyframes adminFloatPulse {
-            0%, 100% { 
-                transform: scale(1); 
-                box-shadow: 0 0 25px rgba(247, 201, 72, 0.6);
-            }
-            50% { 
-                transform: scale(1.1); 
-                box-shadow: 0 0 40px rgba(247, 201, 72, 0.9);
-            }
-        }
-
-        .admin-panel-float:hover {
-            transform: scale(1.15);
-            animation: none;
-            box-shadow: 0 0 45px #f7c948;
-        }
-
-        .admin-float-tooltip {
-            position: absolute;
-            right: 70px;
-            background: linear-gradient(135deg, #1a1a2e, #0f0f1a);
-            color: #f7c948;
-            padding: 8px 15px;
-            border-radius: 30px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            white-space: nowrap;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s;
-            border: 1px solid #f7c948;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-
-        .admin-panel-float:hover .admin-float-tooltip {
-            opacity: 1;
-            visibility: visible;
-            right: 65px;
-        }
-
-        @media (max-width: 640px) {
-            .admin-panel-float {
-                width: 45px;
-                height: 45px;
-                font-size: 1.3rem;
-                bottom: 140px;
-            }
-        }
-    </style>         
+    </style>          
 </head>
 <body>
 
@@ -2073,18 +1830,18 @@
 <div id="loginModal" class="login-modal">
     <div class="login-modal-content">
         <span class="modal-close" onclick="closeLoginModal()">&times;</span>
-                <div class="modal-logo">
+        <div class="modal-logo" onclick="secretAdminAttempt()">
             <i class="fas fa-bolt"></i> NF NEXUS
         </div>
         <p class="modal-subtitle">🔥 Ingresa para una experiencia personalizada</p>
         
         <div class="modal-input-group">
             <label><i class="far fa-user"></i> Tu Nombre</label>
-            <input type="text" id="modalUserName" placeholder="¿Cómo te llamas?" onkeypress="handleLoginEnter(event, 'user', 'name')">
+            <input type="text" id="modalUserName" placeholder="¿Cómo te llamas?" onkeypress="handleLoginEnter(event, 'user')">
         </div>
         <div class="modal-input-group">
             <label><i class="far fa-envelope"></i> Email (opcional)</label>
-            <input type="email" id="modalUserEmail" placeholder="tucorreo@email.com" onkeypress="handleLoginEnter(event, 'user', 'email')">
+            <input type="email" id="modalUserEmail" placeholder="tucorreo@email.com" onkeypress="handleLoginEnter(event, 'user')">
         </div>
         <button class="modal-btn" onclick="registerUser()">
             <i class="fas fa-user-check"></i> Continuar
@@ -2105,8 +1862,8 @@
     <div class="secret-modal-content">
         <span class="modal-close" onclick="closeSecretModal()" style="position:absolute; top:10px; right:15px; color:#ffb090; cursor:pointer; font-size:1.5rem;">&times;</span>
         <h3><i class="fas fa-user-shield"></i> Acceso Administrador</h3>
-<input type="text" id="secretAdminUser" placeholder="Usuario" value="admin" onkeypress="handleLoginEnter(event, 'admin', 'user')">
-<input type="password" id="secretAdminPass" placeholder="Contraseña" onkeypress="handleLoginEnter(event, 'admin', 'pass')">
+        <input type="text" id="secretAdminUser" placeholder="Usuario" value="admin" onkeypress="handleLoginEnter(event, 'admin')">
+        <input type="password" id="secretAdminPass" placeholder="Contraseña" onkeypress="handleLoginEnter(event, 'admin')">
         <div>
             <button onclick="loginAsAdminFromSecret()">Acceder</button>
             <button onclick="closeSecretModal()">Cancelar</button>
@@ -2332,15 +2089,10 @@
 
 
     <div class="main-header">
-                       <div class="logo">
-            <h1>NF NEXUS ⚡</h1>
+        <div class="logo">
+            <h1 onclick="goToAdminFromStore()">NF NEXUS ⚡</h1>
             <p>✨ ELIGE TU COLOR FAVORITO ✨</p>
         </div>
-        </div>
-        <!-- Botón rápido para Admin (solo visible para admin) -->
-        <button class="admin-quick-btn" id="adminQuickBtn" onclick="openAdminDashboard()" style="display: none;">
-            <i class="fas fa-chart-pie"></i> Panel Admin
-        </button>
         <div class="search-bar">
           <input type="text" id="searchInput" placeholder="🔍 Buscar productos... 
           (ej: audífonos, camiseta)" onkeyup="filterProducts()" onkeypress="handleSearchEnter(event)">
@@ -2471,11 +2223,6 @@
         </div>
     </footer>
 
-    <!-- Botón flotante EXCLUSIVO para Admin -->
-<div class="admin-panel-float" id="adminPanelFloatBtn" onclick="openAdminDashboard()" style="display: none;">
-    <i class="fas fa-chart-pie"></i>
-    <span class="admin-float-tooltip">Panel Admin</span>
-</div>
 
 <!-- Botones flotantes AGRUPADOS a la derecha -->
 <div class="social-float-buttons">
@@ -2671,34 +2418,26 @@
     }
 
 
-          // Función mejorada para manejar ENTER en los formularios de login
-    function handleLoginEnter(event, type, field) {
+    // Función para manejar ENTER en los formularios de login
+    function handleLoginEnter(event, type) {
         if (event.key === 'Enter') {
             event.preventDefault();
-            event.stopPropagation(); // ← AGREGAR ESTO
-            
             if (type === 'user') {
+                // Verificar si el modal de usuario está visible
                 const userModal = document.getElementById('loginModal');
-                if (!userModal.classList.contains('show')) return;
-                
-                if (field === 'name') {
-                    document.getElementById('modalUserEmail').focus();
-                } else if (field === 'email') {
+                if (userModal.classList.contains('show')) {
                     registerUser();
                 }
             } else if (type === 'admin') {
+                // Verificar si el modal de admin está visible
                 const adminModal = document.getElementById('adminSecretModal');
-                if (!adminModal.classList.contains('show')) return;
-                
-                if (field === 'user') {
-                    document.getElementById('secretAdminPass').focus();
-                } else if (field === 'pass') {
-                    // Llamar directamente a la función original
+                if (adminModal.classList.contains('show')) {
                     loginAsAdminFromSecret();
                 }
             }
         }
     }
+
 
     function updateUserInterface() {
         if (currentUser) {
@@ -2706,12 +2445,9 @@
             document.getElementById('userInfo').style.display = 'flex';
             document.getElementById('displayUserName').innerText = currentUser.name;
             
-                       if (isAdmin) {
+            if (isAdmin) {
                 document.getElementById('adminBadgeIndicator').style.display = 'inline-block';
                 document.getElementById('adminFloatBtn').classList.add('visible');
-                document.getElementById('adminQuickBtn').style.display = 'flex';
-                document.getElementById('adminPanelFloatBtn').style.display = 'flex';
-            }
             } else {
                 document.getElementById('adminBadgeIndicator').style.display = 'none';
                 document.getElementById('adminFloatBtn').classList.remove('visible');
@@ -2724,33 +2460,21 @@
         }
     }
 
-        function logout() {
+
+    function logout() {
         currentUser = null;
         isAdmin = false;
         updateUserInterface();
         closeAdminDashboard();
-        document.getElementById('adminQuickBtn').style.display = 'none';
-        document.getElementById('adminPanelFloatBtn').style.display = 'none';
     }
+
 
     // ==========================================
     //         DASHBOARD ADMIN
     // ==========================================
-            function openAdminDashboard() {
+    function openAdminDashboard() {
         if (isAdmin) {
             document.getElementById('adminDashboard').classList.add('show');
-            
-            // Ocultar TODOS los botones flotantes
-            const socialButtons = document.querySelector('.social-float-buttons');
-            const adminBtn = document.getElementById('adminFloatBtn');
-            const adminQuick = document.getElementById('adminQuickBtn');
-            const adminPanelFloat = document.getElementById('adminPanelFloatBtn');
-            
-            if (socialButtons) socialButtons.style.display = 'none';
-            if (adminBtn) adminBtn.style.display = 'none';
-            if (adminQuick) adminQuick.style.display = 'none';
-            if (adminPanelFloat) adminPanelFloat.style.display = 'none';
-            
             updateDashboardStats();
             renderTopProducts();
             renderSalesHistory();
@@ -2759,21 +2483,8 @@
     }
 
 
-              function closeAdminDashboard() {
+    function closeAdminDashboard() {
         document.getElementById('adminDashboard').classList.remove('show');
-        
-        // Mostrar botones flotantes nuevamente
-        const socialButtons = document.querySelector('.social-float-buttons');
-        const adminBtn = document.getElementById('adminFloatBtn');
-        const adminQuick = document.getElementById('adminQuickBtn');
-        const adminPanelFloat = document.getElementById('adminPanelFloatBtn');
-        
-        if (socialButtons) socialButtons.style.display = 'flex';
-        if (isAdmin) {
-            if (adminBtn) adminBtn.style.display = 'flex';
-            if (adminQuick) adminQuick.style.display = 'flex';
-            if (adminPanelFloat) adminPanelFloat.style.display = 'flex';
-        }
     }
 
 
@@ -2861,8 +2572,6 @@
             isAdmin = true;
             updateUserInterface();
             closeSecretModal();
-            document.getElementById('secretAdminPass').blur(); // ← IMPORTANTE
-            document.getElementById('secretAdminUser').blur(); // ← AGREGAR ESTO TAMBIÉN
         } else {
             document.getElementById('secretError').innerText = 'Credenciales incorrectas';
         }
@@ -3243,14 +2952,13 @@
     }
 
 
-   // Función mejorada para manejar la tecla ENTER en el buscador
+    // Función para manejar la tecla ENTER en el buscador
     function handleSearchEnter(event) {
         if (event.key === 'Enter') {
             event.preventDefault(); // Evita cualquier comportamiento por defecto
             filterProducts();
-            // Opcional: Quitar el foco del buscador después de buscar
-            document.getElementById('searchInput').blur();
         }
+    
     }
 
 
@@ -3965,9 +3673,10 @@
     window.selectModalColor = selectModalColor;
     window.modalAddToCart = modalAddToCart;
     window.modalBuyNow = modalBuyNow;
+    
 
 
-      console.log('%c🔥 NF NEXUS • Dashboard Admin con Ganancias y Búsqueda Avanzada 🔥', 'color: #ff6b35; font-size: 16px; font-weight: bold;');
+    console.log('%c🔥 NF NEXUS • Dashboard Admin con Ganancias y Búsqueda Avanzada 🔥', 'color: #ff6b35; font-size: 16px; font-weight: bold;');
 </script>
 </body>
 </html>
