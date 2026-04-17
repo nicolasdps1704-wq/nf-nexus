@@ -1991,7 +1991,78 @@
         .admin-quick-btn i {
             font-size: 1rem;
         }
-    </style>          
+
+           /* ===== BOTÓN FLOTANTE EXCLUSIVO PARA ADMIN ===== */
+        .admin-panel-float {
+            position: fixed;
+            bottom: 160px;
+            right: 30px;
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, #f7c948, #ff6b35, #ff2e2e);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 990;
+            box-shadow: 0 0 25px rgba(247, 201, 72, 0.6);
+            border: 3px solid white;
+            transition: all 0.3s;
+            animation: adminFloatPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes adminFloatPulse {
+            0%, 100% { 
+                transform: scale(1); 
+                box-shadow: 0 0 25px rgba(247, 201, 72, 0.6);
+            }
+            50% { 
+                transform: scale(1.1); 
+                box-shadow: 0 0 40px rgba(247, 201, 72, 0.9);
+            }
+        }
+
+        .admin-panel-float:hover {
+            transform: scale(1.15);
+            animation: none;
+            box-shadow: 0 0 45px #f7c948;
+        }
+
+        .admin-float-tooltip {
+            position: absolute;
+            right: 70px;
+            background: linear-gradient(135deg, #1a1a2e, #0f0f1a);
+            color: #f7c948;
+            padding: 8px 15px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            border: 1px solid #f7c948;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .admin-panel-float:hover .admin-float-tooltip {
+            opacity: 1;
+            visibility: visible;
+            right: 65px;
+        }
+
+        @media (max-width: 640px) {
+            .admin-panel-float {
+                width: 45px;
+                height: 45px;
+                font-size: 1.3rem;
+                bottom: 140px;
+            }
+        }
+    </style>         
 </head>
 <body>
 
@@ -2002,7 +2073,7 @@
 <div id="loginModal" class="login-modal">
     <div class="login-modal-content">
         <span class="modal-close" onclick="closeLoginModal()">&times;</span>
-        <div class="modal-logo" onclick="secretAdminAttempt()">
+                <div class="modal-logo">
             <i class="fas fa-bolt"></i> NF NEXUS
         </div>
         <p class="modal-subtitle">🔥 Ingresa para una experiencia personalizada</p>
@@ -2261,9 +2332,10 @@
 
 
     <div class="main-header">
-               <div class="logo">
-            <h1 onclick="goToAdminFromStore()">NF NEXUS ⚡</h1>
+                       <div class="logo">
+            <h1>NF NEXUS ⚡</h1>
             <p>✨ ELIGE TU COLOR FAVORITO ✨</p>
+        </div>
         </div>
         <!-- Botón rápido para Admin (solo visible para admin) -->
         <button class="admin-quick-btn" id="adminQuickBtn" onclick="openAdminDashboard()" style="display: none;">
@@ -2399,6 +2471,11 @@
         </div>
     </footer>
 
+    <!-- Botón flotante EXCLUSIVO para Admin -->
+<div class="admin-panel-float" id="adminPanelFloatBtn" onclick="openAdminDashboard()" style="display: none;">
+    <i class="fas fa-chart-pie"></i>
+    <span class="admin-float-tooltip">Panel Admin</span>
+</div>
 
 <!-- Botones flotantes AGRUPADOS a la derecha -->
 <div class="social-float-buttons">
@@ -2629,10 +2706,12 @@
             document.getElementById('userInfo').style.display = 'flex';
             document.getElementById('displayUserName').innerText = currentUser.name;
             
-            if (isAdmin) {
+                       if (isAdmin) {
                 document.getElementById('adminBadgeIndicator').style.display = 'inline-block';
                 document.getElementById('adminFloatBtn').classList.add('visible');
                 document.getElementById('adminQuickBtn').style.display = 'flex';
+                document.getElementById('adminPanelFloatBtn').style.display = 'flex';
+            }
             } else {
                 document.getElementById('adminBadgeIndicator').style.display = 'none';
                 document.getElementById('adminFloatBtn').classList.remove('visible');
@@ -2645,29 +2724,32 @@
         }
     }
 
-    function logout() {
+        function logout() {
         currentUser = null;
         isAdmin = false;
         updateUserInterface();
         closeAdminDashboard();
         document.getElementById('adminQuickBtn').style.display = 'none';
+        document.getElementById('adminPanelFloatBtn').style.display = 'none';
     }
 
     // ==========================================
     //         DASHBOARD ADMIN
     // ==========================================
-        function openAdminDashboard() {
+            function openAdminDashboard() {
         if (isAdmin) {
             document.getElementById('adminDashboard').classList.add('show');
             
-            // Ocultar TODOS los botones flotantes (FORZADO)
+            // Ocultar TODOS los botones flotantes
             const socialButtons = document.querySelector('.social-float-buttons');
             const adminBtn = document.getElementById('adminFloatBtn');
             const adminQuick = document.getElementById('adminQuickBtn');
+            const adminPanelFloat = document.getElementById('adminPanelFloatBtn');
             
             if (socialButtons) socialButtons.style.display = 'none';
             if (adminBtn) adminBtn.style.display = 'none';
             if (adminQuick) adminQuick.style.display = 'none';
+            if (adminPanelFloat) adminPanelFloat.style.display = 'none';
             
             updateDashboardStats();
             renderTopProducts();
@@ -2677,18 +2759,20 @@
     }
 
 
-           function closeAdminDashboard() {
+              function closeAdminDashboard() {
         document.getElementById('adminDashboard').classList.remove('show');
         
         // Mostrar botones flotantes nuevamente
         const socialButtons = document.querySelector('.social-float-buttons');
         const adminBtn = document.getElementById('adminFloatBtn');
         const adminQuick = document.getElementById('adminQuickBtn');
+        const adminPanelFloat = document.getElementById('adminPanelFloatBtn');
         
         if (socialButtons) socialButtons.style.display = 'flex';
         if (isAdmin) {
             if (adminBtn) adminBtn.style.display = 'flex';
             if (adminQuick) adminQuick.style.display = 'flex';
+            if (adminPanelFloat) adminPanelFloat.style.display = 'flex';
         }
     }
 
