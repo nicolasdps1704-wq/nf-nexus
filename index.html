@@ -1844,11 +1844,11 @@
         
         <div class="modal-input-group">
             <label><i class="far fa-user"></i> Tu Nombre</label>
-            <input type="text" id="modalUserName" placeholder="¿Cómo te llamas?" onkeypress="handleLoginEnter(event, 'user')">
+            <input type="text" id="modalUserName" placeholder="¿Cómo te llamas?" onkeypress="handleLoginEnter(event, 'user', 'name')">
         </div>
         <div class="modal-input-group">
             <label><i class="far fa-envelope"></i> Email (opcional)</label>
-            <input type="email" id="modalUserEmail" placeholder="tucorreo@email.com" onkeypress="handleLoginEnter(event, 'user')">
+            <input type="email" id="modalUserEmail" placeholder="tucorreo@email.com" onkeypress="handleLoginEnter(event, 'user', 'email')">
         </div>
         <button class="modal-btn" onclick="registerUser()">
             <i class="fas fa-user-check"></i> Continuar
@@ -1869,8 +1869,8 @@
     <div class="secret-modal-content">
         <span class="modal-close" onclick="closeSecretModal()" style="position:absolute; top:10px; right:15px; color:#ffb090; cursor:pointer; font-size:1.5rem;">&times;</span>
         <h3><i class="fas fa-user-shield"></i> Acceso Administrador</h3>
-        <input type="text" id="secretAdminUser" placeholder="Usuario" value="admin" onkeypress="handleLoginEnter(event, 'admin')">
-        <input type="password" id="secretAdminPass" placeholder="Contraseña" onkeypress="handleLoginEnter(event, 'admin')">
+<input type="text" id="secretAdminUser" placeholder="Usuario" value="admin" onkeypress="handleLoginEnter(event, 'admin', 'user')">
+<input type="password" id="secretAdminPass" placeholder="Contraseña" onkeypress="handleLoginEnter(event, 'admin', 'pass')">
         <div>
             <button onclick="loginAsAdminFromSecret()">Acceder</button>
             <button onclick="closeSecretModal()">Cancelar</button>
@@ -2425,26 +2425,36 @@
     }
 
 
-    // Función para manejar ENTER en los formularios de login
-    function handleLoginEnter(event, type) {
+   // Función mejorada para manejar ENTER en los formularios de login
+    function handleLoginEnter(event, type, field) {
         if (event.key === 'Enter') {
             event.preventDefault();
+            
             if (type === 'user') {
-                // Verificar si el modal de usuario está visible
                 const userModal = document.getElementById('loginModal');
-                if (userModal.classList.contains('show')) {
+                if (!userModal.classList.contains('show')) return;
+                
+                if (field === 'name') {
+                    // Saltar al campo de email
+                    document.getElementById('modalUserEmail').focus();
+                } else if (field === 'email') {
+                    // Ejecutar login
                     registerUser();
                 }
             } else if (type === 'admin') {
-                // Verificar si el modal de admin está visible
                 const adminModal = document.getElementById('adminSecretModal');
-                if (adminModal.classList.contains('show')) {
+                if (!adminModal.classList.contains('show')) return;
+                
+                if (field === 'user') {
+                    // Saltar al campo de contraseña
+                    document.getElementById('secretAdminPass').focus();
+                } else if (field === 'pass') {
+                    // Ejecutar login de admin
                     loginAsAdminFromSecret();
                 }
             }
         }
     }
-
 
     function updateUserInterface() {
         if (currentUser) {
@@ -2959,13 +2969,14 @@
     }
 
 
-    // Función para manejar la tecla ENTER en el buscador
+   // Función mejorada para manejar la tecla ENTER en el buscador
     function handleSearchEnter(event) {
         if (event.key === 'Enter') {
             event.preventDefault(); // Evita cualquier comportamiento por defecto
             filterProducts();
+            // Opcional: Quitar el foco del buscador después de buscar
+            document.getElementById('searchInput').blur();
         }
-    
     }
 
 
