@@ -719,15 +719,15 @@
 
 
         /* ===== PANEL ADMIN DASHBOARD ===== */
-        .admin-dashboard {
+                .admin-dashboard {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.95);
-            z-index: 2000;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a2a 50%, #0d0d0d 100%);
+            z-index: 9999 !important; /* ← MÁS ALTO QUE TODO */
             overflow-y: auto;
             padding: 20px;
         }
@@ -2660,9 +2660,14 @@
         if (isAdmin) {
             document.getElementById('adminDashboard').classList.add('show');
             
-            // Ocultar botones flotantes
-            document.querySelector('.social-float-buttons').style.display = 'none';
-            document.getElementById('adminFloatBtn').style.display = 'none';
+            // Ocultar TODOS los botones flotantes (FORZADO)
+            const socialButtons = document.querySelector('.social-float-buttons');
+            const adminBtn = document.getElementById('adminFloatBtn');
+            const adminQuick = document.getElementById('adminQuickBtn');
+            
+            if (socialButtons) socialButtons.style.display = 'none';
+            if (adminBtn) adminBtn.style.display = 'none';
+            if (adminQuick) adminQuick.style.display = 'none';
             
             updateDashboardStats();
             renderTopProducts();
@@ -2672,13 +2677,18 @@
     }
 
 
-       function closeAdminDashboard() {
+           function closeAdminDashboard() {
         document.getElementById('adminDashboard').classList.remove('show');
         
         // Mostrar botones flotantes nuevamente
-        document.querySelector('.social-float-buttons').style.display = 'flex';
+        const socialButtons = document.querySelector('.social-float-buttons');
+        const adminBtn = document.getElementById('adminFloatBtn');
+        const adminQuick = document.getElementById('adminQuickBtn');
+        
+        if (socialButtons) socialButtons.style.display = 'flex';
         if (isAdmin) {
-            document.getElementById('adminFloatBtn').style.display = 'flex';
+            if (adminBtn) adminBtn.style.display = 'flex';
+            if (adminQuick) adminQuick.style.display = 'flex';
         }
     }
 
