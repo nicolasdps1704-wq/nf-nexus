@@ -1826,6 +1826,171 @@
             .product-grid { grid-template-columns: 1fr; }
             .newsletter-form input { width: 100%; }
         }
+
+                /* ===== MEJORAS VISUALES PANEL ADMIN ===== */
+        .admin-dashboard {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a2a 50%, #0d0d0d 100%);
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, #1a0a0a, #2d1000, #1a0a2a);
+            border: 2px solid #f7c948;
+            box-shadow: 0 0 30px rgba(247,201,72,0.3);
+        }
+
+        .dashboard-header h2 {
+            background: linear-gradient(135deg, #f7c948, #ff6b35);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .stat-card {
+            background: linear-gradient(145deg, #1a1a2e, #0f0f1a);
+            border: 1px solid #ff6b35;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(255,107,53,0.3);
+            border-color: #f7c948;
+        }
+
+        .stat-card i {
+            background: linear-gradient(135deg, #f7c948, #ff6b35);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .dashboard-section {
+            background: linear-gradient(145deg, #1a1a2e, #0f0f1a);
+            border: 1px solid #ff6b35;
+            border-radius: 20px;
+        }
+
+        .dashboard-section h3 {
+            background: linear-gradient(135deg, #f7c948, #ff6b35);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+
+        .sales-table {
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .sales-table th {
+            background: linear-gradient(135deg, #ff6b35, #b91c1c);
+            color: white;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.8rem;
+        }
+
+        .sales-table tr:hover {
+            background: rgba(255,107,53,0.1);
+        }
+
+        .sales-table td {
+            border-bottom: 1px solid #333;
+        }
+
+        .close-dashboard {
+            background: linear-gradient(135deg, #ff2e2e, #991b1b);
+            border: 2px solid white;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+
+        .close-dashboard:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px #ff2e2e;
+        }
+
+                /* ===== AJUSTE DE TABLAS ===== */
+        .sales-table {
+            width: 100%;
+            max-width: 100%;
+            table-layout: fixed;
+        }
+
+        .sales-table th:first-child,
+        .sales-table td:first-child {
+            width: 40%;
+        }
+
+        .sales-table th:nth-child(2),
+        .sales-table td:nth-child(2) {
+            width: 20%;
+            text-align: center;
+        }
+
+        .sales-table th:nth-child(3),
+        .sales-table td:nth-child(3) {
+            width: 40%;
+            text-align: right;
+        }
+
+        /* Para tablas de 4 columnas (Historial de Ventas) */
+        .sales-table th:nth-child(4),
+        .sales-table td:nth-child(4) {
+            text-align: right;
+        }
+
+        #salesHistoryTable th:first-child,
+        #salesHistoryTable td:first-child {
+            width: 20%;
+        }
+
+        #salesHistoryTable th:nth-child(2),
+        #salesHistoryTable td:nth-child(2) {
+            width: 35%;
+            text-align: left;
+        }
+
+        #salesHistoryTable th:nth-child(3),
+        #salesHistoryTable td:nth-child(3) {
+            width: 15%;
+            text-align: center;
+        }
+
+        #salesHistoryTable th:nth-child(4),
+        #salesHistoryTable td:nth-child(4) {
+            width: 30%;
+            text-align: right;
+        }
+
+                /* ===== BOTÓN RÁPIDO ADMIN ===== */
+        .admin-quick-btn {
+            background: linear-gradient(135deg, #ff6b35, #ff2e2e);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            border: 2px solid rgba(255,255,255,0.3);
+            margin-left: 15px;
+        }
+
+        .admin-quick-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px #ff6b35;
+        }
+
+        .admin-quick-btn i {
+            font-size: 1rem;
+        }
     </style>          
 </head>
 <body>
@@ -2096,10 +2261,14 @@
 
 
     <div class="main-header">
-        <div class="logo">
+               <div class="logo">
             <h1 onclick="goToAdminFromStore()">NF NEXUS ⚡</h1>
             <p>✨ ELIGE TU COLOR FAVORITO ✨</p>
         </div>
+        <!-- Botón rápido para Admin (solo visible para admin) -->
+        <button class="admin-quick-btn" id="adminQuickBtn" onclick="openAdminDashboard()" style="display: none;">
+            <i class="fas fa-chart-pie"></i> Panel Admin
+        </button>
         <div class="search-bar">
           <input type="text" id="searchInput" placeholder="🔍 Buscar productos... 
           (ej: audífonos, camiseta)" onkeyup="filterProducts()" onkeypress="handleSearchEnter(event)">
@@ -2463,6 +2632,7 @@
             if (isAdmin) {
                 document.getElementById('adminBadgeIndicator').style.display = 'inline-block';
                 document.getElementById('adminFloatBtn').classList.add('visible');
+                document.getElementById('adminQuickBtn').style.display = 'flex';
             } else {
                 document.getElementById('adminBadgeIndicator').style.display = 'none';
                 document.getElementById('adminFloatBtn').classList.remove('visible');
@@ -2480,15 +2650,20 @@
         isAdmin = false;
         updateUserInterface();
         closeAdminDashboard();
+        document.getElementById('adminQuickBtn').style.display = 'none';
     }
-
 
     // ==========================================
     //         DASHBOARD ADMIN
     // ==========================================
-    function openAdminDashboard() {
+        function openAdminDashboard() {
         if (isAdmin) {
             document.getElementById('adminDashboard').classList.add('show');
+            
+            // Ocultar botones flotantes
+            document.querySelector('.social-float-buttons').style.display = 'none';
+            document.getElementById('adminFloatBtn').style.display = 'none';
+            
             updateDashboardStats();
             renderTopProducts();
             renderSalesHistory();
@@ -2497,8 +2672,14 @@
     }
 
 
-    function closeAdminDashboard() {
+       function closeAdminDashboard() {
         document.getElementById('adminDashboard').classList.remove('show');
+        
+        // Mostrar botones flotantes nuevamente
+        document.querySelector('.social-float-buttons').style.display = 'flex';
+        if (isAdmin) {
+            document.getElementById('adminFloatBtn').style.display = 'flex';
+        }
     }
 
 
