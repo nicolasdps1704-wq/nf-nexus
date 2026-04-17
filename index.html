@@ -2449,12 +2449,22 @@
                     // Saltar al campo de contraseña
                     document.getElementById('secretAdminPass').focus();
                 } else if (field === 'pass') {
-                    // Ejecutar login de admin
-                    loginAsAdminFromSecret();
+                    // Ejecutar login de admin y forzar cierre
+                    const user = document.getElementById('secretAdminUser').value.trim();
+                    const pass = document.getElementById('secretAdminPass').value;
+                    
+                    if (user === ADMIN_USER && pass === ADMIN_PASS) {
+                        currentUser = { name: 'Administrador' };
+                        isAdmin = true;
+                        updateUserInterface();
+                        closeSecretModal();
+                        // Forzar que el foco se quite del input
+                        document.getElementById('secretAdminPass').blur();
+                    } else {
+                        document.getElementById('secretError').innerText = 'Credenciales incorrectas';
+                    }
                 }
             }
-        }
-    }
 
     function updateUserInterface() {
         if (currentUser) {
