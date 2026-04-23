@@ -858,6 +858,7 @@
 <script>
     // ===== CONFIGURACIÓN GLOBAL =====
     const WHATSAPP_NUMBER = "573115851938";
+    const API_URL = 'https://script.google.com/macros/s/AKfycbxP05qN9OCk35Bz32H35GZVIhN3B4xuD-n8nNc4EeVtrOueur5_5ZaS6dYLpwz_L92jAQ/exec';
     const ADMIN_USER = "admin";
     const ADMIN_PASS = "admin123";
     let currentUser = null, isAdmin = false, products = [], selectedColors = {}, cart = [], currentCategory = "todos", currentSearch = "", nextId = 21, secretClickCount = 0, salesHistory = [], pendingPasteInput = null, wishlist = [], recentViews = [], activeCoupon = null, currentRatingFilter = 0, adminLoginAttempts = 0, currentFilters = { priceMin: 0, priceMax: 500000, rating: 0, inStockOnly: false, onSaleOnly: false };
@@ -883,7 +884,6 @@
     
     function loadTheme() { 
         const savedTheme = localStorage.getItem('nfnexusTheme');
-        // Por defecto modo claro (light-mode)
         if (savedTheme === 'dark') { 
             document.body.classList.add('dark-mode');
             const themeIcon = document.getElementById('themeIcon');
@@ -1021,8 +1021,75 @@
     function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
     function normalizeText(text) { if (!text) return ""; return text.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9\s]/g, ""); }
     
-    function loadProducts() { const saved = localStorage.getItem('nfnexusProducts'); if (saved) { products = JSON.parse(saved); nextId = Math.max(...products.map(p => p.id), 0) + 1; } else { products = [{ id:1,name:"Audífonos Bluetooth 40h",category:"electronica",price:49900,oldPrice:129900,stock:25,sold:1250,rating:4.8,icon:"🎧",image:"",gallery:[],colors:[{name:"Negro",code:"#1a1a2e"},{name:"Blanco",code:"#ffffff"},{name:"Azul",code:"#1e3a8a"}]},{id:2,name:"Camiseta Deportiva",category:"moda",price:28900,oldPrice:79900,stock:42,sold:3450,rating:4.9,icon:"👕",image:"",gallery:[],colors:[{name:"Negro",code:"#1a1a2e"},{name:"Blanco",code:"#ffffff"},{name:"Azul",code:"#1e3a8a"}]},{id:3,name:"Lámpara LED",category:"hogar",price:15900,oldPrice:45900,stock:5,sold:920,rating:4.7,icon:"💡",image:"",gallery:[],colors:[{name:"Blanco",code:"#ffffff"},{name:"Negro",code:"#1a1a2e"}]},{id:4,name:"Set de Ollas",category:"hogar",price:99900,oldPrice:249900,stock:0,sold:580,rating:4.9,icon:"🍳",image:"",gallery:[],colors:[{name:"Rojo",code:"#dc2626"},{name:"Negro",code:"#1a1a2e"}]},{id:5,name:"Cargador Rápido",category:"electronica",price:19900,oldPrice:49900,stock:65,sold:5300,rating:4.9,icon:"🔌",image:"",gallery:[],colors:[{name:"Blanco",code:"#ffffff"},{name:"Negro",code:"#1a1a2e"}]},{id:6,name:"Zapatillas Running",category:"moda",price:79900,oldPrice:189900,stock:12,sold:3200,rating:4.8,icon:"👟",image:"",gallery:[],colors:[{name:"Negro/Blanco",code:"#1a1a2e"},{name:"Rojo/Negro",code:"#dc2626"}]},{id:7,name:"Smartwatch",category:"electronica",price:129900,oldPrice:249900,stock:18,sold:890,rating:4.7,icon:"⌚",image:"",gallery:[],colors:[{name:"Negro",code:"#1a1a2e"},{name:"Plateado",code:"#c0c0c0"}]},{id:8,name:"Bolso de Mano",category:"accesorios",price:45900,oldPrice:89900,stock:30,sold:450,rating:4.6,icon:"👜",image:"",gallery:[],colors:[{name:"Café",code:"#8B4513"},{name:"Negro",code:"#1a1a2e"}]},{id:9,name:"Set de Maquillaje",category:"belleza",price:35900,oldPrice:69900,stock:22,sold:2100,rating:4.9,icon:"💄",image:"",gallery:[],colors:[{name:"Variado",code:"#ff69b4"}]},{id:10,name:"Mochila Impermeable",category:"accesorios",price:68900,oldPrice:129900,stock:8,sold:670,rating:4.8,icon:"🎒",image:"",gallery:[],colors:[{name:"Negro",code:"#1a1a2e"},{name:"Azul",code:"#1e3a8a"}]},{id:11,name:"Teclado Mecánico",category:"electronica",price:189900,oldPrice:299900,stock:15,sold:320,rating:4.9,icon:"⌨️",image:"",gallery:[],colors:[{name:"Negro",code:"#1a1a2e"},{name:"Blanco",code:"#ffffff"}]},{id:12,name:"Crema Hidratante",category:"belleza",price:28900,oldPrice:49900,stock:40,sold:980,rating:4.7,icon:"🧴",image:"",gallery:[],colors:[{name:"Blanco",code:"#ffffff"}]},{id:13,name:"Juego de Sábanas",category:"hogar",price:79900,oldPrice:159900,stock:7,sold:410,rating:4.8,icon:"🛏️",image:"",gallery:[],colors:[{name:"Beige",code:"#f5f5dc"},{name:"Gris",code:"#808080"}]},{id:14,name:"Gafas de Sol",category:"accesorios",price:45900,oldPrice:89900,stock:25,sold:1150,rating:4.8,icon:"🕶️",image:"",gallery:[],colors:[{name:"Negro",code:"#1a1a2e"},{name:"Café",code:"#8B4513"}]},{id:15,name:"Reloj de Pared",category:"hogar",price:38900,oldPrice:69900,stock:14,sold:280,rating:4.6,icon:"🕰️",image:"",gallery:[],colors:[{name:"Blanco",code:"#ffffff"},{name:"Negro",code:"#1a1a2e"}]},{id:16,name:"Parlante Portátil",category:"electronica",price:59900,oldPrice:129900,stock:20,sold:780,rating:4.7,icon:"🔊",image:"",gallery:[],colors:[{name:"Negro",code:"#1a1a2e"},{name:"Rojo",code:"#dc2626"}]},{id:17,name:"Chaqueta Jeans",category:"moda",price:89900,oldPrice:169900,stock:11,sold:530,rating:4.8,icon:"🧥",image:"",gallery:[],colors:[{name:"Azul",code:"#1e3a8a"},{name:"Negro",code:"#1a1a2e"}]},{id:18,name:"Brochas Maquillaje",category:"belleza",price:24900,oldPrice:49900,stock:35,sold:1340,rating:4.9,icon:"🖌️",image:"",gallery:[],colors:[{name:"Rosa",code:"#ffc0cb"}]},{id:19,name:"Cafetera Eléctrica",category:"hogar",price:119900,oldPrice:199900,stock:6,sold:210,rating:4.7,icon:"☕",image:"",gallery:[],colors:[{name:"Negro",code:"#1a1a2e"},{name:"Rojo",code:"#dc2626"}]},{id:20,name:"Pulsera Acero",category:"accesorios",price:19900,oldPrice:39900,stock:50,sold:890,rating:4.8,icon:"📿",image:"",gallery:[],colors:[{name:"Plateado",code:"#c0c0c0"},{name:"Oro",code:"#ffd700"}]}]; saveProducts(); } loadSalesHistory(); }
-    function saveProducts() { localStorage.setItem('nfnexusProducts', JSON.stringify(products)); }
+    // ===== FUNCIONES DE API (GOOGLE SHEETS) =====
+    function loadProducts() { 
+        loadProductsFromAPI(); 
+    }
+
+    async function loadProductsFromAPI() {
+        try {
+            showNotification('🔄 Cargando productos...', 'info');
+            const response = await fetch(`${API_URL}?action=getProducts`);
+            const result = await response.json();
+            
+            if (result.success && result.data && result.data.length > 0) {
+                products = result.data;
+                nextId = Math.max(...products.map(p => p.id), 0) + 1;
+                showNotification(`✅ ${products.length} productos cargados`, 'success');
+            } else {
+                products = getDefaultProducts();
+                await saveAllProductsToAPI();
+                showNotification('📦 Productos iniciales creados', 'info');
+            }
+            
+            loadSalesHistory();
+            renderAll();
+        } catch (error) {
+            console.error('Error al cargar productos:', error);
+            const saved = localStorage.getItem('nfnexusProducts');
+            if (saved) { 
+                products = JSON.parse(saved); 
+                nextId = Math.max(...products.map(p => p.id), 0) + 1; 
+            } else {
+                products = getDefaultProducts();
+            }
+            loadSalesHistory();
+            renderAll();
+            showNotification('⚠️ Modo offline', 'warning');
+        }
+    }
+
+    function getDefaultProducts() {
+        return [
+            { id:1,name:"Audífonos Bluetooth 40h",category:"electronica",price:49900,oldPrice:129900,stock:25,sold:1250,rating:4.8,icon:"🎧",image:"",gallery:[],colors:[{name:"Negro",code:"#1a1a2e"},{name:"Blanco",code:"#ffffff"},{name:"Azul",code:"#1e3a8a"}]},
+            { id:2,name:"Camiseta Deportiva",category:"moda",price:28900,oldPrice:79900,stock:42,sold:3450,rating:4.9,icon:"👕",image:"",gallery:[],colors:[{name:"Negro",code:"#1a1a2e"},{name:"Blanco",code:"#ffffff"}]},
+            { id:3,name:"Lámpara LED",category:"hogar",price:15900,oldPrice:45900,stock:5,sold:920,rating:4.7,icon:"💡",image:"",gallery:[],colors:[{name:"Blanco",code:"#ffffff"},{name:"Negro",code:"#1a1a2e"}]}
+        ];
+    }
+
+    async function saveAllProductsToAPI() {
+        for (const product of products) {
+            try {
+                await fetch(`${API_URL}?action=updateProduct&data=${encodeURIComponent(JSON.stringify(product))}`);
+            } catch(e) {}
+        }
+    }
+
+    async function saveProducts() { 
+        localStorage.setItem('nfnexusProducts', JSON.stringify(products));
+        saveProductsToAPI();
+    }
+
+    async function saveProductsToAPI() {
+        for (const product of products) {
+            try {
+                await fetch(`${API_URL}?action=updateProduct&data=${encodeURIComponent(JSON.stringify(product))}`);
+            } catch(e) {
+                console.error('Error guardando producto:', product.id);
+            }
+        }
+    }
+    
     function loadSalesHistory() { const saved = localStorage.getItem('nfnexusSalesHistory'); if (saved) salesHistory = JSON.parse(saved); else salesHistory = []; }
     function saveSalesHistory() { localStorage.setItem('nfnexusSalesHistory', JSON.stringify(salesHistory)); }
     function loadCart() { const saved = localStorage.getItem('nfnexusCart'); if (saved) cart = JSON.parse(saved); updateCartUI(); }
@@ -1041,7 +1108,24 @@
     function updateDashboardStats() { document.getElementById('totalProducts').innerText = products.length; document.getElementById('totalSold').innerText = products.reduce((s,p) => s + (p.sold || 0),0); document.getElementById('totalRevenue').innerText = products.reduce((s,p) => s + ((p.sold || 0) * p.price),0).toLocaleString('es-CO'); document.getElementById('lowStockCount').innerText = products.filter(p => p.stock > 0 && p.stock < 10).length; }
     function renderTopProducts() { const sorted = [...products].sort((a,b) => (b.sold || 0) - (a.sold || 0)).slice(0,5); document.getElementById('topProductsBody').innerHTML = sorted.map(p => `<tr><td>${p.icon || '📦'} ${p.name}</td><td>${p.sold || 0}</td><td>$${((p.sold || 0) * p.price).toLocaleString('es-CO')}</td></tr>`).join(''); }
     function renderSalesHistory() { const tbody = document.getElementById('salesHistoryBody'); if (salesHistory.length === 0) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:12px;">No hay ventas</td></tr>'; return; } tbody.innerHTML = salesHistory.slice(-10).reverse().map(s => `<tr><td>${s.date}</td><td>${s.productName}</td><td>${s.quantity}</td><td>$${s.total.toLocaleString('es-CO')}</td></tr>`).join(''); }
-    function addSaleToHistory(productName, quantity, total) { salesHistory.push({ date: new Date().toLocaleDateString('es-CO'), productName, quantity, total }); saveSalesHistory(); }
+    
+    async function addSaleToHistory(productName, quantity, total) { 
+        const sale = {
+            date: new Date().toLocaleDateString('es-CO'),
+            productName,
+            quantity,
+            total,
+            color: 'N/A',
+            buyer: currentUser ? currentUser.name : 'Invitado'
+        };
+        
+        salesHistory.push(sale); 
+        saveSalesHistory();
+        
+        try {
+            await fetch(`${API_URL}?action=addSale&data=${encodeURIComponent(JSON.stringify(sale))}`);
+        } catch(e) {}
+    }
     
     function secretAdminAttempt() { secretClickCount++; if (secretClickCount >= 3) { secretClickCount = 0; closeLoginModal(); document.getElementById('adminSecretModal').classList.add('show'); } setTimeout(() => { secretClickCount = 0; }, 2000); }
     function closeSecretModal() { document.getElementById('adminSecretModal').classList.remove('show'); document.getElementById('secretError').innerText = ''; }
@@ -1050,7 +1134,7 @@
     
     function uploadImage(file, callback) { if (!file) { callback(""); return; } const reader = new FileReader(); reader.onload = function(e) { callback(e.target.result); }; reader.readAsDataURL(file); }
     
-    function addNewProduct() {
+    async function addNewProduct() {
         const name = document.getElementById('newName').value;
         const price = parseInt(document.getElementById('newPrice').value);
         const oldPrice = parseInt(document.getElementById('newOldPrice').value);
@@ -1060,11 +1144,45 @@
         const colors = getNewColors();
         const pastedImage = window.pastedImageData;
         const gallery = [...tempGalleryImages];
+        
         if (!name || !price) { showNotification("Complete nombre y precio", 'error'); return; }
         if (colors.length === 0) colors.push({ name: "Negro", code: "#1a1a2e" });
-        const newProduct = { id: nextId++, name, price, oldPrice: oldPrice || price * 2, stock: stock || 10, sold: 0, rating: 5.0, icon: '📦', category, image: "", gallery, colors };
-        const finalizeAdd = (imgData) => { if (imgData) newProduct.image = imgData; products.push(newProduct); saveProducts(); renderAll(); clearAddForm(); updateDashboardStats(); showNotification(`✅ Producto agregado con ${gallery.length} imágenes!`, 'success'); };
-        if (imageFile) uploadImage(imageFile, finalizeAdd); else if (pastedImage) { finalizeAdd(pastedImage); window.pastedImageData = null; } else finalizeAdd("");
+        
+        const newProduct = { 
+            id: nextId++, 
+            name, 
+            price, 
+            oldPrice: oldPrice || price * 2, 
+            stock: stock || 10, 
+            sold: 0, 
+            rating: 5.0, 
+            icon: '📦', 
+            category, 
+            image: "", 
+            gallery, 
+            colors 
+        };
+        
+        const finalizeAdd = async (imgData) => { 
+            if (imgData) newProduct.image = imgData; 
+            products.push(newProduct); 
+            
+            try {
+                await fetch(`${API_URL}?action=addProduct&data=${encodeURIComponent(JSON.stringify(newProduct))}`);
+            } catch(e) {}
+            
+            saveProducts(); 
+            renderAll(); 
+            clearAddForm(); 
+            updateDashboardStats(); 
+            showNotification(`✅ Producto agregado con ${gallery.length} imágenes!`, 'success'); 
+        };
+        
+        if (imageFile) uploadImage(imageFile, finalizeAdd); 
+        else if (pastedImage) { 
+            finalizeAdd(pastedImage); 
+            window.pastedImageData = null; 
+        } else finalizeAdd("");
     }
     
     function clearAddForm() {
@@ -1074,7 +1192,21 @@
         document.getElementById('newColorsContainer').innerHTML = `<div style="display:flex;gap:5px;"><input type="text" placeholder="Nombre" class="colorNameInput" style="flex:1;"><input type="color" class="colorCodeInput" value="#1a1a2e" style="width:35px;"><button class="btn-danger" onclick="removeNewColor(this)">x</button></div>`;
     }
     
-    function deleteProduct(productId) { if (confirm("¿Eliminar este producto?")) { products = products.filter(p => p.id !== productId); saveProducts(); renderAll(); updateDashboardStats(); showNotification("Producto eliminado", 'info'); } }
+    async function deleteProduct(productId) { 
+        if (confirm("¿Eliminar este producto?")) { 
+            products = products.filter(p => p.id !== productId); 
+            
+            try {
+                await fetch(`${API_URL}?action=deleteProduct&id=${productId}`);
+            } catch(e) {}
+            
+            saveProducts(); 
+            renderAll(); 
+            updateDashboardStats(); 
+            showNotification("✅ Producto eliminado", 'info'); 
+        } 
+    }
+    
     function updateProduct(productId, field, value) { const product = products.find(p => p.id === productId); if (product) { if (field === 'price' || field === 'oldPrice' || field === 'stock') product[field] = parseInt(value) || 0; else product[field] = value; saveProducts(); renderAll(); updateDashboardStats(); showNotification(`✅ ${field} actualizado correctamente`, 'success'); } }
     function updateProductImage(productId, file) { if (file) { uploadImage(file, (imgData) => { const product = products.find(p => p.id === productId); if (product) { product.image = imgData; saveProducts(); renderAll(); showNotification("Imagen actualizada", 'success'); } }); } }
     function updateProductGallery(productId, newGallery) { const product = products.find(p => p.id === productId); if (product) { product.gallery = newGallery; saveProducts(); renderAll(); showNotification(`✅ Galería actualizada con ${newGallery.length} imágenes`, 'success'); } }
@@ -1411,6 +1543,21 @@
     function modalBuyNow() { if (!currentModalProduct) return; if (!modalSelectedColor) { showNotification("⚠️ Selecciona un color", 'warning'); return; } if (currentModalProduct.stock <= 0) { showNotification("❌ Producto agotado", 'error'); return; } buyDirectWhatsApp(currentModalProduct.id, currentModalProduct.name, currentModalProduct.price); closeProductModal(); }
     
     loadProducts(); loadCart(); loadWishlist(); loadRecentViews(); loadTheme(); renderAll(); setupPasteListener(); autoBackup();
+    
+    // Actualización automática cada 30 segundos
+    setInterval(async () => {
+        try {
+            const response = await fetch(`${API_URL}?action=getProducts`);
+            const result = await response.json();
+            if (result.success && result.data) {
+                const apiProducts = result.data;
+                if (JSON.stringify(apiProducts) !== JSON.stringify(products)) {
+                    products = apiProducts;
+                    renderProducts();
+                }
+            }
+        } catch(e) {}
+    }, 30000);
     
     window.openLoginModal = openLoginModal; window.closeLoginModal = closeLoginModal; window.registerUser = registerUser; window.continueAsGuest = continueAsGuest; window.logout = logout; window.secretAdminAttempt = secretAdminAttempt; window.closeSecretModal = closeSecretModal; window.loginAsAdminFromSecret = loginAsAdminFromSecret; window.goToAdminFromStore = goToAdminFromStore; window.openAdminDashboard = openAdminDashboard; window.closeAdminDashboard = closeAdminDashboard; window.addNewProduct = addNewProduct; window.deleteProduct = deleteProduct; window.updateProduct = updateProduct; window.updateProductImage = updateProductImage; window.updateProductGallery = updateProductGallery; window.addColor = addColor; window.removeColor = removeColor; window.selectColor = selectColor; window.addToCart = addToCart; window.buyDirectWhatsApp = buyDirectWhatsApp; window.updateQuantity = updateQuantity; window.removeItem = removeItem; window.checkout = checkout; window.openCart = openCart; window.closeCart = closeCart; window.filterProducts = filterProducts; window.filterByCategory = filterByCategory; window.handleSearchEnter = handleSearchEnter; window.contactWhatsApp = contactWhatsApp; window.handleLoginEnter = handleLoginEnter; window.previewExcelData = previewExcelData; window.confirmImportExcel = confirmImportExcel; window.cancelImportExcel = cancelImportExcel; window.downloadExcelTemplate = downloadExcelTemplate; window.openFacebook = openFacebook; window.openInstagram = openInstagram; window.openProductModal = openProductModal; window.closeProductModal = closeProductModal; window.selectModalColor = selectModalColor; window.modalAddToCart = modalAddToCart; window.modalBuyNow = modalBuyNow; window.previewNewImage = previewNewImage; window.previewImage = previewImage; window.deleteImage = deleteImage; window.focusPaste = focusPaste; window.focusEditPaste = focusEditPaste; window.focusGalleryPaste = focusGalleryPaste; window.focusEditGalleryPaste = focusEditGalleryPaste; window.addNewColorField = addNewColorField; window.removeNewColor = removeNewColor; window.toggleTheme = toggleTheme; window.openWishlist = openWishlist; window.closeWishlist = closeWishlist; window.toggleWishlist = toggleWishlist; window.applyCoupon = applyCoupon; window.subscribeNewsletter = subscribeNewsletter; window.scrollToTop = scrollToTop; window.exportSalesReport = exportSalesReport; window.applyFilters = applyFilters; window.setRatingFilter = setRatingFilter; window.clearFilters = clearFilters; window.previewGalleryImages = previewGalleryImages; window.addGalleryImagesFromFile = addGalleryImagesFromFile; window.nextImage = nextImage; window.previousImage = previousImage; window.goToImage = goToImage; window.toggleFilters = toggleFilters; window.saveAllProductChanges = saveAllProductChanges; window.updateProductImageFromEditor = updateProductImageFromEditor;
 </script>
