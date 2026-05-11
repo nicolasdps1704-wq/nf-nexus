@@ -103,7 +103,7 @@
         body.dark-mode .product-modal-image .no-img { color: #666; }
         body.dark-mode .product-modal-close { background: rgba(0,0,0,0.3); border: 1px solid white; color: white; }
 
-        /* ===== CARRUSEL DE IMÁGENES ===== */
+        /* ===== CARRUSEL DE IMÁGENES (MODAL) ===== */
         .product-modal-carousel {
             position: relative;
             width: 100%;
@@ -193,6 +193,99 @@
             font-size: 0.65rem;
             z-index: 10;
         }
+
+        /* ===== CARRUSEL EN TARJETAS DE PRODUCTO ===== */
+        .product-card-carousel {
+            position: relative;
+            width: 100%;
+            height: 180px;
+            overflow: hidden;
+        }
+        .product-card-slides {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            height: 100%;
+        }
+        .product-card-slides::-webkit-scrollbar { display: none; }
+        .product-card-slide {
+            flex: 0 0 100%;
+            scroll-snap-align: start;
+            height: 100%;
+        }
+        .product-card-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .product-card-slide .no-img {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: #9ca3af;
+            background: #f3f4f6;
+        }
+        body.dark-mode .product-card-slide .no-img {
+            background: linear-gradient(145deg, #2a1a1a, #1a1a2a);
+        }
+        .card-carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .product-card:hover .card-carousel-btn { opacity: 1; }
+        .card-carousel-btn:hover { background: #ff6b35; }
+        .card-carousel-prev { left: 5px; }
+        .card-carousel-next { right: 5px; }
+        .card-image-counter {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 0.55rem;
+            z-index: 5;
+        }
+        .card-carousel-dots {
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 4px;
+            z-index: 5;
+        }
+        .card-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .card-dot.active { background: #ff6b35; width: 8px; height: 8px; }
 
         /* ===== SELECTOR DE COLORES ===== */
         .color-options {
@@ -322,7 +415,7 @@
         .mobile-nav-item:hover { color: #ff6b35; transform: translateY(-2px); }
         .mobile-nav-item i { font-size: 1.3rem; }
 
-        /* ===== VISTOS RECIENTEMENTE (mismo tamaño que productos normales) ===== */
+        /* ===== VISTOS RECIENTEMENTE ===== */
         .recent-section { margin: 30px 0; }
         .recent-grid { 
             display: grid; 
@@ -635,7 +728,7 @@
 <body>
 
 <!-- ========================================== -->
-<!--        MODAL DE LOGIN PARA USUARIO          -->
+<!--        MODALES Y TIENDA (SIN CAMBIOS)        -->
 <!-- ========================================== -->
 <div id="loginModal" class="login-modal">
     <div class="login-modal-content">
@@ -650,7 +743,6 @@
     </div>
 </div>
 
-<!-- Modal Secreto Admin -->
 <div id="adminSecretModal" class="admin-secret-modal">
     <div class="secret-modal-content">
         <span class="modal-close" onclick="closeSecretModal()" style="position:absolute;top:10px;right:12px;color:#ffb090;cursor:pointer;font-size:1.3rem;">&times;</span>
@@ -663,9 +755,6 @@
     </div>
 </div>
 
-<!-- ========================================== -->
-<!--        DASHBOARD ADMIN (GANANCIAS)          -->
-<!-- ========================================== -->
 <div id="adminDashboard" class="admin-dashboard">
     <div class="dashboard-header">
         <h2><i class="fas fa-chart-pie"></i> Panel Admin</h2>
@@ -680,38 +769,13 @@
         </div>
         <div class="dashboard-section"><h3><i class="fas fa-chart-bar"></i> Más Vendidos</h3><div style="overflow-x:auto;"><table class="sales-table" id="topProductsTable"><thead><tr><th>Producto</th><th>Vendidos</th><th>Ganancias</th></tr></thead><tbody id="topProductsBody"></tbody></table></div></div>
         <div class="dashboard-section"><h3><i class="fas fa-history"></i> Historial de Ventas</h3><div style="overflow-x:auto;"><table class="sales-table" id="salesHistoryTable"><thead><tr><th>Fecha</th><th>Producto</th><th>Cantidad</th><th>Total</th></tr></thead><tbody id="salesHistoryBody"></tbody></table></div></div>
-        
-        <!-- IMPORTAR EXCEL CON FORMATO CORRECTO -->
         <div class="dashboard-section"><h3><i class="fas fa-file-excel"></i> Importar Excel</h3>
             <div class="import-excel-box">
-                <div class="form-grid">
-                    <div class="form-field">
-                        <label>📁 Seleccionar archivo Excel (.xlsx, .xls, .csv)</label>
-                        <input type="file" id="excelFile" accept=".xlsx,.xls,.csv" onchange="previewExcelData(this)">
-                    </div>
-                </div>
-                <div id="excelPreview" style="display:none;margin-top:10px;">
-                    <div id="excelPreviewTable" style="max-height:180px;overflow-y:auto;background:rgba(0,0,0,0.05);border-radius:8px;padding:6px;"></div>
-                    <div style="display:flex;gap:6px;margin-top:8px;"><button class="btn-primary" onclick="confirmImportExcel()">✅ Confirmar Importación</button><button class="btn-danger" onclick="cancelImportExcel()">❌ Cancelar</button></div>
-                </div>
-                <div class="excel-format" style="margin-top:10px; padding:8px; background:rgba(0,0,0,0.03); border-radius:8px; font-size:0.65rem;">
-                    <strong>📋 FORMATO REQUERIDO DEL EXCEL:</strong><br>
-                    <table style="width:100%; border-collapse:collapse; margin-top:6px;">
-                        <tr style="background:rgba(255,107,53,0.1);"><th style="padding:4px; border:1px solid #ff6b35;">Columna</th><th style="padding:4px; border:1px solid #ff6b35;">Descripción</th><th style="padding:4px; border:1px solid #ff6b35;">Ejemplo</th></tr>
-                        <tr><td style="padding:3px; border:1px solid #ddd;"><strong>nombre</strong></td><td style="padding:3px; border:1px solid #ddd;">Nombre del producto</td><td style="padding:3px; border:1px solid #ddd;">Audífonos Bluetooth</td></tr>
-                        <tr><td style="padding:3px; border:1px solid #ddd;"><strong>precio</strong></td><td style="padding:3px; border:1px solid #ddd;">Precio de venta (COP)</td><td style="padding:3px; border:1px solid #ddd;">49900</td></tr>
-                        <tr><td style="padding:3px; border:1px solid #ddd;">precio_anterior</td><td style="padding:3px; border:1px solid #ddd;">Precio tachado (opcional)</td><td style="padding:3px; border:1px solid #ddd;">129900</td></tr>
-                        <tr><td style="padding:3px; border:1px solid #ddd;">stock</td><td style="padding:3px; border:1px solid #ddd;">Cantidad disponible</td><td style="padding:3px; border:1px solid #ddd;">25</td></tr>
-                        <tr><td style="padding:3px; border:1px solid #ddd;">categoria</td><td style="padding:3px; border:1px solid #ddd;">electronica/moda/hogar/accesorios/belleza</td><td style="padding:3px; border:1px solid #ddd;">electronica</td></tr>
-                        <tr><td style="padding:3px; border:1px solid #ddd;">colores</td><td style="padding:3px; border:1px solid #ddd;">Formato: nombre:#código;nombre:#código</td><td style="padding:3px; border:1px solid #ddd;">Negro:#1a1a2e;Blanco:#ffffff</td></tr>
-                        <tr><td style="padding:3px; border:1px solid #ddd;">imagen_url</td><td style="padding:3px; border:1px solid #ddd;">URL de imagen (opcional)</td><td style="padding:3px; border:1px solid #ddd;">https://ejemplo.com/img.jpg</td></tr>
-                    </table>
-                    <button class="btn-primary" onclick="downloadExcelTemplate()" style="margin-top:8px;">📥 Descargar Plantilla Excel</button>
-                </div>
+                <div class="form-grid"><div class="form-field"><label>📁 Seleccionar archivo Excel (.xlsx, .xls, .csv)</label><input type="file" id="excelFile" accept=".xlsx,.xls,.csv" onchange="previewExcelData(this)"></div></div>
+                <div id="excelPreview" style="display:none;margin-top:10px;"><div id="excelPreviewTable" style="max-height:180px;overflow-y:auto;background:rgba(0,0,0,0.05);border-radius:8px;padding:6px;"></div><div style="display:flex;gap:6px;margin-top:8px;"><button class="btn-primary" onclick="confirmImportExcel()">✅ Confirmar Importación</button><button class="btn-danger" onclick="cancelImportExcel()">❌ Cancelar</button></div></div>
+                <button class="btn-primary" onclick="downloadExcelTemplate()" style="margin-top:8px;">📥 Descargar Plantilla Excel</button>
             </div>
         </div>
-        
-        <!-- AGREGAR PRODUCTO -->
         <div class="dashboard-section"><h3><i class="fas fa-plus-circle"></i> Agregar Producto</h3>
             <div class="add-product-form">
                 <div class="form-grid">
@@ -720,39 +784,17 @@
                     <div class="form-field"><label>Precio anterior</label><input type="number" id="newOldPrice" placeholder="129900"></div>
                     <div class="form-field"><label>Stock</label><input type="number" id="newStock" placeholder="10"></div>
                     <div class="form-field"><label>Categoría</label><select id="newCategory"><option value="electronica">Electrónica</option><option value="moda">Moda</option><option value="hogar">Hogar</option><option value="accesorios">Accesorios</option><option value="belleza">Belleza</option></select></div>
-                    <div class="form-field">
-                        <label>Imagen Principal</label>
-                        <input type="file" id="newImageFile" accept="image/*" onchange="previewNewImage(this)">
-                        <div onclick="focusPaste()" style="border:1px dashed #ff6b35;border-radius:6px;padding:5px;text-align:center;cursor:pointer;font-size:0.65rem;"><i class="fas fa-paste"></i> Pegar imagen (Ctrl+V)</div>
-                        <img id="newImagePreview" class="image-preview" style="display:none;">
-                    </div>
-                    <div class="form-field">
-                        <label>📸 Galería (hasta 20 fotos)</label>
-                        <input type="file" id="newGalleryFiles" accept="image/jpeg,image/png,image/jpg" multiple onchange="previewGalleryImages(this)">
-                        <div onclick="focusGalleryPaste()" style="border:1px dashed #ff6b35; border-radius:6px; padding:5px; margin-top:5px; text-align:center; cursor:pointer; background:rgba(0,0,0,0.03); font-size:0.65rem;">
-                            <i class="fas fa-paste"></i> Pegar imagen (Ctrl+V)
-                        </div>
-                        <div id="galleryPreview" style="display:flex; gap:5px; flex-wrap:wrap; margin-top:5px; max-height:100px; overflow-y:auto;"></div>
-                        <small style="color:#6b7280; font-size:0.55rem;">✨ Selecciona múltiples o pega (Ctrl+V) - hasta 20 fotos</small>
-                    </div>
-                    <div class="form-field">
-                        <label>Colores</label>
-                        <div id="newColorsContainer"><div style="display:flex;gap:5px;margin-bottom:5px;"><input type="text" placeholder="Nombre" class="colorNameInput" style="flex:1;"><input type="color" class="colorCodeInput" value="#1a1a2e" style="width:35px;"><button class="btn-danger" onclick="removeNewColor(this)">x</button></div></div>
-                        <button class="btn-primary" style="padding:3px 6px;" onclick="addNewColorField()">+ Agregar color</button>
-                    </div>
+                    <div class="form-field"><label>Imagen Principal</label><input type="file" id="newImageFile" accept="image/*" onchange="previewNewImage(this)"><div onclick="focusPaste()" style="border:1px dashed #ff6b35;border-radius:6px;padding:5px;text-align:center;cursor:pointer;font-size:0.65rem;"><i class="fas fa-paste"></i> Pegar imagen (Ctrl+V)</div><img id="newImagePreview" class="image-preview" style="display:none;"></div>
+                    <div class="form-field"><label>📸 Galería (hasta 20 fotos)</label><input type="file" id="newGalleryFiles" accept="image/jpeg,image/png,image/jpg" multiple onchange="previewGalleryImages(this)"><div onclick="focusGalleryPaste()" style="border:1px dashed #ff6b35; border-radius:6px; padding:5px; margin-top:5px; text-align:center; cursor:pointer; background:rgba(0,0,0,0.03); font-size:0.65rem;"><i class="fas fa-paste"></i> Pegar imagen (Ctrl+V)</div><div id="galleryPreview" style="display:flex; gap:5px; flex-wrap:wrap; margin-top:5px; max-height:100px; overflow-y:auto;"></div></div>
+                    <div class="form-field"><label>Colores</label><div id="newColorsContainer"><div style="display:flex;gap:5px;margin-bottom:5px;"><input type="text" placeholder="Nombre" class="colorNameInput" style="flex:1;"><input type="color" class="colorCodeInput" value="#1a1a2e" style="width:35px;"><button class="btn-danger" onclick="removeNewColor(this)">x</button></div></div><button class="btn-primary" style="padding:3px 6px;" onclick="addNewColorField()">+ Agregar color</button></div>
                 </div>
                 <button class="btn-primary" style="margin-top:10px;" onclick="addNewProduct()">➕ Agregar Producto</button>
             </div>
         </div>
-        
-        <!-- EDITAR PRODUCTOS CON BOTÓN GUARDAR -->
         <div class="dashboard-section"><h3><i class="fas fa-edit"></i> Editar Productos</h3><div id="productEditors"></div></div>
     </div>
 </div>
 
-<!-- ========================================== -->
-<!--            TIENDA PRINCIPAL                 -->
-<!-- ========================================== -->
 <div id="userStore" class="main-store">
     <div class="top-bar">🎉 OFERTAS IMPERDIBLES | PAGO CONTRAENTREGA | ENVÍO GRATIS > $100.000</div>
     <div class="main-header">
@@ -760,17 +802,13 @@
         <div class="search-bar"><input type="text" id="searchInput" placeholder="🔍 Buscar productos..." onkeyup="filterProducts()" onkeypress="handleSearchEnter(event)"><button onclick="filterProducts()"><i class="fas fa-search"></i></button></div>
         <div class="header-icons">
             <div class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-sun" id="themeIcon"></i><span id="themeText">Claro</span></div>
-            <div class="user-section" id="userSection">
-                <div id="loginBtn" class="user-btn" onclick="openLoginModal()"><i class="far fa-user-circle"></i><span>Ingresar</span></div>
-                <div id="userInfo" class="user-badge" style="display:none;"><i class="far fa-user-circle"></i><span id="displayUserName">Usuario</span><span id="adminBadgeIndicator" class="admin-badge">ADMIN</span><button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i></button></div>
-            </div>
+            <div class="user-section" id="userSection"><div id="loginBtn" class="user-btn" onclick="openLoginModal()"><i class="far fa-user-circle"></i><span>Ingresar</span></div><div id="userInfo" class="user-badge" style="display:none;"><i class="far fa-user-circle"></i><span id="displayUserName">Usuario</span><span id="adminBadgeIndicator" class="admin-badge">ADMIN</span><button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i></button></div></div>
             <div class="cart-icon" onclick="openCart()"><i class="fas fa-shopping-cart"></i><span class="cart-count" id="cartCount">0</span></div>
             <div class="cart-icon" onclick="openWishlist()"><i class="fas fa-heart"></i><span class="cart-count" id="wishlistCount">0</span></div>
         </div>
     </div>
     <div class="container">
         <div class="hero"><h2>NF<span style="color:#ff6b35;">NEXUS</span></h2><p>Descubre una nueva forma de comprar con estilo</p><div class="hero-badge">🌟 Envío gratis en compras mayores a $100.000 🌟</div></div>
-        
         <div class="filter-toggle-btn"><button class="btn-primary" onclick="toggleFilters()" style="width:100%;"><i class="fas fa-filter"></i> Mostrar/Ocultar Filtros</button></div>
         <div class="filters-sidebar collapsed" id="filtersSidebar">
             <h3 style="color:#ff6b35;margin-bottom:10px;"><i class="fas fa-filter"></i> Filtros</h3>
@@ -780,52 +818,31 @@
             <div class="filter-group"><label class="filter-checkbox"><input type="checkbox" id="onSaleOnly" onchange="applyFilters()"><span>🔥 Solo en oferta</span></label></div>
             <button class="btn-primary" onclick="clearFilters()" style="width:100%;">Limpiar filtros</button>
         </div>
-        
         <div class="categorias" id="categoriasContainer"></div>
         <div class="section-title"><span><i class="fas fa-bolt" style="color:#ff6b35"></i> Productos Destacados</span></div>
         <div class="product-grid" id="productGrid"></div>
         <div id="noResults" class="no-results" style="display:none;"><i class="fas fa-search" style="font-size:1.8rem;margin-bottom:10px;"></i><p>No se encontraron productos</p></div>
-        
-        <!-- VISTOS RECIENTEMENTE - MISMO TAMAÑO QUE PRODUCTOS NORMALES -->
-        <div id="recentSection" class="recent-section" style="display:none;">
-            <div class="section-title">👁️ Vistos recientemente</div>
-            <div class="recent-grid" id="recentGrid"></div>
-        </div>
-        
+        <div id="recentSection" class="recent-section" style="display:none;"><div class="section-title">👁️ Vistos recientemente</div><div class="recent-grid" id="recentGrid"></div></div>
         <div class="features"><div class="feature-card"><i class="fas fa-truck"></i><h3>Envío Rápido</h3><p>Entregas en 24-48h</p></div><div class="feature-card"><i class="fas fa-shield-alt"></i><h3>Pago Seguro</h3><p>Contraentrega</p></div><div class="feature-card"><i class="fas fa-exchange-alt"></i><h3>Devoluciones</h3><p>30 días sin costo</p></div><div class="feature-card"><i class="fas fa-headset"></i><h3>Soporte 24/7</h3><p>Siempre disponibles</p></div></div>
-        
-        <div class="testimonios"><div class="section-title">💬 Lo que dicen nuestros clientes</div><div class="testimonios-grid"><div class="testimonio-card"><i class="fas fa-star"></i><p>"Excelente servicio, los productos llegaron en perfecto estado!"</p><h4>- María G.</h4></div><div class="testimonio-card"><i class="fas fa-star"></i><p>"La mejor tienda online, calidad y precio inmejorables."</p><h4>- Carlos R.</h4></div><div class="testimonio-card"><i class="fas fa-star"></i><p>"Atención rápida y productos de primera. Muy seguros."</p><h4>- Laura M.</h4></div></div></div>
-        
-        <div class="newsletter"><h3><i class="fas fa-envelope"></i> ¡Ofertas exclusivas!</h3><p>Suscríbete y recibe descuentos especiales</p><div class="newsletter-form"><input type="email" id="newsletterEmail" placeholder="Tu correo electrónico"><button onclick="subscribeNewsletter()">Suscribirme</button></div></div>
-        
-        <div class="social-center"><div class="social-buttons"><a href="#" class="social-mini facebook" onclick="openFacebook()"><i class="fab fa-facebook-f"></i></a><a href="#" class="social-mini instagram" onclick="openInstagram()"><i class="fab fa-instagram"></i></a><a href="#" class="social-mini whatsapp" onclick="contactWhatsApp()"><i class="fab fa-whatsapp"></i></a></div><div style="margin-top:8px;font-size:0.6rem;">Síguenos en redes sociales</div></div>
+        <div class="testimonios"><div class="section-title">💬 Lo que dicen nuestros clientes</div><div class="testimonios-grid"><div class="testimonio-card"><i class="fas fa-star"></i><p>"Excelente servicio!"</p><h4>- María G.</h4></div><div class="testimonio-card"><i class="fas fa-star"></i><p>"Calidad y precio inmejorables."</p><h4>- Carlos R.</h4></div><div class="testimonio-card"><i class="fas fa-star"></i><p>"Atención rápida y seguros."</p><h4>- Laura M.</h4></div></div></div>
+        <div class="newsletter"><h3><i class="fas fa-envelope"></i> ¡Ofertas exclusivas!</h3><p>Suscríbete y recibe descuentos especiales</p><div class="newsletter-form"><input type="email" id="newsletterEmail" placeholder="Tu correo"><button onclick="subscribeNewsletter()">Suscribirme</button></div></div>
+        <div class="social-center"><div class="social-buttons"><a href="#" class="social-mini facebook" onclick="openFacebook()"><i class="fab fa-facebook-f"></i></a><a href="#" class="social-mini instagram" onclick="openInstagram()"><i class="fab fa-instagram"></i></a><a href="#" class="social-mini whatsapp" onclick="contactWhatsApp()"><i class="fab fa-whatsapp"></i></a></div></div>
     </div>
-    
-    <footer><p>🇨🇴 NF NEXUS - Tienda Online Colombia</p><p><i class="fab fa-whatsapp"></i> +57 313 255 0658 | 📧 hola@nfnexus.com</p><p>💵 PAGA CONTRAENTREGA - Recibe y paga cuando llegue</p><div style="margin-top:10px;display:flex;justify-content:center;gap:12px;"><span onclick="openFacebook()"><i class="fab fa-facebook"></i> Facebook</span><span onclick="openInstagram()"><i class="fab fa-instagram"></i> Instagram</span><span onclick="contactWhatsApp()"><i class="fab fa-whatsapp"></i> WhatsApp</span></div></footer>
-    
+    <footer><p>🇨🇴 NF NEXUS - Tienda Online Colombia</p><p><i class="fab fa-whatsapp"></i> +57 313 255 0658 | 📧 hola@nfnexus.com</p></footer>
     <div class="social-float-buttons"><div class="social-float whatsapp-float-new" onclick="contactWhatsApp()"><i class="fab fa-whatsapp"></i></div><div class="social-float instagram-float" onclick="openInstagram()"><i class="fab fa-instagram"></i></div><div class="social-float facebook-float" onclick="openFacebook()"><i class="fab fa-facebook-f"></i></div></div>
     <div class="mobile-bottom-nav"><div class="mobile-nav-item" onclick="scrollToTop()"><i class="fas fa-home"></i><span>Inicio</span></div><div class="mobile-nav-item" onclick="document.getElementById('searchInput').focus()"><i class="fas fa-search"></i><span>Buscar</span></div><div class="mobile-nav-item" onclick="openCart()"><i class="fas fa-shopping-cart"></i><span>Carrito</span></div><div class="mobile-nav-item" onclick="openWishlist()"><i class="fas fa-heart"></i><span>Favoritos</span></div><div class="mobile-nav-item" onclick="if(!currentUser) openLoginModal();"><i class="fas fa-user"></i><span>Mi cuenta</span></div></div>
-    
     <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
     <div class="cart-modal" id="cartModal"><div class="cart-header"><h3><i class="fas fa-shopping-cart"></i> Mi Carrito</h3><button onclick="closeCart()" style="background:none;border:none;color:white;font-size:1.3rem;cursor:pointer;">&times;</button></div><div class="cart-items" id="cartItems"><div style="text-align:center;padding:25px;">🛒 Vacío</div></div><div class="cart-footer" id="cartFooter" style="display:none;"><div class="coupon-section"><div class="coupon-input-group"><input type="text" id="couponCode" placeholder="Código"><button class="btn-primary" onclick="applyCoupon()">Aplicar</button></div><div id="couponMessage" class="coupon-discount"></div></div><div class="cart-total"><span>Subtotal:</span><span id="cartSubtotal">$0</span></div><div id="discountRow" style="display:none;" class="cart-total"><span>Descuento:</span><span id="discountAmount" style="color:#10b981;">-$0</span></div><div class="cart-total"><span>Total:</span><span id="cartTotal">$0</span></div><button class="btn-checkout" onclick="checkout()"><i class="fab fa-whatsapp"></i> Finalizar compra</button></div></div>
-    
     <div class="cart-overlay" id="wishlistOverlay" onclick="closeWishlist()"></div>
     <div class="cart-modal" id="wishlistModal"><div class="cart-header"><h3><i class="fas fa-heart"></i> Mis Favoritos</h3><button onclick="closeWishlist()" style="background:none;border:none;color:white;font-size:1.3rem;cursor:pointer;">&times;</button></div><div class="cart-items" id="wishlistItems"><div style="text-align:center;padding:25px;">❤️ Tu lista está vacía</div></div></div>
-    
-    <!-- MODAL DE PRODUCTO CON CARRUSEL -->
     <div class="product-modal-overlay" id="productModalOverlay" onclick="closeProductModal()"></div>
     <div class="product-modal" id="productModal">
-        <div class="product-modal-header">
-            <h2><i class="fas fa-box"></i> Detalle del Producto</h2>
-            <button class="product-modal-close" onclick="closeProductModal()">&times;</button>
-        </div>
+        <div class="product-modal-header"><h2><i class="fas fa-box"></i> Detalle del Producto</h2><button class="product-modal-close" onclick="closeProductModal()">&times;</button></div>
         <div class="product-modal-body">
             <div class="product-modal-carousel">
                 <div class="carousel-container">
                     <button class="carousel-btn carousel-btn-prev" onclick="event.stopPropagation(); previousImage()">❮</button>
-                    <div class="carousel-slides" id="carouselSlides">
-                        <div class="carousel-slide"><div class="no-img">📦</div></div>
-                    </div>
+                    <div class="carousel-slides" id="carouselSlides"><div class="carousel-slide"><div class="no-img">📦</div></div></div>
                     <button class="carousel-btn carousel-btn-next" onclick="event.stopPropagation(); nextImage()">❯</button>
                     <div class="image-counter" id="imageCounter">1/1</div>
                 </div>
@@ -838,17 +855,10 @@
                 <div class="product-modal-stock" id="modalProductStock"></div>
                 <div class="product-modal-sold" id="modalProductSold"></div>
                 <div class="product-modal-category" id="modalProductCategory"></div>
-                <div class="product-modal-colors">
-                    <label><i class="fas fa-palette"></i> Colores disponibles:</label>
-                    <div class="product-modal-color-options" id="modalProductColors"></div>
-                </div>
+                <div class="product-modal-colors"><label><i class="fas fa-palette"></i> Colores disponibles:</label><div class="product-modal-color-options" id="modalProductColors"></div></div>
                 <div class="product-modal-actions">
-                    <button class="product-modal-btn product-modal-btn-cart" id="modalAddToCartBtn" onclick="modalAddToCart()">
-                        <i class="fas fa-cart-plus"></i> Carrito
-                    </button>
-                    <button class="product-modal-btn product-modal-btn-whatsapp" id="modalBuyNowBtn" onclick="modalBuyNow()">
-                        <i class="fab fa-whatsapp"></i> WhatsApp
-                    </button>
+                    <button class="product-modal-btn product-modal-btn-cart" id="modalAddToCartBtn" onclick="modalAddToCart()"><i class="fas fa-cart-plus"></i> Carrito</button>
+                    <button class="product-modal-btn product-modal-btn-whatsapp" id="modalBuyNowBtn" onclick="modalBuyNow()"><i class="fab fa-whatsapp"></i> WhatsApp</button>
                 </div>
             </div>
         </div>
@@ -870,15 +880,9 @@
         document.body.classList.toggle('dark-mode'); 
         const isDark = document.body.classList.contains('dark-mode');
         localStorage.setItem('nfnexusTheme', isDark ? 'dark' : 'light');
-        const themeIcon = document.getElementById('themeIcon');
-        const themeText = document.getElementById('themeText');
-        if (isDark) { 
-            themeIcon.className = 'fas fa-moon'; 
-            themeText.innerText = 'Oscuro'; 
-        } else { 
-            themeIcon.className = 'fas fa-sun'; 
-            themeText.innerText = 'Claro'; 
-        }
+        const themeIcon = document.getElementById('themeIcon'), themeText = document.getElementById('themeText');
+        if (isDark) { themeIcon.className = 'fas fa-moon'; themeText.innerText = 'Oscuro'; } 
+        else { themeIcon.className = 'fas fa-sun'; themeText.innerText = 'Claro'; }
         showNotification(isDark ? 'Modo oscuro activado' : 'Modo claro activado', 'info'); 
     }
     
@@ -886,30 +890,21 @@
         const savedTheme = localStorage.getItem('nfnexusTheme');
         if (savedTheme === 'dark') { 
             document.body.classList.add('dark-mode');
-            const themeIcon = document.getElementById('themeIcon');
-            const themeText = document.getElementById('themeText');
-            if (themeIcon) { 
-                themeIcon.className = 'fas fa-moon'; 
-                themeText.innerText = 'Oscuro'; 
-            }
+            const themeIcon = document.getElementById('themeIcon'), themeText = document.getElementById('themeText');
+            if (themeIcon) { themeIcon.className = 'fas fa-moon'; themeText.innerText = 'Oscuro'; }
         } else {
             document.body.classList.remove('dark-mode');
-            const themeIcon = document.getElementById('themeIcon');
-            const themeText = document.getElementById('themeText');
-            if (themeIcon) { 
-                themeIcon.className = 'fas fa-sun'; 
-                themeText.innerText = 'Claro'; 
-            }
+            const themeIcon = document.getElementById('themeIcon'), themeText = document.getElementById('themeText');
+            if (themeIcon) { themeIcon.className = 'fas fa-sun'; themeText.innerText = 'Claro'; }
         }
     }
     
-    function toggleFilters() { const sidebar = document.getElementById('filtersSidebar'); sidebar.classList.toggle('collapsed'); }
-    
+    function toggleFilters() { document.getElementById('filtersSidebar').classList.toggle('collapsed'); }
     function loadWishlist() { const saved = localStorage.getItem('nfnexusWishlist'); if (saved) wishlist = JSON.parse(saved); updateWishlistUI(); }
     function saveWishlist() { localStorage.setItem('nfnexusWishlist', JSON.stringify(wishlist)); updateWishlistUI(); }
     function toggleWishlist(productId) { if (wishlist.includes(productId)) { wishlist = wishlist.filter(id => id !== productId); showNotification('❌ Eliminado de favoritos', 'info'); } else { wishlist.push(productId); showNotification('❤️ Agregado a favoritos', 'success'); } saveWishlist(); renderProducts(); }
-    function updateWishlistUI() { document.getElementById('wishlistCount').innerText = wishlist.length; if (document.getElementById('wishlistItems')) { const wishlistProducts = products.filter(p => wishlist.includes(p.id)); if (wishlistProducts.length === 0) document.getElementById('wishlistItems').innerHTML = '<div style="text-align:center;padding:25px;">❤️ Tu lista está vacía</div>'; else document.getElementById('wishlistItems').innerHTML = wishlistProducts.map(p => `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #e5e7eb;"><div><strong>${p.name}</strong><br><span style="color:#ff6b35;">$${p.price.toLocaleString('es-CO')}</span></div><div><button class="btn-primary" onclick="addToCartFromWishlist(${p.id})" style="padding:4px 8px;margin-right:4px;">🛒</button><button class="btn-danger" onclick="toggleWishlist(${p.id})">🗑️</button></div></div>`).join(''); } }
-    function addToCartFromWishlist(productId) { const product = products.find(p => p.id === productId); if (product) { const color = product.colors[0]; selectedColors[productId] = { name: color.name, code: color.code, index: 0 }; addToCart(productId, product.name, product.price); showNotification(`${product.name} agregado`, 'success'); } }
+    function updateWishlistUI() { document.getElementById('wishlistCount').innerText = wishlist.length; if (document.getElementById('wishlistItems')) { const wp = products.filter(p => wishlist.includes(p.id)); document.getElementById('wishlistItems').innerHTML = wp.length === 0 ? '<div style="text-align:center;padding:25px;">❤️ Tu lista está vacía</div>' : wp.map(p => `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #e5e7eb;"><div><strong>${p.name}</strong><br><span style="color:#ff6b35;">$${p.price.toLocaleString('es-CO')}</span></div><div><button class="btn-primary" onclick="addToCartFromWishlist(${p.id})" style="padding:4px 8px;margin-right:4px;">🛒</button><button class="btn-danger" onclick="toggleWishlist(${p.id})">🗑️</button></div></div>`).join(''); } }
+    function addToCartFromWishlist(productId) { const product = products.find(p => p.id === productId); if (product) { selectedColors[productId] = { name: product.colors[0].name, code: product.colors[0].code, index: 0 }; addToCart(productId, product.name, product.price); showNotification(`${product.name} agregado`, 'success'); } }
     function openWishlist() { document.getElementById('wishlistModal').classList.add('show'); document.getElementById('wishlistOverlay').classList.add('show'); updateWishlistUI(); }
     function closeWishlist() { document.getElementById('wishlistModal').classList.remove('show'); document.getElementById('wishlistOverlay').classList.remove('show'); }
     
@@ -917,649 +912,287 @@
     function saveRecentViews() { localStorage.setItem('nfnexusRecentViews', JSON.stringify(recentViews.slice(0, 6))); renderRecentSection(); }
     function addToRecentViews(product) { recentViews = [product, ...recentViews.filter(p => p.id !== product.id)].slice(0, 6); saveRecentViews(); }
     function renderRecentSection() { 
-        const section = document.getElementById('recentSection'); 
-        const grid = document.getElementById('recentGrid'); 
-        if (recentViews.length === 0) { 
-            section.style.display = 'none'; 
-            return; 
-        } 
+        const section = document.getElementById('recentSection'), grid = document.getElementById('recentGrid'); 
+        if (recentViews.length === 0) { section.style.display = 'none'; return; } 
         section.style.display = 'block'; 
-        grid.innerHTML = recentViews.map(p => `
-            <div class="recent-card" onclick="openProductModal(${p.id})">
-                <div class="recent-img">
-                    ${p.image ? `<img src="${p.image}" alt="${p.name}">` : `<div class="no-img">${p.icon || '📦'}</div>`}
-                </div>
-                <div class="recent-info">
-                    <div class="recent-title">${p.name.length > 30 ? p.name.substring(0, 27) + '...' : p.name}</div>
-                    <div class="recent-price">$${p.price.toLocaleString('es-CO')}</div>
-                </div>
-            </div>
-        `).join(''); 
+        grid.innerHTML = recentViews.map(p => `<div class="recent-card" onclick="openProductModal(${p.id})"><div class="recent-img">${p.image ? `<img src="${p.image}" alt="${p.name}">` : `<div class="no-img">${p.icon || '📦'}</div>`}</div><div class="recent-info"><div class="recent-title">${p.name.length > 30 ? p.name.substring(0, 27) + '...' : p.name}</div><div class="recent-price">$${p.price.toLocaleString('es-CO')}</div></div></div>`).join(''); 
     }
     
     function applyFilters() { currentFilters.priceMin = parseInt(document.getElementById('priceMin').value) || 0; currentFilters.priceMax = parseInt(document.getElementById('priceMax').value) || 500000; currentFilters.inStockOnly = document.getElementById('inStockOnly').checked; currentFilters.onSaleOnly = document.getElementById('onSaleOnly').checked; renderProducts(); }
-    function setRatingFilter(rating) { currentRatingFilter = rating; const spans = document.querySelectorAll('#ratingFilter span'); spans.forEach(span => span.classList.remove('active')); if (rating === 0) spans[0].classList.add('active'); else if (rating === 4) spans[1].classList.add('active'); else if (rating === 3) spans[2].classList.add('active'); else if (rating === 2) spans[3].classList.add('active'); renderProducts(); }
+    function setRatingFilter(rating) { currentRatingFilter = rating; document.querySelectorAll('#ratingFilter span').forEach((s,i) => s.classList.toggle('active', (rating===0&&i===0)||(rating===4&&i===1)||(rating===3&&i===2)||(rating===2&&i===3))); renderProducts(); }
     function clearFilters() { document.getElementById('priceMin').value = 0; document.getElementById('priceMax').value = 500000; document.getElementById('inStockOnly').checked = false; document.getElementById('onSaleOnly').checked = false; setRatingFilter(0); renderProducts(); showNotification('Filtros limpiados', 'info'); }
-    
     function applyCoupon() { const code = document.getElementById('couponCode').value.toUpperCase().trim(); const coupon = coupons[code]; const subtotal = cart.reduce((s, i) => s + (i.price * i.quantity), 0); if (!coupon) { document.getElementById('couponMessage').innerHTML = '❌ Código inválido'; document.getElementById('couponMessage').style.color = '#ef4444'; return; } if (coupon.minPurchase && subtotal < coupon.minPurchase) { document.getElementById('couponMessage').innerHTML = `❌ Mínimo: $${coupon.minPurchase.toLocaleString('es-CO')}`; document.getElementById('couponMessage').style.color = '#ef4444'; return; } activeCoupon = { code, ...coupon }; document.getElementById('couponMessage').innerHTML = `✅ ${coupon.message}`; document.getElementById('couponMessage').style.color = '#10b981'; updateCartUI(); showNotification(`Cupón ${code} aplicado!`, 'success'); }
-    function calculateDiscount(subtotal) { if (!activeCoupon) return 0; if (activeCoupon.type === 'percent') return subtotal * (activeCoupon.discount / 100); else return Math.min(activeCoupon.discount, subtotal); }
+    function calculateDiscount(subtotal) { if (!activeCoupon) return 0; return activeCoupon.type === 'percent' ? subtotal * (activeCoupon.discount / 100) : Math.min(activeCoupon.discount, subtotal); }
     
-    // ===== GALERÍA DE IMÁGENES =====
     let tempGalleryImages = [];
-    
     function previewGalleryImages(input) {
-        const preview = document.getElementById('galleryPreview');
-        preview.innerHTML = '';
-        tempGalleryImages = [];
-        const files = Array.from(input.files);
-        const maxImages = 20;
-        const filesToProcess = files.slice(0, maxImages);
-        if (files.length > maxImages) showNotification(`⚠️ Solo se pueden subir ${maxImages} imágenes`, 'warning');
-        filesToProcess.forEach((file, idx) => {
+        const preview = document.getElementById('galleryPreview'); preview.innerHTML = ''; tempGalleryImages = [];
+        const files = Array.from(input.files).slice(0, 20);
+        files.forEach((file, idx) => {
             const reader = new FileReader();
-            reader.onload = function(e) {
-                tempGalleryImages.push(e.target.result);
-                addGalleryThumb(e.target.result, idx);
-            };
+            reader.onload = function(e) { tempGalleryImages.push(e.target.result); const img = document.createElement('img'); img.src = e.target.result; Object.assign(img.style, {width:'45px',height:'45px',objectFit:'cover',borderRadius:'6px',border:'2px solid #ff6b35',margin:'3px'}); preview.appendChild(img); };
             reader.readAsDataURL(file);
         });
-        if (filesToProcess.length > 0) showNotification(`${filesToProcess.length} imágenes seleccionadas`, 'info');
+        if (files.length > 0) showNotification(`${files.length} imágenes seleccionadas`, 'info');
     }
-    
-    function addGalleryThumb(imageData, idx) {
-        const preview = document.getElementById('galleryPreview');
-        const img = document.createElement('img');
-        img.src = imageData;
-        img.style.width = '45px';
-        img.style.height = '45px';
-        img.style.objectFit = 'cover';
-        img.style.borderRadius = '6px';
-        img.style.border = '2px solid #ff6b35';
-        img.style.margin = '3px';
-        preview.appendChild(img);
-    }
-    
-    function focusGalleryPaste() { pendingPasteInput = 'gallery'; alert("📸 Ahora pega la imagen (Ctrl+V) para agregarla a la galería"); }
-    
+    function addGalleryThumb(imageData, idx) { const preview = document.getElementById('galleryPreview'); const img = document.createElement('img'); img.src = imageData; Object.assign(img.style, {width:'45px',height:'45px',objectFit:'cover',borderRadius:'6px',border:'2px solid #ff6b35',margin:'3px'}); preview.appendChild(img); }
+    function focusGalleryPaste() { pendingPasteInput = 'gallery'; alert("📸 Pega la imagen (Ctrl+V) para la galería"); }
     function renderGalleryEditor(productId, gallery) {
-        const container = document.getElementById(`gallery_editor_${productId}`);
-        if (!container) return;
-        container.innerHTML = '';
-        if (gallery && gallery.length > 0) {
-            gallery.forEach((img, idx) => {
-                const div = document.createElement('div');
-                div.className = 'gallery-thumb';
-                div.innerHTML = `<img src="${img}" alt="Galería ${idx + 1}"><button class="remove-img" onclick="removeGalleryImage(${productId}, ${idx})">×</button>`;
-                container.appendChild(div);
-            });
-        } else {
-            const emptyMsg = document.createElement('div');
-            emptyMsg.style.cssText = 'color:#999;font-size:0.6rem;padding:6px;text-align:center;';
-            emptyMsg.innerText = 'No hay imágenes en la galería';
-            container.appendChild(emptyMsg);
-        }
+        const container = document.getElementById(`gallery_editor_${productId}`); if (!container) return;
+        container.innerHTML = (gallery && gallery.length > 0) ? gallery.map((img, idx) => `<div class="gallery-thumb" style="position:relative;display:inline-block;margin:3px;"><img src="${img}" style="width:45px;height:45px;object-fit:cover;border-radius:6px;border:2px solid #ff6b35;"><button onclick="removeGalleryImage(${productId},${idx})" style="position:absolute;top:-5px;right:-5px;background:#ff2e2e;color:white;border:none;width:16px;height:16px;border-radius:50%;cursor:pointer;font-size:9px;">×</button></div>`).join('') : '<div style="color:#999;font-size:0.6rem;">No hay imágenes</div>';
     }
+    function removeGalleryImage(productId, index) { const product = products.find(p => p.id === productId); if (product && product.gallery) { product.gallery.splice(index, 1); saveProducts(); renderAll(); showNotification("🗑️ Imagen eliminada", 'info'); } }
+    function focusEditGalleryPaste(productId) { pendingPasteInput = 'edit_gallery_' + productId; alert("📸 Pega la imagen (Ctrl+V)"); }
     
-    function removeGalleryImage(productId, index) {
-        const product = products.find(p => p.id === productId);
-        if (product && product.gallery && product.gallery[index]) {
-            product.gallery.splice(index, 1);
-            saveProducts();
-            renderAll();
-            showNotification("🗑️ Imagen eliminada de la galería", 'info');
-        }
-    }
-    
-    function focusEditGalleryPaste(productId) {
-        pendingPasteInput = 'edit_gallery_' + productId;
-        alert("📸 Ahora pega la imagen (Ctrl+V) para agregarla a la galería de este producto");
-    }
-    
-    function autoBackup() { setInterval(() => { const backup = { products: products, sales: salesHistory, date: new Date().toISOString() }; localStorage.setItem('nfnexusBackup', JSON.stringify(backup)); }, 3600000); }
-    function exportSalesReport() { const wsData = salesHistory.map(s => [s.date, s.productName, s.quantity, s.total]); wsData.unshift(['Fecha', 'Producto', 'Cantidad', 'Total']); const ws = XLSX.utils.aoa_to_sheet(wsData); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Ventas'); XLSX.writeFile(wb, `ventas_nfnexus_${new Date().toISOString().split('T')[0]}.xlsx`); showNotification('Reporte exportado', 'success'); }
-    function subscribeNewsletter() { const email = document.getElementById('newsletterEmail').value; if (email && email.includes('@')) { let subscribers = JSON.parse(localStorage.getItem('nfnexusSubscribers') || '[]'); if (!subscribers.includes(email)) { subscribers.push(email); localStorage.setItem('nfnexusSubscribers', JSON.stringify(subscribers)); showNotification('✅ Suscripción exitosa!', 'success'); document.getElementById('newsletterEmail').value = ''; } else showNotification('Ya estás suscrito!', 'info'); } else showNotification('Email inválido', 'error'); }
+    function autoBackup() { setInterval(() => { localStorage.setItem('nfnexusBackup', JSON.stringify({ products, salesHistory, date: new Date().toISOString() })); }, 3600000); }
+    function exportSalesReport() { const wsData = salesHistory.map(s => [s.date, s.productName, s.quantity, s.total]); wsData.unshift(['Fecha','Producto','Cantidad','Total']); const ws = XLSX.utils.aoa_to_sheet(wsData); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Ventas'); XLSX.writeFile(wb, `ventas_nfnexus_${new Date().toISOString().split('T')[0]}.xlsx`); showNotification('Reporte exportado', 'success'); }
+    function subscribeNewsletter() { const email = document.getElementById('newsletterEmail').value; if (email && email.includes('@')) { let subs = JSON.parse(localStorage.getItem('nfnexusSubscribers') || '[]'); if (!subs.includes(email)) { subs.push(email); localStorage.setItem('nfnexusSubscribers', JSON.stringify(subs)); showNotification('✅ Suscripción exitosa!', 'success'); document.getElementById('newsletterEmail').value = ''; } else showNotification('Ya estás suscrito!', 'info'); } else showNotification('Email inválido', 'error'); }
     function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
-    function normalizeText(text) { if (!text) return ""; return text.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9\s]/g, ""); }
+    function normalizeText(text) { return text ? text.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9\s]/g, "") : ""; }
     
-    // ===== FUNCIONES DE API (GOOGLE SHEETS) =====
-    function loadProducts() { 
-        loadProductsFromAPI(); 
-    }
-
+    // ===== API GOOGLE SHEETS =====
+    function loadProducts() { loadProductsFromAPI(); }
     async function loadProductsFromAPI() {
         try {
             showNotification('🔄 Cargando productos...', 'info');
             const response = await fetch(`${API_URL}?action=getProducts`);
             const result = await response.json();
-            
-            if (result.success && result.data && result.data.length > 0) {
-                products = result.data;
-                nextId = Math.max(...products.map(p => p.id), 0) + 1;
-                showNotification(`✅ ${products.length} productos cargados`, 'success');
-            } else {
-                products = getDefaultProducts();
-                await saveAllProductsToAPI();
-                showNotification('📦 Productos iniciales creados', 'info');
-            }
-            
-            loadSalesHistory();
-            renderAll();
+            if (result.success && result.data && result.data.length > 0) { products = result.data; nextId = Math.max(...products.map(p => p.id), 0) + 1; showNotification(`✅ ${products.length} productos cargados`, 'success'); }
+            else { products = getDefaultProducts(); await saveAllProductsToAPI(); showNotification('📦 Productos iniciales creados', 'info'); }
+            loadSalesHistory(); renderAll();
         } catch (error) {
-            console.error('Error al cargar productos:', error);
+            console.error('Error:', error);
             const saved = localStorage.getItem('nfnexusProducts');
-            if (saved) { 
-                products = JSON.parse(saved); 
-                nextId = Math.max(...products.map(p => p.id), 0) + 1; 
-            } else {
-                products = getDefaultProducts();
-            }
-            loadSalesHistory();
-            renderAll();
+            products = saved ? JSON.parse(saved) : getDefaultProducts();
+            if (saved) nextId = Math.max(...products.map(p => p.id), 0) + 1;
+            loadSalesHistory(); renderAll();
             showNotification('⚠️ Modo offline', 'warning');
         }
     }
-
-    function getDefaultProducts() {
-        return [
-            { id:1,name:"Audífonos Bluetooth 40h",category:"electronica",price:49900,oldPrice:129900,stock:25,sold:1250,rating:4.8,icon:"🎧",image:"",gallery:[],colors:[{name:"Negro",code:"#1a1a2e"},{name:"Blanco",code:"#ffffff"},{name:"Azul",code:"#1e3a8a"}]},
-            { id:2,name:"Camiseta Deportiva",category:"moda",price:28900,oldPrice:79900,stock:42,sold:3450,rating:4.9,icon:"👕",image:"",gallery:[],colors:[{name:"Negro",code:"#1a1a2e"},{name:"Blanco",code:"#ffffff"}]},
-            { id:3,name:"Lámpara LED",category:"hogar",price:15900,oldPrice:45900,stock:5,sold:920,rating:4.7,icon:"💡",image:"",gallery:[],colors:[{name:"Blanco",code:"#ffffff"},{name:"Negro",code:"#1a1a2e"}]}
-        ];
-    }
-
-    async function saveAllProductsToAPI() {
-        for (const product of products) {
-            try {
-                await fetch(`${API_URL}?action=updateProduct&data=${encodeURIComponent(JSON.stringify(product))}`);
-            } catch(e) {}
-        }
-    }
-
-    async function saveProducts() { 
-        localStorage.setItem('nfnexusProducts', JSON.stringify(products));
-        saveProductsToAPI();
-    }
-
-    async function saveProductsToAPI() {
-        for (const product of products) {
-            try {
-                await fetch(`${API_URL}?action=updateProduct&data=${encodeURIComponent(JSON.stringify(product))}`);
-            } catch(e) {
-                console.error('Error guardando producto:', product.id);
-            }
-        }
-    }
-    
-    function loadSalesHistory() { const saved = localStorage.getItem('nfnexusSalesHistory'); if (saved) salesHistory = JSON.parse(saved); else salesHistory = []; }
+    function getDefaultProducts() { return [{ id:1,name:"Audífonos Bluetooth 40h",category:"electronica",price:49900,oldPrice:129900,stock:25,sold:1250,rating:4.8,icon:"🎧",image:"",gallery:[],colors:[{name:"Negro",code:"#1a1a2e"},{name:"Blanco",code:"#ffffff"}] },{ id:2,name:"Camiseta Deportiva",category:"moda",price:28900,oldPrice:79900,stock:42,sold:3450,rating:4.9,icon:"👕",image:"",gallery:[],colors:[{name:"Negro",code:"#1a1a2e"}] },{ id:3,name:"Lámpara LED",category:"hogar",price:15900,oldPrice:45900,stock:5,sold:920,rating:4.7,icon:"💡",image:"",gallery:[],colors:[{name:"Blanco",code:"#ffffff"}] }]; }
+    async function saveAllProductsToAPI() { for (const p of products) { try { await fetch(`${API_URL}?action=updateProduct&data=${encodeURIComponent(JSON.stringify(p))}`); } catch(e) {} } }
+    async function saveProducts() { localStorage.setItem('nfnexusProducts', JSON.stringify(products)); saveProductsToAPI(); }
+    async function saveProductsToAPI() { for (const p of products) { try { await fetch(`${API_URL}?action=updateProduct&data=${encodeURIComponent(JSON.stringify(p))}`); } catch(e) {} } }
+    function loadSalesHistory() { salesHistory = JSON.parse(localStorage.getItem('nfnexusSalesHistory') || '[]'); }
     function saveSalesHistory() { localStorage.setItem('nfnexusSalesHistory', JSON.stringify(salesHistory)); }
-    function loadCart() { const saved = localStorage.getItem('nfnexusCart'); if (saved) cart = JSON.parse(saved); updateCartUI(); }
+    function loadCart() { cart = JSON.parse(localStorage.getItem('nfnexusCart') || '[]'); updateCartUI(); }
     function saveCart() { localStorage.setItem('nfnexusCart', JSON.stringify(cart)); }
     
     function openLoginModal() { document.getElementById('loginModal').classList.add('show'); }
     function closeLoginModal() { document.getElementById('loginModal').classList.remove('show'); }
-    function registerUser() { const name = document.getElementById('modalUserName').value.trim(); if (!name) { document.getElementById('modalError').innerText = 'Ingresa tu nombre'; return; } currentUser = { name: name, email: document.getElementById('modalUserEmail').value }; updateUserInterface(); closeLoginModal(); showNotification(`¡Bienvenido ${name}!`, 'success'); }
+    function registerUser() { const name = document.getElementById('modalUserName').value.trim(); if (!name) { document.getElementById('modalError').innerText = 'Ingresa tu nombre'; return; } currentUser = { name, email: document.getElementById('modalUserEmail').value }; updateUserInterface(); closeLoginModal(); showNotification(`¡Bienvenido ${name}!`, 'success'); }
     function continueAsGuest() { currentUser = { name: 'Invitado' }; updateUserInterface(); closeLoginModal(); showNotification('Continuando como invitado', 'info'); }
     function handleLoginEnter(event, type) { if (event.key === 'Enter') { event.preventDefault(); if (type === 'user' && document.getElementById('loginModal').classList.contains('show')) registerUser(); else if (type === 'admin' && document.getElementById('adminSecretModal').classList.contains('show')) loginAsAdminFromSecret(); } }
     function updateUserInterface() { if (currentUser) { document.getElementById('loginBtn').style.display = 'none'; document.getElementById('userInfo').style.display = 'flex'; document.getElementById('displayUserName').innerText = currentUser.name; document.getElementById('adminBadgeIndicator').style.display = isAdmin ? 'inline-block' : 'none'; } else { document.getElementById('loginBtn').style.display = 'flex'; document.getElementById('userInfo').style.display = 'none'; isAdmin = false; } }
     function logout() { currentUser = null; isAdmin = false; updateUserInterface(); closeAdminDashboard(); showNotification('Sesión cerrada', 'info'); }
-    
     function openAdminDashboard() { if (isAdmin) { document.getElementById('adminDashboard').classList.add('show'); updateDashboardStats(); renderTopProducts(); renderSalesHistory(); renderAdminPanel(); } }
     function closeAdminDashboard() { document.getElementById('adminDashboard').classList.remove('show'); }
     function updateDashboardStats() { document.getElementById('totalProducts').innerText = products.length; document.getElementById('totalSold').innerText = products.reduce((s,p) => s + (p.sold || 0),0); document.getElementById('totalRevenue').innerText = products.reduce((s,p) => s + ((p.sold || 0) * p.price),0).toLocaleString('es-CO'); document.getElementById('lowStockCount').innerText = products.filter(p => p.stock > 0 && p.stock < 10).length; }
-    function renderTopProducts() { const sorted = [...products].sort((a,b) => (b.sold || 0) - (a.sold || 0)).slice(0,5); document.getElementById('topProductsBody').innerHTML = sorted.map(p => `<tr><td>${p.icon || '📦'} ${p.name}</td><td>${p.sold || 0}</td><td>$${((p.sold || 0) * p.price).toLocaleString('es-CO')}</td></tr>`).join(''); }
-    function renderSalesHistory() { const tbody = document.getElementById('salesHistoryBody'); if (salesHistory.length === 0) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:12px;">No hay ventas</td></tr>'; return; } tbody.innerHTML = salesHistory.slice(-10).reverse().map(s => `<tr><td>${s.date}</td><td>${s.productName}</td><td>${s.quantity}</td><td>$${s.total.toLocaleString('es-CO')}</td></tr>`).join(''); }
-    
-    async function addSaleToHistory(productName, quantity, total) { 
-        const sale = {
-            date: new Date().toLocaleDateString('es-CO'),
-            productName,
-            quantity,
-            total,
-            color: 'N/A',
-            buyer: currentUser ? currentUser.name : 'Invitado'
-        };
-        
-        salesHistory.push(sale); 
-        saveSalesHistory();
-        
-        try {
-            await fetch(`${API_URL}?action=addSale&data=${encodeURIComponent(JSON.stringify(sale))}`);
-        } catch(e) {}
-    }
-    
+    function renderTopProducts() { document.getElementById('topProductsBody').innerHTML = [...products].sort((a,b) => (b.sold||0)-(a.sold||0)).slice(0,5).map(p => `<tr><td>${p.icon||'📦'} ${p.name}</td><td>${p.sold||0}</td><td>$${((p.sold||0)*p.price).toLocaleString('es-CO')}</td></tr>`).join(''); }
+    function renderSalesHistory() { const tbody = document.getElementById('salesHistoryBody'); tbody.innerHTML = salesHistory.length === 0 ? '<tr><td colspan="4" style="text-align:center;padding:12px;">No hay ventas</td></tr>' : salesHistory.slice(-10).reverse().map(s => `<tr><td>${s.date}</td><td>${s.productName}</td><td>${s.quantity}</td><td>$${s.total.toLocaleString('es-CO')}</td></tr>`).join(''); }
+    async function addSaleToHistory(productName, quantity, total) { const sale = { date: new Date().toLocaleDateString('es-CO'), productName, quantity, total, color: 'N/A', buyer: currentUser ? currentUser.name : 'Invitado' }; salesHistory.push(sale); saveSalesHistory(); try { await fetch(`${API_URL}?action=addSale&data=${encodeURIComponent(JSON.stringify(sale))}`); } catch(e) {} }
     function secretAdminAttempt() { secretClickCount++; if (secretClickCount >= 3) { secretClickCount = 0; closeLoginModal(); document.getElementById('adminSecretModal').classList.add('show'); } setTimeout(() => { secretClickCount = 0; }, 2000); }
-    function closeSecretModal() { document.getElementById('adminSecretModal').classList.remove('show'); document.getElementById('secretError').innerText = ''; }
-    function loginAsAdminFromSecret() { if (adminLoginAttempts >= 3) { document.getElementById('secretError').innerText = 'Demasiados intentos. Espera 5 minutos.'; setTimeout(() => { adminLoginAttempts = 0; }, 300000); return; } const user = document.getElementById('secretAdminUser').value.trim(); const pass = document.getElementById('secretAdminPass').value; if (user === ADMIN_USER && pass === ADMIN_PASS) { currentUser = { name: 'Administrador' }; isAdmin = true; updateUserInterface(); closeSecretModal(); adminLoginAttempts = 0; showNotification('Bienvenido Administrador', 'success'); } else { adminLoginAttempts++; document.getElementById('secretError').innerText = `Credenciales incorrectas. Intentos: ${3 - adminLoginAttempts}`; } }
+    function closeSecretModal() { document.getElementById('adminSecretModal').classList.remove('show'); }
+    function loginAsAdminFromSecret() { if (adminLoginAttempts >= 3) { document.getElementById('secretError').innerText = 'Demasiados intentos.'; setTimeout(() => { adminLoginAttempts = 0; }, 300000); return; } if (document.getElementById('secretAdminUser').value.trim() === ADMIN_USER && document.getElementById('secretAdminPass').value === ADMIN_PASS) { currentUser = { name: 'Administrador' }; isAdmin = true; updateUserInterface(); closeSecretModal(); adminLoginAttempts = 0; showNotification('Bienvenido Administrador', 'success'); } else { adminLoginAttempts++; document.getElementById('secretError').innerText = `Credenciales incorrectas. Intentos: ${3 - adminLoginAttempts}`; } }
     function goToAdminFromStore() { if (isAdmin) openAdminDashboard(); else if (currentUser) { secretClickCount++; if (secretClickCount >= 3) { secretClickCount = 0; document.getElementById('adminSecretModal').classList.add('show'); } setTimeout(() => { secretClickCount = 0; }, 2000); } }
     
-    function uploadImage(file, callback) { if (!file) { callback(""); return; } const reader = new FileReader(); reader.onload = function(e) { callback(e.target.result); }; reader.readAsDataURL(file); }
-    
+    function uploadImage(file, callback) { if (!file) { callback(""); return; } const reader = new FileReader(); reader.onload = e => callback(e.target.result); reader.readAsDataURL(file); }
     async function addNewProduct() {
-        const name = document.getElementById('newName').value;
-        const price = parseInt(document.getElementById('newPrice').value);
-        const oldPrice = parseInt(document.getElementById('newOldPrice').value);
-        const stock = parseInt(document.getElementById('newStock').value);
-        const category = document.getElementById('newCategory').value;
-        const imageFile = document.getElementById('newImageFile').files[0];
-        const colors = getNewColors();
-        const pastedImage = window.pastedImageData;
-        const gallery = [...tempGalleryImages];
-        
+        const name = document.getElementById('newName').value, price = parseInt(document.getElementById('newPrice').value), oldPrice = parseInt(document.getElementById('newOldPrice').value), stock = parseInt(document.getElementById('newStock').value), category = document.getElementById('newCategory').value, imageFile = document.getElementById('newImageFile').files[0], colors = getNewColors(), pastedImage = window.pastedImageData, gallery = [...tempGalleryImages];
         if (!name || !price) { showNotification("Complete nombre y precio", 'error'); return; }
         if (colors.length === 0) colors.push({ name: "Negro", code: "#1a1a2e" });
-        
-        const newProduct = { 
-            id: nextId++, 
-            name, 
-            price, 
-            oldPrice: oldPrice || price * 2, 
-            stock: stock || 10, 
-            sold: 0, 
-            rating: 5.0, 
-            icon: '📦', 
-            category, 
-            image: "", 
-            gallery, 
-            colors 
-        };
-        
-        const finalizeAdd = async (imgData) => { 
-            if (imgData) newProduct.image = imgData; 
-            products.push(newProduct); 
-            
-            try {
-                await fetch(`${API_URL}?action=addProduct&data=${encodeURIComponent(JSON.stringify(newProduct))}`);
-            } catch(e) {}
-            
-            saveProducts(); 
-            renderAll(); 
-            clearAddForm(); 
-            updateDashboardStats(); 
-            showNotification(`✅ Producto agregado con ${gallery.length} imágenes!`, 'success'); 
-        };
-        
-        if (imageFile) uploadImage(imageFile, finalizeAdd); 
-        else if (pastedImage) { 
-            finalizeAdd(pastedImage); 
-            window.pastedImageData = null; 
-        } else finalizeAdd("");
+        const newProduct = { id: nextId++, name, price, oldPrice: oldPrice || price * 2, stock: stock || 10, sold: 0, rating: 5.0, icon: '📦', category, image: "", gallery, colors };
+        const finalizeAdd = async (imgData) => { if (imgData) newProduct.image = imgData; products.push(newProduct); try { await fetch(`${API_URL}?action=addProduct&data=${encodeURIComponent(JSON.stringify(newProduct))}`); } catch(e) {} saveProducts(); renderAll(); clearAddForm(); updateDashboardStats(); showNotification(`✅ Producto agregado!`, 'success'); };
+        if (imageFile) uploadImage(imageFile, finalizeAdd); else if (pastedImage) { finalizeAdd(pastedImage); window.pastedImageData = null; } else finalizeAdd("");
     }
-    
-    function clearAddForm() {
-        document.getElementById('newName').value = ''; document.getElementById('newPrice').value = ''; document.getElementById('newOldPrice').value = '';
-        document.getElementById('newStock').value = ''; document.getElementById('newImageFile').value = ''; document.getElementById('newImagePreview').style.display = 'none';
-        document.getElementById('galleryPreview').innerHTML = ''; window.pastedImageData = null; tempGalleryImages = [];
-        document.getElementById('newColorsContainer').innerHTML = `<div style="display:flex;gap:5px;"><input type="text" placeholder="Nombre" class="colorNameInput" style="flex:1;"><input type="color" class="colorCodeInput" value="#1a1a2e" style="width:35px;"><button class="btn-danger" onclick="removeNewColor(this)">x</button></div>`;
-    }
-    
-    async function deleteProduct(productId) { 
-        if (confirm("¿Eliminar este producto?")) { 
-            products = products.filter(p => p.id !== productId); 
-            
-            try {
-                await fetch(`${API_URL}?action=deleteProduct&id=${productId}`);
-            } catch(e) {}
-            
-            saveProducts(); 
-            renderAll(); 
-            updateDashboardStats(); 
-            showNotification("✅ Producto eliminado", 'info'); 
-        } 
-    }
-    
-    function updateProduct(productId, field, value) { const product = products.find(p => p.id === productId); if (product) { if (field === 'price' || field === 'oldPrice' || field === 'stock') product[field] = parseInt(value) || 0; else product[field] = value; saveProducts(); renderAll(); updateDashboardStats(); showNotification(`✅ ${field} actualizado correctamente`, 'success'); } }
-    function updateProductImage(productId, file) { if (file) { uploadImage(file, (imgData) => { const product = products.find(p => p.id === productId); if (product) { product.image = imgData; saveProducts(); renderAll(); showNotification("Imagen actualizada", 'success'); } }); } }
-    function updateProductGallery(productId, newGallery) { const product = products.find(p => p.id === productId); if (product) { product.gallery = newGallery; saveProducts(); renderAll(); showNotification(`✅ Galería actualizada con ${newGallery.length} imágenes`, 'success'); } }
-    function addColor(productId, colorName, colorCode) { const product = products.find(p => p.id === productId); if (product && colorName && colorCode) { product.colors.push({ name: colorName, code: colorCode }); saveProducts(); renderAll(); showNotification("Color agregado", 'success'); } }
-    function removeColor(productId, colorIndex) { const product = products.find(p => p.id === productId); if (product && product.colors.length > 1) { product.colors.splice(colorIndex, 1); saveProducts(); renderAll(); showNotification("Color eliminado", 'info'); } else showNotification("Debe haber al menos un color", 'warning'); }
-    function getNewColors() { const colors = []; document.querySelectorAll('#newColorsContainer .colorNameInput').forEach((input, idx) => { const name = input.value.trim(); const code = document.querySelectorAll('#newColorsContainer .colorCodeInput')[idx].value; if (name) colors.push({ name, code }); }); return colors; }
-    function addNewColorField() { const container = document.getElementById('newColorsContainer'); const div = document.createElement('div'); div.style.display = 'flex'; div.style.gap = '5px'; div.style.marginTop = '5px'; div.innerHTML = `<input type="text" placeholder="Nombre" class="colorNameInput" style="flex:1;"><input type="color" class="colorCodeInput" value="#1a1a2e" style="width:35px;"><button class="btn-danger" onclick="removeNewColor(this)">x</button>`; container.appendChild(div); }
+    function clearAddForm() { document.getElementById('newName').value = document.getElementById('newPrice').value = document.getElementById('newOldPrice').value = document.getElementById('newStock').value = ''; document.getElementById('newImageFile').value = ''; document.getElementById('newImagePreview').style.display = 'none'; document.getElementById('galleryPreview').innerHTML = ''; window.pastedImageData = null; tempGalleryImages = []; document.getElementById('newColorsContainer').innerHTML = `<div style="display:flex;gap:5px;"><input type="text" placeholder="Nombre" class="colorNameInput" style="flex:1;"><input type="color" class="colorCodeInput" value="#1a1a2e" style="width:35px;"><button class="btn-danger" onclick="removeNewColor(this)">x</button></div>`; }
+    async function deleteProduct(productId) { if (confirm("¿Eliminar?")) { products = products.filter(p => p.id !== productId); try { await fetch(`${API_URL}?action=deleteProduct&id=${productId}`); } catch(e) {} saveProducts(); renderAll(); updateDashboardStats(); showNotification("✅ Producto eliminado", 'info'); } }
+    function updateProduct(productId, field, value) { const p = products.find(p => p.id === productId); if (p) { p[field] = (field==='price'||field==='oldPrice'||field==='stock') ? (parseInt(value)||0) : value; saveProducts(); renderAll(); updateDashboardStats(); showNotification(`✅ Actualizado`, 'success'); } }
+    function updateProductImage(productId, file) { if (file) uploadImage(file, imgData => { const p = products.find(p => p.id === productId); if (p) { p.image = imgData; saveProducts(); renderAll(); showNotification("Imagen actualizada", 'success'); } }); }
+    function addColor(productId, colorName, colorCode) { const p = products.find(p => p.id === productId); if (p && colorName && colorCode) { p.colors.push({ name: colorName, code: colorCode }); saveProducts(); renderAll(); showNotification("Color agregado", 'success'); } }
+    function removeColor(productId, idx) { const p = products.find(p => p.id === productId); if (p && p.colors.length > 1) { p.colors.splice(idx, 1); saveProducts(); renderAll(); } else showNotification("Mínimo 1 color", 'warning'); }
+    function getNewColors() { const colors = []; document.querySelectorAll('#newColorsContainer .colorNameInput').forEach((input, idx) => { const name = input.value.trim(), code = document.querySelectorAll('#newColorsContainer .colorCodeInput')[idx].value; if (name) colors.push({ name, code }); }); return colors; }
+    function addNewColorField() { const div = document.createElement('div'); div.style.cssText = 'display:flex;gap:5px;margin-top:5px;'; div.innerHTML = `<input type="text" placeholder="Nombre" class="colorNameInput" style="flex:1;"><input type="color" class="colorCodeInput" value="#1a1a2e" style="width:35px;"><button class="btn-danger" onclick="removeNewColor(this)">x</button>`; document.getElementById('newColorsContainer').appendChild(div); }
     function removeNewColor(btn) { btn.parentElement.remove(); }
     
     function renderAdminPanel() { 
-        const container = document.getElementById('productEditors'); 
-        if (!container) return; 
-        container.innerHTML = products.map(p => `
-            <div class="product-editor">
-                <h4>${p.name}
-                    <div>
-                        <button class="save-product-btn" onclick="saveAllProductChanges(${p.id})"><i class="fas fa-save"></i> Guardar cambios</button>
-                        <button class="btn-danger" onclick="deleteProduct(${p.id})">🗑️ Eliminar</button>
-                    </div>
-                </h4>
-                <div class="editor-grid">
-                    <div class="form-field"><label>Nombre</label><input type="text" id="edit_name_${p.id}" value="${p.name.replace(/"/g,'&quot;')}"></div>
-                    <div class="form-field"><label>Precio</label><input type="number" id="edit_price_${p.id}" value="${p.price}"></div>
-                    <div class="form-field"><label>Precio ant</label><input type="number" id="edit_oldPrice_${p.id}" value="${p.oldPrice}"></div>
-                    <div class="form-field"><label>Stock</label><input type="number" id="edit_stock_${p.id}" value="${p.stock}"></div>
-                    <div class="form-field"><label>Categoría</label><select id="edit_category_${p.id}"><option ${p.category === 'electronica' ? 'selected' : ''}>electronica</option><option ${p.category === 'moda' ? 'selected' : ''}>moda</option><option ${p.category === 'hogar' ? 'selected' : ''}>hogar</option><option ${p.category === 'accesorios' ? 'selected' : ''}>accesorios</option><option ${p.category === 'belleza' ? 'selected' : ''}>belleza</option></select></div>
-                    <div class="form-field"><label>Imagen Principal</label><input type="file" accept="image/*" onchange="updateProductImageFromEditor(${p.id}, this)"><div onclick="focusEditPaste(${p.id})" style="border:1px dashed #ff6b35;border-radius:5px;padding:3px;text-align:center;cursor:pointer;font-size:0.6rem;"><i class="fas fa-paste"></i> Pegar imagen</div>${p.image ? `<img id="preview_${p.id}" class="image-preview" src="${p.image}" style="display:block;"><button class="btn-warning" onclick="deleteImage(${p.id})">🗑️</button>` : `<img id="preview_${p.id}" class="image-preview" style="display:none;">`}</div></div>
-                    <div class="form-field">
-                        <label>📸 Galería (${p.gallery ? p.gallery.length : 0}/20)</label>
-                        <div class="gallery-editor">
-                            <div class="gallery-editor-title">
-                                <span><i class="fas fa-images"></i> Imágenes</span>
-                                <div>
-                                    <input type="file" id="gallery_file_${p.id}" accept="image/*" multiple style="display:none;" onchange="addGalleryImagesFromFile(${p.id}, this)">
-                                    <button class="btn-primary" style="padding:2px 5px; font-size:0.55rem;" onclick="document.getElementById('gallery_file_${p.id}').click()">➕</button>
-                                    <button class="btn-primary" style="padding:2px 5px; font-size:0.55rem; margin-left:3px;" onclick="focusEditGalleryPaste(${p.id})">📋</button>
-                                </div>
-                            </div>
-                            <div id="gallery_editor_${p.id}" class="gallery-preview"></div>
-                        </div>
-                    </div>
-                    <div class="form-field"><label>Colores:</label><div class="color-list">${p.colors.map((c,idx) => `<div class="color-chip"><span style="background:${c.code};width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:3px;"></span>${c.name}<button class="btn-danger" style="padding:1px 5px;margin-left:3px;" onclick="removeColor(${p.id},${idx})">×</button></div>`).join('')}</div><div style="display:flex;gap:4px;margin-top:5px;"><input type="text" id="newColorName_${p.id}" placeholder="Nombre" style="padding:4px;background:rgba(0,0,0,0.05);border:1px solid #ff6b35;border-radius:6px;color:inherit;flex:1;font-size:0.65rem;"><input type="color" id="newColorCode_${p.id}" value="#1a1a2e" style="width:32px;"><button class="btn-primary" style="padding:2px 6px;" onclick="addColor(${p.id}, document.getElementById('newColorName_${p.id}').value, document.getElementById('newColorCode_${p.id}').value)">+</button></div></div>
-                </div>
-            </div>
+        document.getElementById('productEditors').innerHTML = products.map(p => `
+            <div class="product-editor"><h4>${p.name}<div><button class="save-product-btn" onclick="saveAllProductChanges(${p.id})"><i class="fas fa-save"></i> Guardar</button><button class="btn-danger" onclick="deleteProduct(${p.id})">🗑️</button></div></h4>
+            <div class="editor-grid">
+                <div class="form-field"><label>Nombre</label><input type="text" id="edit_name_${p.id}" value="${p.name.replace(/"/g,'&quot;')}"></div>
+                <div class="form-field"><label>Precio</label><input type="number" id="edit_price_${p.id}" value="${p.price}"></div>
+                <div class="form-field"><label>Precio ant</label><input type="number" id="edit_oldPrice_${p.id}" value="${p.oldPrice}"></div>
+                <div class="form-field"><label>Stock</label><input type="number" id="edit_stock_${p.id}" value="${p.stock}"></div>
+                <div class="form-field"><label>Categoría</label><select id="edit_category_${p.id}">${['electronica','moda','hogar','accesorios','belleza'].map(c => `<option ${p.category===c?'selected':''}>${c}</option>`).join('')}</select></div>
+                <div class="form-field"><label>Imagen Principal</label><input type="file" accept="image/*" onchange="updateProductImageFromEditor(${p.id}, this)"><div onclick="focusEditPaste(${p.id})" style="border:1px dashed #ff6b35;border-radius:5px;padding:3px;text-align:center;cursor:pointer;font-size:0.6rem;"><i class="fas fa-paste"></i> Pegar</div>${p.image ? `<img id="preview_${p.id}" class="image-preview" src="${p.image}" style="display:block;"><button onclick="deleteImage(${p.id})" style="font-size:0.6rem;">🗑️</button>` : `<img id="preview_${p.id}" class="image-preview" style="display:none;">`}</div>
+                <div class="form-field"><label>📸 Galería (${p.gallery?p.gallery.length:0}/20)</label><input type="file" id="gallery_file_${p.id}" accept="image/*" multiple style="display:none;" onchange="addGalleryImagesFromFile(${p.id}, this)"><div style="display:flex;gap:5px;"><button class="btn-primary" style="padding:2px 5px;font-size:0.55rem;" onclick="document.getElementById('gallery_file_${p.id}').click()">➕ Agregar</button><button class="btn-primary" style="padding:2px 5px;font-size:0.55rem;" onclick="focusEditGalleryPaste(${p.id})">📋 Pegar</button></div><div id="gallery_editor_${p.id}" style="display:flex;flex-wrap:wrap;gap:3px;margin-top:5px;"></div></div>
+                <div class="form-field"><label>Colores:</label><div class="color-list">${p.colors.map((c,idx) => `<div class="color-chip"><span style="background:${c.code};width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:3px;"></span>${c.name}<button class="btn-danger" style="padding:1px 5px;margin-left:3px;" onclick="removeColor(${p.id},${idx})">×</button></div>`).join('')}</div><div style="display:flex;gap:4px;margin-top:5px;"><input type="text" id="newColorName_${p.id}" placeholder="Nombre" style="padding:4px;flex:1;font-size:0.65rem;"><input type="color" id="newColorCode_${p.id}" value="#1a1a2e" style="width:32px;"><button class="btn-primary" style="padding:2px 6px;" onclick="addColor(${p.id}, document.getElementById('newColorName_${p.id}').value, document.getElementById('newColorCode_${p.id}').value)">+</button></div></div>
+            </div></div>
         `).join('');
-        products.forEach(p => { renderGalleryEditor(p.id, p.gallery || []); });
+        products.forEach(p => renderGalleryEditor(p.id, p.gallery || []));
     }
     
-    function saveAllProductChanges(productId) {
-        const product = products.find(p => p.id === productId);
-        if (product) {
-            const newName = document.getElementById(`edit_name_${productId}`).value;
-            const newPrice = parseInt(document.getElementById(`edit_price_${productId}`).value);
-            const newOldPrice = parseInt(document.getElementById(`edit_oldPrice_${productId}`).value);
-            const newStock = parseInt(document.getElementById(`edit_stock_${productId}`).value);
-            const newCategory = document.getElementById(`edit_category_${productId}`).value;
-            
-            if (newName) product.name = newName;
-            if (!isNaN(newPrice)) product.price = newPrice;
-            if (!isNaN(newOldPrice)) product.oldPrice = newOldPrice;
-            if (!isNaN(newStock)) product.stock = newStock;
-            if (newCategory) product.category = newCategory;
-            
-            saveProducts();
-            renderAll();
-            showNotification(`✅ Producto "${product.name}" guardado correctamente`, 'success');
-        }
-    }
+    function saveAllProductChanges(productId) { const p = products.find(p => p.id === productId); if (p) { const nn = document.getElementById(`edit_name_${productId}`).value; const np = parseInt(document.getElementById(`edit_price_${productId}`).value); const no = parseInt(document.getElementById(`edit_oldPrice_${productId}`).value); const ns = parseInt(document.getElementById(`edit_stock_${productId}`).value); const nc = document.getElementById(`edit_category_${productId}`).value; if (nn) p.name = nn; if (!isNaN(np)) p.price = np; if (!isNaN(no)) p.oldPrice = no; if (!isNaN(ns)) p.stock = ns; if (nc) p.category = nc; saveProducts(); renderAll(); showNotification(`✅ Guardado`, 'success'); } }
+    function updateProductImageFromEditor(productId, input) { if (input.files && input.files[0]) uploadImage(input.files[0], imgData => { const p = products.find(p => p.id === productId); if (p) { p.image = imgData; saveProducts(); renderAll(); } }); }
+    function addGalleryImagesFromFile(productId, input) { const files = Array.from(input.files), p = products.find(p => p.id === productId); if (!p) return; if (!p.gallery) p.gallery = []; const remaining = 20 - p.gallery.length, toAdd = files.slice(0, remaining); toAdd.forEach(file => { const reader = new FileReader(); reader.onload = e => { p.gallery.push(e.target.result); saveProducts(); renderGalleryEditor(productId, p.gallery); renderAll(); }; reader.readAsDataURL(file); }); if (toAdd.length > 0) showNotification(`✅ ${toAdd.length} imágenes agregadas`, 'success'); input.value = ''; }
     
-    function updateProductImageFromEditor(productId, input) {
-        if (input.files && input.files[0]) {
-            uploadImage(input.files[0], (imgData) => {
-                const product = products.find(p => p.id === productId);
-                if (product) {
-                    product.image = imgData;
-                    saveProducts();
-                    renderAll();
-                    showNotification("Imagen actualizada", 'success');
-                }
-            });
-        }
-    }
-    
-    function addGalleryImagesFromFile(productId, input) {
-        const files = Array.from(input.files);
-        const product = products.find(p => p.id === productId);
-        if (!product) return;
-        if (!product.gallery) product.gallery = [];
-        const remaining = 20 - product.gallery.length;
-        const toAdd = files.slice(0, remaining);
-        toAdd.forEach(file => {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                product.gallery.push(e.target.result);
-                saveProducts();
-                renderGalleryEditor(productId, product.gallery);
-                renderAll();
-            };
-            reader.readAsDataURL(file);
-        });
-        if (files.length > remaining) showNotification(`⚠️ Solo se agregaron ${remaining} de ${files.length} imágenes (límite 20)`, 'warning');
-        else if (toAdd.length > 0) showNotification(`✅ ${toAdd.length} imágenes agregadas a la galería`, 'success');
-        input.value = '';
-    }
-    
-    function selectColor(productId, colorName, colorCode, index) { selectedColors[productId] = { name: colorName, code: colorCode, index: index }; renderProducts(); }
-    function addToCart(productId, productName, productPrice) { const selectedColor = selectedColors[productId]; if (!selectedColor) { showNotification("⚠️ Selecciona un color", 'warning'); return; } const product = products.find(p => p.id === productId); if (product.stock <= 0) { showNotification("❌ Producto agotado", 'error'); return; } const existing = cart.find(item => item.id === productId && item.color === selectedColor.name); if (existing) existing.quantity++; else cart.push({ id: productId, name: productName, color: selectedColor.name, price: productPrice, quantity: 1 }); saveCart(); updateCartUI(); product.stock--; product.sold = (product.sold || 0) + 1; saveProducts(); addSaleToHistory(productName, 1, productPrice); renderProducts(); if (isAdmin) updateDashboardStats(); showNotification(`${productName} agregado`, 'success'); }
-    function buyDirectWhatsApp(productId, productName, productPrice) { const selectedColor = selectedColors[productId]; if (!selectedColor) { showNotification("⚠️ Selecciona un color", 'warning'); return; } const product = products.find(p => p.id === productId); if (product.stock <= 0) { showNotification("❌ Producto agotado", 'error'); return; } const userName = currentUser ? currentUser.name : 'Invitado'; const msg = `🛍️ *COMPRA NF NEXUS*%0A👤 ${userName}%0A📦 ${productName}%0A🎨 ${selectedColor.name}%0A💰 $${productPrice.toLocaleString('es-CO')}%0A💵 Pago contraentrega`; window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, '_blank'); }
-    function updateCartUI() { const totalItems = cart.reduce((s,i) => s + i.quantity,0); document.getElementById('cartCount').innerText = totalItems; const cartDiv = document.getElementById('cartItems'); const footer = document.getElementById('cartFooter'); if (cart.length === 0) { cartDiv.innerHTML = '<div style="text-align:center;padding:25px;">🛒 Vacío</div>'; footer.style.display = 'none'; activeCoupon = null; return; } footer.style.display = 'block'; let html = '', subtotal = 0; cart.forEach((item,idx) => { const itemTotal = item.price * item.quantity; subtotal += itemTotal; html += `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #e5e7eb;"><div><strong>${item.name}</strong><br>🎨 ${item.color}<br>$${item.price.toLocaleString('es-CO')}</div><div><button onclick="updateQuantity(${idx},-1)" style="background:#ff6b35;color:white;border:none;width:24px;height:24px;border-radius:50%;cursor:pointer;">-</button><span style="margin:0 5px;">${item.quantity}</span><button onclick="updateQuantity(${idx},1)" style="background:#ff6b35;color:white;border:none;width:24px;height:24px;border-radius:50%;cursor:pointer;">+</button><button onclick="removeItem(${idx})" style="background:#ff2e2e;color:white;border:none;padding:2px 6px;border-radius:12px;margin-left:5px;cursor:pointer;">🗑️</button></div></div>`; }); cartDiv.innerHTML = html; const discount = calculateDiscount(subtotal); const total = subtotal - discount; document.getElementById('cartSubtotal').innerHTML = `$${subtotal.toLocaleString('es-CO')}`; if (discount > 0) { document.getElementById('discountRow').style.display = 'flex'; document.getElementById('discountAmount').innerHTML = `-$${discount.toLocaleString('es-CO')}`; } else document.getElementById('discountRow').style.display = 'none'; document.getElementById('cartTotal').innerHTML = `$${total.toLocaleString('es-CO')}`; }
-    function updateQuantity(idx, delta) { if (cart[idx]) { const newQty = cart[idx].quantity + delta; if (newQty <= 0) cart.splice(idx,1); else cart[idx].quantity = newQty; saveCart(); updateCartUI(); } }
+    function selectColor(productId, colorName, colorCode, index) { selectedColors[productId] = { name: colorName, code: colorCode, index }; renderProducts(); }
+    function addToCart(productId, productName, productPrice) { const sc = selectedColors[productId]; if (!sc) { showNotification("⚠️ Selecciona un color", 'warning'); return; } const p = products.find(p => p.id === productId); if (p.stock <= 0) { showNotification("❌ Agotado", 'error'); return; } const existing = cart.find(i => i.id === productId && i.color === sc.name); existing ? existing.quantity++ : cart.push({ id: productId, name: productName, color: sc.name, price: productPrice, quantity: 1 }); saveCart(); updateCartUI(); p.stock--; p.sold = (p.sold||0) + 1; saveProducts(); addSaleToHistory(productName, 1, productPrice); renderProducts(); if (isAdmin) updateDashboardStats(); showNotification(`${productName} agregado`, 'success'); }
+    function buyDirectWhatsApp(productId, productName, productPrice) { const sc = selectedColors[productId]; if (!sc) { showNotification("⚠️ Selecciona un color", 'warning'); return; } window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=🛍️ *COMPRA NF NEXUS*%0A👤 ${currentUser?currentUser.name:'Invitado'}%0A📦 ${productName}%0A🎨 ${sc.name}%0A💰 $${productPrice.toLocaleString('es-CO')}%0A💵 Pago contraentrega`, '_blank'); }
+    function updateCartUI() { document.getElementById('cartCount').innerText = cart.reduce((s,i) => s + i.quantity, 0); const cd = document.getElementById('cartItems'), ft = document.getElementById('cartFooter'); if (cart.length === 0) { cd.innerHTML = '<div style="text-align:center;padding:25px;">🛒 Vacío</div>'; ft.style.display = 'none'; activeCoupon = null; return; } ft.style.display = 'block'; let html = '', subtotal = 0; cart.forEach((item,idx) => { const it = item.price * item.quantity; subtotal += it; html += `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #e5e7eb;"><div><strong>${item.name}</strong><br>🎨 ${item.color}<br>$${item.price.toLocaleString('es-CO')}</div><div><button onclick="updateQuantity(${idx},-1)" style="background:#ff6b35;color:white;border:none;width:24px;height:24px;border-radius:50%;cursor:pointer;">-</button><span style="margin:0 5px;">${item.quantity}</span><button onclick="updateQuantity(${idx},1)" style="background:#ff6b35;color:white;border:none;width:24px;height:24px;border-radius:50%;cursor:pointer;">+</button><button onclick="removeItem(${idx})" style="background:#ff2e2e;color:white;border:none;padding:2px 6px;border-radius:12px;margin-left:5px;cursor:pointer;">🗑️</button></div></div>`; }); cd.innerHTML = html; const discount = calculateDiscount(subtotal), total = subtotal - discount; document.getElementById('cartSubtotal').innerHTML = `$${subtotal.toLocaleString('es-CO')}`; document.getElementById('discountRow').style.display = discount > 0 ? 'flex' : 'none'; if (discount > 0) document.getElementById('discountAmount').innerHTML = `-$${discount.toLocaleString('es-CO')}`; document.getElementById('cartTotal').innerHTML = `$${total.toLocaleString('es-CO')}`; }
+    function updateQuantity(idx, delta) { if (cart[idx]) { const nq = cart[idx].quantity + delta; nq <= 0 ? cart.splice(idx,1) : cart[idx].quantity = nq; saveCart(); updateCartUI(); } }
     function removeItem(idx) { cart.splice(idx,1); saveCart(); updateCartUI(); }
-    function checkout() { if (cart.length === 0) { showNotification("🛒 Carrito vacío", 'error'); return; } const subtotal = cart.reduce((s,i) => s + (i.price * i.quantity),0); const discount = calculateDiscount(subtotal); const total = subtotal - discount; const userName = currentUser ? currentUser.name : 'Invitado'; let msg = `🛒 *PEDIDO NF NEXUS*%0A👤 ${userName}%0A%0A`; cart.forEach(i => msg += `📦 ${i.name} - ${i.color} x${i.quantity} = $${(i.price * i.quantity).toLocaleString('es-CO')}%0A`); if (discount > 0) msg += `%0A💰 *DESCUENTO: -$${discount.toLocaleString('es-CO')}*%0A`; msg += `%0A💰 *TOTAL: $${total.toLocaleString('es-CO')}*%0A💵 Pago contraentrega`; if (activeCoupon) msg += `%0A🎫 Cupón: ${activeCoupon.code}`; window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, '_blank'); cart.forEach(i => addSaleToHistory(i.name, i.quantity, i.price * i.quantity)); cart = []; activeCoupon = null; saveCart(); updateCartUI(); closeCart(); if (isAdmin) updateDashboardStats(); showNotification('Pedido enviado', 'success'); }
+    function checkout() { if (cart.length === 0) { showNotification("🛒 Carrito vacío", 'error'); return; } const subtotal = cart.reduce((s,i) => s + (i.price * i.quantity),0), discount = calculateDiscount(subtotal), total = subtotal - discount; let msg = `🛒 *PEDIDO NF NEXUS*%0A👤 ${currentUser?currentUser.name:'Invitado'}%0A%0A`; cart.forEach(i => msg += `📦 ${i.name} - ${i.color} x${i.quantity} = $${(i.price*i.quantity).toLocaleString('es-CO')}%0A`); if (discount > 0) msg += `%0A💰 *DESCUENTO: -$${discount.toLocaleString('es-CO')}*%0A`; msg += `%0A💰 *TOTAL: $${total.toLocaleString('es-CO')}*%0A💵 Pago contraentrega`; window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, '_blank'); cart = []; activeCoupon = null; saveCart(); updateCartUI(); closeCart(); showNotification('Pedido enviado', 'success'); }
     function openCart() { document.getElementById('cartModal').classList.add('show'); document.getElementById('cartOverlay').classList.add('show'); }
     function closeCart() { document.getElementById('cartModal').classList.remove('show'); document.getElementById('cartOverlay').classList.remove('show'); }
-    function contactWhatsApp() { window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=¡Hola! Quiero más información.`, '_blank'); }
-    
-    const FACEBOOK_URL = "https://www.facebook.com/nfnexus", INSTAGRAM_URL = "https://www.instagram.com/nfnexus";
-    function openFacebook() { window.open(FACEBOOK_URL, '_blank'); }
-    function openInstagram() { window.open(INSTAGRAM_URL, '_blank'); }
+    function contactWhatsApp() { window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=¡Hola!`, '_blank'); }
+    function openFacebook() { window.open("https://www.facebook.com/nfnexus", '_blank'); }
+    function openInstagram() { window.open("https://www.instagram.com/nfnexus", '_blank'); }
     
     function filterProducts() { currentSearch = document.getElementById('searchInput').value.toLowerCase(); renderProducts(); }
     function handleSearchEnter(event) { if (event.key === 'Enter') { event.preventDefault(); filterProducts(); } }
-    function filterByCategory(cat) { currentCategory = cat; document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.cat === cat)); renderProducts(); }
-    function renderProducts() { let filtered = products.filter(p => currentCategory === 'todos' || p.category === currentCategory); if (currentSearch && currentSearch.trim() !== "") { const searchNorm = normalizeText(currentSearch); filtered = filtered.filter(p => normalizeText(p.name).includes(searchNorm) || normalizeText(p.category).includes(searchNorm)); } filtered = filtered.filter(p => p.price >= currentFilters.priceMin && p.price <= currentFilters.priceMax); if (currentRatingFilter > 0) filtered = filtered.filter(p => (p.rating || 4.5) >= currentRatingFilter); if (currentFilters.inStockOnly) filtered = filtered.filter(p => p.stock > 0); if (currentFilters.onSaleOnly) filtered = filtered.filter(p => p.price < p.oldPrice); const grid = document.getElementById('productGrid'); const noResults = document.getElementById('noResults'); if (filtered.length === 0) { grid.innerHTML = ''; noResults.style.display = 'block'; return; } noResults.style.display = 'none'; grid.innerHTML = filtered.map(p => { const currentSelected = selectedColors[p.id]; const discount = Math.round((1 - p.price / p.oldPrice) * 100); const stockClass = p.stock <= 0 ? 'out-stock' : (p.stock < 10 ? 'low-stock' : 'in-stock'); const stockText = p.stock <= 0 ? 'AGOTADO' : (p.stock < 10 ? `⚠️ ¡Últimas ${p.stock}!` : `${p.stock} disponibles`); const isInWishlist = wishlist.includes(p.id); return `<div class="product-card" onclick="openProductModal(${p.id})"><button class="wishlist-btn ${isInWishlist ? 'active' : ''}" onclick="event.stopPropagation(); toggleWishlist(${p.id})"><i class="fas fa-heart"></i></button><div class="badge">-${discount}%</div><div class="product-img">${p.image ? `<img src="${p.image}" alt="${p.name}">` : `<div class="no-img">${p.icon || '📦'}</div>`}</div><div class="product-info"><div class="product-title">${p.name}</div><div class="rating">${'★'.repeat(Math.floor(p.rating || 4.5))}${'☆'.repeat(5 - Math.floor(p.rating || 4.5))} ${p.rating || 4.5}</div><div class="price">$${p.price.toLocaleString('es-CO')}<span class="old-price">$${p.oldPrice.toLocaleString('es-CO')}</span></div><div class="stock ${stockClass}"><i class="fas fa-box"></i> ${stockText}</div>${p.stock <= 5 && p.stock > 0 ? `<div class="urgency-banner">⚠️ ¡Solo ${p.stock}!</div>` : ''}<div class="color-selector"><span style="color:#6b7280;font-size:0.6rem;"><i class="fas fa-palette"></i> Colores:</span><div class="color-options">${p.colors.map((c,idx) => `<div class="color-option ${currentSelected && currentSelected.index === idx ? 'selected' : ''}" style="background:${c.code}" onclick="event.stopPropagation(); selectColor(${p.id}, '${c.name}', '${c.code}', ${idx})" title="${c.name}"></div>`).join('')}</div></div><div class="button-group"><button class="btn-add" ${p.stock <= 0 ? 'disabled' : ''} onclick="event.stopPropagation(); addToCart(${p.id}, '${p.name.replace(/'/g,"\\'")}', ${p.price})"><i class="fas fa-cart-plus"></i> Carrito</button><button class="btn-whatsapp-product" ${p.stock <= 0 ? 'disabled' : ''} onclick="event.stopPropagation(); buyDirectWhatsApp(${p.id}, '${p.name.replace(/'/g,"\\'")}', ${p.price})"><i class="fab fa-whatsapp"></i> Comprar</button></div></div></div>`; }).join(''); }
-    function renderCategories() { const cats = [{ id:'todos', name:'Todos', icon:'📦' },{ id:'electronica', name:'Electrónica', icon:'📱' },{ id:'moda', name:'Moda', icon:'👕' },{ id:'hogar', name:'Hogar', icon:'🏠' },{ id:'accesorios', name:'Accesorios', icon:'🕶️' },{ id:'belleza', name:'Belleza', icon:'💄' }]; document.getElementById('categoriasContainer').innerHTML = cats.map(c => `<button class="cat-btn ${currentCategory === c.id ? 'active' : ''}" data-cat="${c.id}" onclick="filterByCategory('${c.id}')">${c.icon} ${c.name}</button>`).join(''); }
+    function filterByCategory(cat) { currentCategory = cat; document.querySelectorAll('.cat-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat)); renderProducts(); }
+    
+    // ===== RENDERIZAR PRODUCTOS CON CARRUSEL EN TARJETAS =====
+    function renderProducts() { 
+        let filtered = products.filter(p => currentCategory === 'todos' || p.category === currentCategory); 
+        if (currentSearch && currentSearch.trim() !== "") { 
+            const searchNorm = normalizeText(currentSearch); 
+            filtered = filtered.filter(p => normalizeText(p.name).includes(searchNorm) || normalizeText(p.category).includes(searchNorm)); 
+        } 
+        filtered = filtered.filter(p => p.price >= currentFilters.priceMin && p.price <= currentFilters.priceMax); 
+        if (currentRatingFilter > 0) filtered = filtered.filter(p => (p.rating || 4.5) >= currentRatingFilter); 
+        if (currentFilters.inStockOnly) filtered = filtered.filter(p => p.stock > 0); 
+        if (currentFilters.onSaleOnly) filtered = filtered.filter(p => p.price < p.oldPrice); 
+        const grid = document.getElementById('productGrid'), noResults = document.getElementById('noResults'); 
+        if (filtered.length === 0) { grid.innerHTML = ''; noResults.style.display = 'block'; return; } 
+        noResults.style.display = 'none'; 
+        grid.innerHTML = filtered.map(p => { 
+            const currentSelected = selectedColors[p.id]; 
+            const discount = Math.round((1 - p.price / p.oldPrice) * 100); 
+            const stockClass = p.stock <= 0 ? 'out-stock' : (p.stock < 10 ? 'low-stock' : 'in-stock'); 
+            const stockText = p.stock <= 0 ? 'AGOTADO' : (p.stock < 10 ? `⚠️ ¡Últimas ${p.stock}!` : `${p.stock} disponibles`); 
+            const isInWishlist = wishlist.includes(p.id); 
+            const allImages = []; if (p.image) allImages.push(p.image); if (p.gallery && p.gallery.length > 0) allImages.push(...p.gallery); 
+            const hasMultipleImages = allImages.length > 1, totalImages = allImages.length || 1;
+            const slidesHTML = allImages.length > 0 ? allImages.map(img => `<div class="product-card-slide"><img src="${img}" alt="${p.name}" loading="lazy"></div>`).join('') : `<div class="product-card-slide"><div class="no-img">${p.icon || '📦'}</div></div>`;
+            const dotsHTML = hasMultipleImages ? allImages.map((_, idx) => `<span class="card-dot ${idx===0?'active':''}" data-product="${p.id}" data-index="${idx}" onclick="event.stopPropagation();goToCardImage(${p.id},${idx})"></span>`).join('') : '';
+            return `<div class="product-card" onclick="openProductModal(${p.id})">
+                <button class="wishlist-btn ${isInWishlist?'active':''}" onclick="event.stopPropagation();toggleWishlist(${p.id})"><i class="fas fa-heart"></i></button>
+                <div class="badge">-${discount}%</div>
+                <div class="product-img" style="padding:0;"><div class="product-card-carousel">
+                    <div class="product-card-slides" id="cardSlides_${p.id}">${slidesHTML}</div>
+                    ${hasMultipleImages ? `<button class="card-carousel-btn card-carousel-prev" onclick="event.stopPropagation();navigateCardCarousel(${p.id},-1)">❮</button><button class="card-carousel-btn card-carousel-next" onclick="event.stopPropagation();navigateCardCarousel(${p.id},1)">❯</button><div class="card-image-counter" id="cardCounter_${p.id}">1/${totalImages}</div><div class="card-carousel-dots" id="cardDots_${p.id}">${dotsHTML}</div>` : ''}
+                </div></div>
+                <div class="product-info"><div class="product-title">${p.name}</div><div class="rating">${'★'.repeat(Math.floor(p.rating||4.5))}${'☆'.repeat(5-Math.floor(p.rating||4.5))} ${p.rating||4.5}</div><div class="price">$${p.price.toLocaleString('es-CO')}<span class="old-price">$${p.oldPrice.toLocaleString('es-CO')}</span></div><div class="stock ${stockClass}"><i class="fas fa-box"></i> ${stockText}</div>${p.stock<=5&&p.stock>0?`<div class="urgency-banner">⚠️ ¡Solo ${p.stock}!</div>`:''}<div class="color-selector"><span style="color:#6b7280;font-size:0.6rem;"><i class="fas fa-palette"></i> Colores:</span><div class="color-options">${p.colors.map((c,idx)=>`<div class="color-option ${currentSelected&&currentSelected.index===idx?'selected':''}" style="background:${c.code}" onclick="event.stopPropagation();selectColor(${p.id},'${c.name}','${c.code}',${idx})" title="${c.name}"></div>`).join('')}</div></div><div class="button-group"><button class="btn-add" ${p.stock<=0?'disabled':''} onclick="event.stopPropagation();addToCart(${p.id},'${p.name.replace(/'/g,"\\'")}',${p.price})"><i class="fas fa-cart-plus"></i> Carrito</button><button class="btn-whatsapp-product" ${p.stock<=0?'disabled':''} onclick="event.stopPropagation();buyDirectWhatsApp(${p.id},'${p.name.replace(/'/g,"\\'")}',${p.price})"><i class="fab fa-whatsapp"></i> Comprar</button></div></div>
+            </div>`; 
+        }).join(''); 
+    }
+    
+    function renderCategories() { document.getElementById('categoriasContainer').innerHTML = [{ id:'todos',name:'Todos',icon:'📦' },{ id:'electronica',name:'Electrónica',icon:'📱' },{ id:'moda',name:'Moda',icon:'👕' },{ id:'hogar',name:'Hogar',icon:'🏠' },{ id:'accesorios',name:'Accesorios',icon:'🕶️' },{ id:'belleza',name:'Belleza',icon:'💄' }].map(c => `<button class="cat-btn ${currentCategory===c.id?'active':''}" data-cat="${c.id}" onclick="filterByCategory('${c.id}')">${c.icon} ${c.name}</button>`).join(''); }
     function renderAll() { renderCategories(); renderProducts(); if (isAdmin) { updateDashboardStats(); renderAdminPanel(); } }
     
-    // ===== CARRUSEL DE IMÁGENES =====
-    let currentImageIndex = 0;
-    let currentProductImages = [];
-    let carouselSlides = null;
-    
+    // ===== CARRUSEL MODAL =====
+    let currentImageIndex = 0, currentProductImages = [], carouselSlides = null;
     function renderCarousel(images) {
         currentProductImages = images || [];
-        const slidesContainer = document.getElementById('carouselSlides');
-        const dotsContainer = document.getElementById('carouselDots');
-        const imageCounter = document.getElementById('imageCounter');
+        const slidesContainer = document.getElementById('carouselSlides'), dotsContainer = document.getElementById('carouselDots'), imageCounter = document.getElementById('imageCounter');
         if (!slidesContainer) return;
-        if (currentProductImages.length === 0) {
-            slidesContainer.innerHTML = `<div class="carousel-slide"><div class="no-img">📦</div></div>`;
-            dotsContainer.innerHTML = '';
-            imageCounter.innerText = '1/1';
-            return;
-        }
-        slidesContainer.innerHTML = currentProductImages.map((img, idx) => `<div class="carousel-slide"><img src="${img}" alt="Imagen ${idx + 1}" loading="lazy"></div>`).join('');
-        dotsContainer.innerHTML = currentProductImages.map((_, idx) => `<div class="carousel-dot ${idx === 0 ? 'active' : ''}" onclick="event.stopPropagation(); goToImage(${idx})"></div>`).join('');
-        imageCounter.innerText = `1/${currentProductImages.length}`;
-        currentImageIndex = 0;
+        if (currentProductImages.length === 0) { slidesContainer.innerHTML = `<div class="carousel-slide"><div class="no-img">📦</div></div>`; dotsContainer.innerHTML = ''; imageCounter.innerText = '1/1'; return; }
+        slidesContainer.innerHTML = currentProductImages.map((img, idx) => `<div class="carousel-slide"><img src="${img}" alt="Imagen ${idx+1}" loading="lazy"></div>`).join('');
+        dotsContainer.innerHTML = currentProductImages.map((_, idx) => `<div class="carousel-dot ${idx===0?'active':''}" onclick="event.stopPropagation();goToImage(${idx})"></div>`).join('');
+        imageCounter.innerText = `1/${currentProductImages.length}`; currentImageIndex = 0;
         if (slidesContainer) slidesContainer.scrollLeft = 0;
         if (carouselSlides) carouselSlides.removeEventListener('scroll', onCarouselScroll);
         carouselSlides = slidesContainer;
         if (carouselSlides) carouselSlides.addEventListener('scroll', onCarouselScroll);
     }
+    function onCarouselScroll() { if (!carouselSlides) return; const slideWidth = carouselSlides.clientWidth, newIndex = Math.round(carouselSlides.scrollLeft / slideWidth); if (newIndex !== currentImageIndex && newIndex >= 0 && newIndex < currentProductImages.length) { currentImageIndex = newIndex; document.querySelectorAll('.carousel-dot').forEach((d,i) => d.classList.toggle('active', i===currentImageIndex)); document.getElementById('imageCounter').innerText = `${currentImageIndex+1}/${currentProductImages.length}`; } }
+    function nextImage() { if (carouselSlides && currentProductImages.length > 0 && currentImageIndex < currentProductImages.length-1) carouselSlides.scrollTo({ left: (currentImageIndex+1)*carouselSlides.clientWidth, behavior: 'smooth' }); }
+    function previousImage() { if (carouselSlides && currentImageIndex > 0) carouselSlides.scrollTo({ left: (currentImageIndex-1)*carouselSlides.clientWidth, behavior: 'smooth' }); }
+    function goToImage(index) { if (carouselSlides && index >= 0 && index < currentProductImages.length) carouselSlides.scrollTo({ left: index*carouselSlides.clientWidth, behavior: 'smooth' }); }
     
-    function onCarouselScroll() {
-        if (!carouselSlides) return;
-        const slideWidth = carouselSlides.clientWidth;
-        const scrollPosition = carouselSlides.scrollLeft;
-        const newIndex = Math.round(scrollPosition / slideWidth);
-        if (newIndex !== currentImageIndex && newIndex >= 0 && newIndex < currentProductImages.length) {
-            currentImageIndex = newIndex;
-            const dots = document.querySelectorAll('.carousel-dot');
-            dots.forEach((dot, idx) => dot.classList.toggle('active', idx === currentImageIndex));
-            const imageCounter = document.getElementById('imageCounter');
-            if (imageCounter) imageCounter.innerText = `${currentImageIndex + 1}/${currentProductImages.length}`;
-        }
+    // ===== CARRUSEL EN TARJETAS =====
+    function navigateCardCarousel(productId, direction) {
+        const slides = document.getElementById(`cardSlides_${productId}`); if (!slides) return;
+        const slideWidth = slides.clientWidth, totalSlides = slides.children.length, currentIndex = Math.round(slides.scrollLeft / slideWidth);
+        let newIndex = currentIndex + direction;
+        if (newIndex < 0) newIndex = totalSlides - 1; if (newIndex >= totalSlides) newIndex = 0;
+        slides.scrollTo({ left: newIndex * slideWidth, behavior: 'smooth' });
+        document.getElementById(`cardCounter_${productId}`).innerText = `${newIndex+1}/${totalSlides}`;
+        updateCardDots(productId, newIndex);
     }
-    
-    function nextImage() { if (!carouselSlides || currentProductImages.length === 0) return; if (currentImageIndex < currentProductImages.length - 1) { const slideWidth = carouselSlides.clientWidth; carouselSlides.scrollTo({ left: (currentImageIndex + 1) * slideWidth, behavior: 'smooth' }); } }
-    function previousImage() { if (!carouselSlides || currentProductImages.length === 0) return; if (currentImageIndex > 0) { const slideWidth = carouselSlides.clientWidth; carouselSlides.scrollTo({ left: (currentImageIndex - 1) * slideWidth, behavior: 'smooth' }); } }
-    function goToImage(index) { if (!carouselSlides || currentProductImages.length === 0) return; if (index >= 0 && index < currentProductImages.length) { const slideWidth = carouselSlides.clientWidth; carouselSlides.scrollTo({ left: index * slideWidth, behavior: 'smooth' }); } }
+    function goToCardImage(productId, index) {
+        const slides = document.getElementById(`cardSlides_${productId}`); if (!slides) return;
+        slides.scrollTo({ left: index * slides.clientWidth, behavior: 'smooth' });
+        document.getElementById(`cardCounter_${productId}`).innerText = `${index+1}/${slides.children.length}`;
+        updateCardDots(productId, index);
+    }
+    function updateCardDots(productId, activeIndex) { document.querySelectorAll(`.card-dot[data-product="${productId}"]`).forEach((d,i) => d.classList.toggle('active', i===activeIndex)); }
+    document.addEventListener('scroll', function(e) { if (e.target.classList.contains('product-card-slides')) { const pid = parseInt(e.target.id.replace('cardSlides_','')), sw = e.target.clientWidth, ci = Math.round(e.target.scrollLeft / sw); document.getElementById(`cardCounter_${pid}`).innerText = `${ci+1}/${e.target.children.length}`; updateCardDots(pid, ci); } }, true);
     
     // ===== IMPORTAR EXCEL =====
     let pendingExcelData = [];
-    function previewExcelData(input) { const file = input.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = function(e) { const data = new Uint8Array(e.target.result); const workbook = XLSX.read(data, { type:'array' }); const firstSheet = workbook.Sheets[workbook.SheetNames[0]]; const rows = XLSX.utils.sheet_to_json(firstSheet); if (rows.length === 0) { showNotification("Excel vacío", 'error'); return; } pendingExcelData = rows; const previewDiv = document.getElementById('excelPreview'); const previewTable = document.getElementById('excelPreviewTable'); let tableHtml = '<table style="width:100%;border-collapse:collapse;color:inherit;font-size:0.6rem;"><tr style="background:rgba(255,107,53,0.1);">'; const allColumns = new Set(); rows.forEach(row => { Object.keys(row).forEach(key => allColumns.add(key)); }); const columns = Array.from(allColumns); columns.forEach(col => tableHtml += `<th style="padding:3px;border:1px solid #ff6b35;">${col}</th>`); tableHtml += '<th style="padding:3px;border:1px solid #ff6b35;">Estado</th>;</tr>'; rows.slice(0,5).forEach(row => { tableHtml += '<tr>'; columns.forEach(col => { const value = row[col] || ''; tableHtml += `<td style="padding:3px;border:1px solid #ddd;">${value.toString().substring(0,12)}${value.toString().length > 12 ? '...' : ''}</td>`; }); const name = row.nombre || row.name; const price = parseInt(row.precio || row.price) || 0; const isValid = name && price > 0; tableHtml += `<td style="padding:3px;border:1px solid #ddd;text-align:center;">${isValid ? '✅' : '❌'}</td></tr>`; }); if (rows.length > 5) tableHtml += `<tr><td colspan="${columns.length + 1}" style="padding:5px;text-align:center;">+${rows.length - 5} más</td></tr>`; tableHtml += '</table>'; previewTable.innerHTML = tableHtml; previewDiv.style.display = 'block'; }; reader.readAsArrayBuffer(file); }
-    function confirmImportExcel() { if (!pendingExcelData || pendingExcelData.length === 0) { showNotification("No hay datos", 'error'); return; } let importedCount = 0, skippedCount = 0; const validCategories = ['electronica','moda','hogar','accesorios','belleza']; for (const row of pendingExcelData) { const name = row.nombre || row.name; const price = parseInt(row.precio || row.price) || 0; if (!name || price <= 0) { skippedCount++; continue; } const oldPrice = parseInt(row.precio_anterior || row.oldPrice) || price * 2; const stock = parseInt(row.stock) || 10; let category = (row.categoria || row.category || "electronica").toLowerCase(); if (!validCategories.includes(category)) category = 'electronica'; let colors = []; const colorsStr = row.colores || row.colors || "Negro,#1a1a2e"; colorsStr.split(';').forEach(item => { const parts = item.split(/[:,]/); if (parts.length >= 2) { const colorName = parts[0].trim(); const colorCode = parts[1].trim(); if (colorName && colorCode) colors.push({ name: colorName, code: colorCode }); } }); if (colors.length === 0) colors.push({ name: "Negro", code: "#1a1a2e" }); const image = row.imagen_url || row.image || ""; products.push({ id: nextId++, name, price, oldPrice, stock, category, image, colors, sold: 0, rating: 5.0, icon: '📦' }); importedCount++; } saveProducts(); renderAll(); updateDashboardStats(); cancelImportExcel(); showNotification(`✅ ${importedCount} productos importados correctamente`, 'success'); if (skippedCount > 0) showNotification(`⚠️ ${skippedCount} filas omitidas por datos inválidos`, 'warning'); }
-    function cancelImportExcel() { pendingExcelData = []; document.getElementById('excelPreview').style.display = 'none'; document.getElementById('excelFile').value = ''; }
-    function downloadExcelTemplate() { const templateData = [["nombre","precio","precio_anterior","stock","categoria","colores","imagen_url"],["Audífonos Bluetooth","49900","129900","25","electronica","Negro:#1a1a2e;Blanco:#ffffff;Azul:#1e3a8a",""],["Camiseta Deportiva","28900","79900","42","moda","Negro:#1a1a2e;Blanco:#ffffff",""],["Lámpara LED","15900","45900","18","hogar","Blanco:#ffffff;Negro:#1a1a2e",""],["Set de Ollas","99900","249900","8","hogar","Rojo:#dc2626;Negro:#1a1a2e",""],["Cargador Rápido","19900","49900","65","electronica","Blanco:#ffffff;Negro:#1a1a2e",""]]; const ws = XLSX.utils.aoa_to_sheet(templateData); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Plantilla"); XLSX.writeFile(wb, "plantilla_productos_nfnexus.xlsx"); showNotification('Plantilla descargada', 'success'); }
+    function previewExcelData(input) { const file = input.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = function(e) { const data = new Uint8Array(e.target.result), workbook = XLSX.read(data, { type:'array' }), rows = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]); if (rows.length===0) { showNotification("Excel vacío",'error'); return; } pendingExcelData = rows; const previewDiv = document.getElementById('excelPreview'), previewTable = document.getElementById('excelPreviewTable'), allColumns = new Set(); rows.forEach(row => Object.keys(row).forEach(key => allColumns.add(key))); const columns = Array.from(allColumns); let tableHtml = '<table style="width:100%;border-collapse:collapse;font-size:0.6rem;"><tr style="background:rgba(255,107,53,0.1);">'; columns.forEach(col => tableHtml += `<th style="padding:3px;border:1px solid #ff6b35;">${col}</th>`); tableHtml += '<th style="padding:3px;border:1px solid #ff6b35;">Estado</th></tr>'; rows.slice(0,5).forEach(row => { tableHtml += '<tr>'; columns.forEach(col => { const value = row[col]||''; tableHtml += `<td style="padding:3px;border:1px solid #ddd;">${value.toString().substring(0,12)}</td>`; }); const name = row.nombre||row.name, price = parseInt(row.precio||row.price)||0; tableHtml += `<td style="padding:3px;text-align:center;">${name&&price>0?'✅':'❌'}</td></tr>`; }); if (rows.length>5) tableHtml += `<tr><td colspan="${columns.length+1}" style="padding:5px;text-align:center;">+${rows.length-5} más</td></tr>`; tableHtml += '</table>'; previewTable.innerHTML = tableHtml; previewDiv.style.display = 'block'; }; reader.readAsArrayBuffer(file); }
+    function confirmImportExcel() { if (!pendingExcelData||pendingExcelData.length===0) { showNotification("No hay datos",'error'); return; } let imported=0, skipped=0; const validCategories=['electronica','moda','hogar','accesorios','belleza']; for (const row of pendingExcelData) { const name=row.nombre||row.name, price=parseInt(row.precio||row.price)||0; if(!name||price<=0){skipped++;continue;} const oldPrice=parseInt(row.precio_anterior||row.oldPrice)||price*2, stock=parseInt(row.stock)||10; let category=(row.categoria||row.category||"electronica").toLowerCase(); if(!validCategories.includes(category))category='electronica'; let colors=[]; (row.colores||row.colors||"Negro,#1a1a2e").split(';').forEach(item=>{const parts=item.split(/[:,]/);if(parts.length>=2){const cn=parts[0].trim(),cc=parts[1].trim();if(cn&&cc)colors.push({name:cn,code:cc});}}); if(colors.length===0)colors.push({name:"Negro",code:"#1a1a2e"}); products.push({id:nextId++,name,price,oldPrice,stock,category,image:row.imagen_url||row.image||"",colors,sold:0,rating:5.0,icon:'📦'}); imported++; } saveProducts(); renderAll(); updateDashboardStats(); cancelImportExcel(); showNotification(`✅ ${imported} importados`, 'success'); if(skipped>0)showNotification(`⚠️ ${skipped} omitidos`, 'warning'); }
+    function cancelImportExcel() { pendingExcelData=[]; document.getElementById('excelPreview').style.display='none'; document.getElementById('excelFile').value=''; }
+    function downloadExcelTemplate() { const ws=XLSX.utils.aoa_to_sheet([["nombre","precio","precio_anterior","stock","categoria","colores","imagen_url"],["Audífonos","49900","129900","25","electronica","Negro:#1a1a2e;Blanco:#ffffff",""],["Camiseta","28900","79900","42","moda","Negro:#1a1a2e",""]]); const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,"Plantilla"); XLSX.writeFile(wb,"plantilla_nfnexus.xlsx"); }
     
-    // ===== FUNCIONES DE PEGADO =====
-    function focusPaste() { pendingPasteInput = 'new'; alert("📸 Pega la imagen (Ctrl+V) para la imagen principal"); }
-    function focusEditPaste(productId) { pendingPasteInput = 'edit_' + productId; alert("📸 Pega la imagen (Ctrl+V) para la imagen principal de este producto"); }
-    
+    function focusPaste() { pendingPasteInput='new'; alert("📸 Pega la imagen (Ctrl+V)"); }
+    function focusEditPaste(productId) { pendingPasteInput='edit_'+productId; alert("📸 Pega la imagen (Ctrl+V)"); }
     function setupPasteListener() {
         document.addEventListener('paste', function(e) {
-            if (pendingPasteInput === 'new') {
-                const items = e.clipboardData.items;
-                for (let i = 0; i < items.length; i++) {
-                    if (items[i].type.indexOf('image') !== -1) {
-                        const blob = items[i].getAsFile();
-                        const reader = new FileReader();
-                        reader.onload = function(event) {
-                            document.getElementById('newImagePreview').src = event.target.result;
-                            document.getElementById('newImagePreview').style.display = 'block';
-                            window.pastedImageData = event.target.result;
-                            showNotification("✅ Imagen principal pegada", 'success');
-                        };
-                        reader.readAsDataURL(blob);
+            const items = e.clipboardData.items;
+            for (let i = 0; i < items.length; i++) {
+                if (items[i].type.indexOf('image') !== -1) {
+                    const blob = items[i].getAsFile(), reader = new FileReader();
+                    reader.onload = function(event) {
+                        if (pendingPasteInput === 'new') { document.getElementById('newImagePreview').src = event.target.result; document.getElementById('newImagePreview').style.display = 'block'; window.pastedImageData = event.target.result; showNotification("✅ Imagen pegada", 'success'); }
+                        else if (pendingPasteInput && pendingPasteInput.startsWith('edit_')) { const pid = parseInt(pendingPasteInput.split('_')[1]), p = products.find(p => p.id === pid); if (p) { p.image = event.target.result; saveProducts(); renderAll(); showNotification("✅ Imagen actualizada", 'success'); } }
+                        else if (pendingPasteInput === 'gallery') { if (tempGalleryImages.length < 20) { tempGalleryImages.push(event.target.result); addGalleryThumb(event.target.result, tempGalleryImages.length-1); showNotification(`✅ Imagen ${tempGalleryImages.length}/20`, 'success'); } else showNotification("⚠️ Límite 20", 'warning'); }
+                        else if (pendingPasteInput && pendingPasteInput.startsWith('edit_gallery_')) { const pid = parseInt(pendingPasteInput.split('_')[2]), p = products.find(p => p.id === pid); if (p) { if (!p.gallery) p.gallery = []; if (p.gallery.length < 20) { p.gallery.push(event.target.result); saveProducts(); renderGalleryEditor(pid, p.gallery); renderAll(); showNotification(`✅ Imagen ${p.gallery.length}/20`, 'success'); } else showNotification("⚠️ Límite 20", 'warning'); } }
                         pendingPasteInput = null;
-                        return;
-                    }
+                    };
+                    reader.readAsDataURL(blob);
+                    return;
                 }
-                showNotification("No se encontró imagen en el portapapeles", 'error');
-                pendingPasteInput = null;
-            }
-            else if (pendingPasteInput && pendingPasteInput.startsWith('edit_')) {
-                const productId = parseInt(pendingPasteInput.split('_')[1]);
-                const items = e.clipboardData.items;
-                for (let i = 0; i < items.length; i++) {
-                    if (items[i].type.indexOf('image') !== -1) {
-                        const blob = items[i].getAsFile();
-                        const reader = new FileReader();
-                        reader.onload = function(event) {
-                            const product = products.find(p => p.id === productId);
-                            if (product) {
-                                product.image = event.target.result;
-                                saveProducts();
-                                renderAll();
-                                showNotification("✅ Imagen pegada y guardada", 'success');
-                            }
-                        };
-                        reader.readAsDataURL(blob);
-                        pendingPasteInput = null;
-                        return;
-                    }
-                }
-                showNotification("No se encontró imagen", 'error');
-                pendingPasteInput = null;
-            }
-            else if (pendingPasteInput === 'gallery') {
-                const items = e.clipboardData.items;
-                for (let i = 0; i < items.length; i++) {
-                    if (items[i].type.indexOf('image') !== -1) {
-                        const blob = items[i].getAsFile();
-                        const reader = new FileReader();
-                        reader.onload = function(event) {
-                            const imageData = event.target.result;
-                            if (tempGalleryImages.length < 20) {
-                                tempGalleryImages.push(imageData);
-                                addGalleryThumb(imageData, tempGalleryImages.length - 1);
-                                showNotification(`✅ Imagen pegada en galería (${tempGalleryImages.length}/20)`, 'success');
-                            } else {
-                                showNotification("⚠️ Límite de 20 imágenes alcanzado", 'warning');
-                            }
-                        };
-                        reader.readAsDataURL(blob);
-                        pendingPasteInput = null;
-                        return;
-                    }
-                }
-                showNotification("No se encontró imagen en el portapapeles", 'error');
-                pendingPasteInput = null;
-            }
-            else if (pendingPasteInput && pendingPasteInput.startsWith('edit_gallery_')) {
-                const productId = parseInt(pendingPasteInput.split('_')[2]);
-                const items = e.clipboardData.items;
-                for (let i = 0; i < items.length; i++) {
-                    if (items[i].type.indexOf('image') !== -1) {
-                        const blob = items[i].getAsFile();
-                        const reader = new FileReader();
-                        reader.onload = function(event) {
-                            const product = products.find(p => p.id === productId);
-                            if (product) {
-                                if (!product.gallery) product.gallery = [];
-                                if (product.gallery.length < 20) {
-                                    product.gallery.push(event.target.result);
-                                    saveProducts();
-                                    renderGalleryEditor(productId, product.gallery);
-                                    renderAll();
-                                    showNotification(`✅ Imagen pegada en galería (${product.gallery.length}/20)`, 'success');
-                                } else {
-                                    showNotification("⚠️ Límite de 20 imágenes alcanzado", 'warning');
-                                }
-                            }
-                        };
-                        reader.readAsDataURL(blob);
-                        pendingPasteInput = null;
-                        return;
-                    }
-                }
-                showNotification("No se encontró imagen", 'error');
-                pendingPasteInput = null;
             }
         });
     }
-    
-    function previewNewImage(input) { if (input.files && input.files[0]) { const reader = new FileReader(); reader.onload = function(e) { document.getElementById('newImagePreview').src = e.target.result; document.getElementById('newImagePreview').style.display = 'block'; window.pastedImageData = null; }; reader.readAsDataURL(input.files[0]); } }
-    function previewImage(input, previewId) { if (input.files && input.files[0]) { const reader = new FileReader(); reader.onload = function(e) { document.getElementById(previewId).src = e.target.result; document.getElementById(previewId).style.display = 'block'; }; reader.readAsDataURL(input.files[0]); } }
-    function deleteImage(productId) { const product = products.find(p => p.id === productId); if (product) { product.image = ""; saveProducts(); renderAll(); showNotification("✅ Imagen eliminada", 'info'); } }
+    function previewNewImage(input) { if (input.files && input.files[0]) { const reader = new FileReader(); reader.onload = e => { document.getElementById('newImagePreview').src = e.target.result; document.getElementById('newImagePreview').style.display = 'block'; window.pastedImageData = null; }; reader.readAsDataURL(input.files[0]); } }
+    function previewImage(input, previewId) { if (input.files && input.files[0]) { const reader = new FileReader(); reader.onload = e => { const img = document.getElementById(previewId); if (img) { img.src = e.target.result; img.style.display = 'block'; } }; reader.readAsDataURL(input.files[0]); } }
+    function deleteImage(productId) { const p = products.find(p => p.id === productId); if (p) { p.image = ""; saveProducts(); renderAll(); showNotification("✅ Imagen eliminada", 'info'); } }
     
     let currentModalProduct = null, modalSelectedColor = null;
     function openProductModal(productId) {
-        const product = products.find(p => p.id === productId);
-        if (!product) return;
-        currentModalProduct = product;
-        addToRecentViews(product);
-        const savedColor = selectedColors[productId];
-        modalSelectedColor = savedColor || (product.colors[0] ? { name: product.colors[0].name, code: product.colors[0].code, index: 0 } : null);
+        const product = products.find(p => p.id === productId); if (!product) return;
+        currentModalProduct = product; addToRecentViews(product);
+        modalSelectedColor = selectedColors[productId] || (product.colors[0] ? { name: product.colors[0].name, code: product.colors[0].code, index: 0 } : null);
         document.getElementById('modalProductName').innerText = product.name;
-        const rating = product.rating || 4.5;
-        document.getElementById('modalProductRating').innerHTML = `${'★'.repeat(Math.floor(rating))}${'☆'.repeat(5 - Math.floor(rating))} ${rating}`;
-        const discount = Math.round((1 - product.price / product.oldPrice) * 100);
-        document.getElementById('modalProductPrice').innerHTML = `<span class="current-price">$${product.price.toLocaleString('es-CO')}</span><span class="old-price">$${product.oldPrice.toLocaleString('es-CO')}</span><span class="discount-badge">-${discount}%</span>`;
-        const stockClass = product.stock <= 0 ? 'out-stock' : (product.stock < 10 ? 'low-stock' : 'in-stock');
-        const stockText = product.stock <= 0 ? '❌ AGOTADO' : (product.stock < 10 ? `⚠️ ¡Últimas ${product.stock}!` : `✅ ${product.stock} disponibles`);
-        const stockElem = document.getElementById('modalProductStock');
-        stockElem.className = `product-modal-stock ${stockClass}`;
-        stockElem.innerText = stockText;
-        document.getElementById('modalProductSold').innerHTML = `<i class="fas fa-chart-line"></i> ${product.sold || 0}+ vendidos`;
+        document.getElementById('modalProductRating').innerHTML = `${'★'.repeat(Math.floor(product.rating||4.5))}${'☆'.repeat(5-Math.floor(product.rating||4.5))} ${product.rating||4.5}`;
+        document.getElementById('modalProductPrice').innerHTML = `<span class="current-price">$${product.price.toLocaleString('es-CO')}</span><span class="old-price">$${product.oldPrice.toLocaleString('es-CO')}</span><span class="discount-badge">-${Math.round((1-product.price/product.oldPrice)*100)}%</span>`;
+        const sc = product.stock <= 0 ? 'out-stock' : (product.stock < 10 ? 'low-stock' : 'in-stock'), st = product.stock <= 0 ? '❌ AGOTADO' : (product.stock < 10 ? `⚠️ ¡Últimas ${product.stock}!` : `✅ ${product.stock} disponibles`);
+        document.getElementById('modalProductStock').className = `product-modal-stock ${sc}`; document.getElementById('modalProductStock').innerText = st;
+        document.getElementById('modalProductSold').innerHTML = `<i class="fas fa-chart-line"></i> ${product.sold||0}+ vendidos`;
         document.getElementById('modalProductCategory').innerHTML = `<i class="fas fa-tag"></i> ${product.category}`;
-        const allImages = [];
-        if (product.image) allImages.push(product.image);
-        if (product.gallery && product.gallery.length > 0) allImages.push(...product.gallery);
+        const allImages = []; if (product.image) allImages.push(product.image); if (product.gallery) allImages.push(...product.gallery);
         renderCarousel(allImages);
-        const colorsContainer = document.getElementById('modalProductColors');
-        colorsContainer.innerHTML = product.colors.map((c, idx) => `<div class="modal-color-option ${modalSelectedColor && modalSelectedColor.index === idx ? 'selected' : ''}" style="background: ${c.code}" onclick="selectModalColor(${product.id}, '${c.name}', '${c.code}', ${idx})" title="${c.name}"></div>`).join('');
-        const addToCartBtn = document.getElementById('modalAddToCartBtn');
-        const buyNowBtn = document.getElementById('modalBuyNowBtn');
-        if (product.stock <= 0) { addToCartBtn.disabled = true; buyNowBtn.disabled = true; } else { addToCartBtn.disabled = false; buyNowBtn.disabled = false; }
-        document.getElementById('productModalOverlay').classList.add('show');
-        document.getElementById('productModal').classList.add('show');
+        document.getElementById('modalProductColors').innerHTML = product.colors.map((c, idx) => `<div class="modal-color-option ${modalSelectedColor&&modalSelectedColor.index===idx?'selected':''}" style="background:${c.code}" onclick="selectModalColor(${product.id},'${c.name}','${c.code}',${idx})" title="${c.name}"></div>`).join('');
+        const atc = document.getElementById('modalAddToCartBtn'), bn = document.getElementById('modalBuyNowBtn');
+        atc.disabled = bn.disabled = product.stock <= 0;
+        document.getElementById('productModalOverlay').classList.add('show'); document.getElementById('productModal').classList.add('show');
     }
-    
-    function closeProductModal() {
-        document.getElementById('productModalOverlay').classList.remove('show');
-        document.getElementById('productModal').classList.remove('show');
-        currentModalProduct = null;
-        modalSelectedColor = null;
-        if (carouselSlides) { carouselSlides.removeEventListener('scroll', onCarouselScroll); carouselSlides = null; }
-    }
-    
-    function selectModalColor(productId, colorName, colorCode, index) { modalSelectedColor = { name: colorName, code: colorCode, index: index }; selectedColors[productId] = modalSelectedColor; document.querySelectorAll('.modal-color-option').forEach((opt,i) => { if (i === index) opt.classList.add('selected'); else opt.classList.remove('selected'); }); renderProducts(); }
-    function modalAddToCart() { if (!currentModalProduct) return; if (!modalSelectedColor) { showNotification("⚠️ Selecciona un color", 'warning'); return; } if (currentModalProduct.stock <= 0) { showNotification("❌ Producto agotado", 'error'); return; } addToCart(currentModalProduct.id, currentModalProduct.name, currentModalProduct.price); closeProductModal(); }
-    function modalBuyNow() { if (!currentModalProduct) return; if (!modalSelectedColor) { showNotification("⚠️ Selecciona un color", 'warning'); return; } if (currentModalProduct.stock <= 0) { showNotification("❌ Producto agotado", 'error'); return; } buyDirectWhatsApp(currentModalProduct.id, currentModalProduct.name, currentModalProduct.price); closeProductModal(); }
+    function closeProductModal() { document.getElementById('productModalOverlay').classList.remove('show'); document.getElementById('productModal').classList.remove('show'); currentModalProduct = null; modalSelectedColor = null; if (carouselSlides) { carouselSlides.removeEventListener('scroll', onCarouselScroll); carouselSlides = null; } }
+    function selectModalColor(productId, colorName, colorCode, index) { modalSelectedColor = { name: colorName, code: colorCode, index }; selectedColors[productId] = modalSelectedColor; document.querySelectorAll('.modal-color-option').forEach((o,i) => o.classList.toggle('selected', i===index)); renderProducts(); }
+    function modalAddToCart() { if (!currentModalProduct || !modalSelectedColor) { showNotification("⚠️ Selecciona un color", 'warning'); return; } if (currentModalProduct.stock <= 0) { showNotification("❌ Agotado", 'error'); return; } addToCart(currentModalProduct.id, currentModalProduct.name, currentModalProduct.price); closeProductModal(); }
+    function modalBuyNow() { if (!currentModalProduct || !modalSelectedColor) { showNotification("⚠️ Selecciona un color", 'warning'); return; } if (currentModalProduct.stock <= 0) { showNotification("❌ Agotado", 'error'); return; } buyDirectWhatsApp(currentModalProduct.id, currentModalProduct.name, currentModalProduct.price); closeProductModal(); }
     
     loadProducts(); loadCart(); loadWishlist(); loadRecentViews(); loadTheme(); renderAll(); setupPasteListener(); autoBackup();
     
-    // Actualización automática cada 30 segundos
-    setInterval(async () => {
-        try {
-            const response = await fetch(`${API_URL}?action=getProducts`);
-            const result = await response.json();
-            if (result.success && result.data) {
-                const apiProducts = result.data;
-                if (JSON.stringify(apiProducts) !== JSON.stringify(products)) {
-                    products = apiProducts;
-                    renderProducts();
-                }
-            }
-        } catch(e) {}
-    }, 30000);
+    setInterval(async () => { try { const r = await fetch(`${API_URL}?action=getProducts`); const d = await r.json(); if (d.success && d.data && JSON.stringify(d.data) !== JSON.stringify(products)) { products = d.data; renderProducts(); } } catch(e) {} }, 30000);
     
-    window.openLoginModal = openLoginModal; window.closeLoginModal = closeLoginModal; window.registerUser = registerUser; window.continueAsGuest = continueAsGuest; window.logout = logout; window.secretAdminAttempt = secretAdminAttempt; window.closeSecretModal = closeSecretModal; window.loginAsAdminFromSecret = loginAsAdminFromSecret; window.goToAdminFromStore = goToAdminFromStore; window.openAdminDashboard = openAdminDashboard; window.closeAdminDashboard = closeAdminDashboard; window.addNewProduct = addNewProduct; window.deleteProduct = deleteProduct; window.updateProduct = updateProduct; window.updateProductImage = updateProductImage; window.updateProductGallery = updateProductGallery; window.addColor = addColor; window.removeColor = removeColor; window.selectColor = selectColor; window.addToCart = addToCart; window.buyDirectWhatsApp = buyDirectWhatsApp; window.updateQuantity = updateQuantity; window.removeItem = removeItem; window.checkout = checkout; window.openCart = openCart; window.closeCart = closeCart; window.filterProducts = filterProducts; window.filterByCategory = filterByCategory; window.handleSearchEnter = handleSearchEnter; window.contactWhatsApp = contactWhatsApp; window.handleLoginEnter = handleLoginEnter; window.previewExcelData = previewExcelData; window.confirmImportExcel = confirmImportExcel; window.cancelImportExcel = cancelImportExcel; window.downloadExcelTemplate = downloadExcelTemplate; window.openFacebook = openFacebook; window.openInstagram = openInstagram; window.openProductModal = openProductModal; window.closeProductModal = closeProductModal; window.selectModalColor = selectModalColor; window.modalAddToCart = modalAddToCart; window.modalBuyNow = modalBuyNow; window.previewNewImage = previewNewImage; window.previewImage = previewImage; window.deleteImage = deleteImage; window.focusPaste = focusPaste; window.focusEditPaste = focusEditPaste; window.focusGalleryPaste = focusGalleryPaste; window.focusEditGalleryPaste = focusEditGalleryPaste; window.addNewColorField = addNewColorField; window.removeNewColor = removeNewColor; window.toggleTheme = toggleTheme; window.openWishlist = openWishlist; window.closeWishlist = closeWishlist; window.toggleWishlist = toggleWishlist; window.applyCoupon = applyCoupon; window.subscribeNewsletter = subscribeNewsletter; window.scrollToTop = scrollToTop; window.exportSalesReport = exportSalesReport; window.applyFilters = applyFilters; window.setRatingFilter = setRatingFilter; window.clearFilters = clearFilters; window.previewGalleryImages = previewGalleryImages; window.addGalleryImagesFromFile = addGalleryImagesFromFile; window.nextImage = nextImage; window.previousImage = previousImage; window.goToImage = goToImage; window.toggleFilters = toggleFilters; window.saveAllProductChanges = saveAllProductChanges; window.updateProductImageFromEditor = updateProductImageFromEditor;
+    // Exponer funciones globales
+    window.openLoginModal=openLoginModal;window.closeLoginModal=closeLoginModal;window.registerUser=registerUser;window.continueAsGuest=continueAsGuest;window.logout=logout;window.secretAdminAttempt=secretAdminAttempt;window.closeSecretModal=closeSecretModal;window.loginAsAdminFromSecret=loginAsAdminFromSecret;window.goToAdminFromStore=goToAdminFromStore;window.openAdminDashboard=openAdminDashboard;window.closeAdminDashboard=closeAdminDashboard;window.addNewProduct=addNewProduct;window.deleteProduct=deleteProduct;window.updateProduct=updateProduct;window.updateProductImage=updateProductImage;window.addColor=addColor;window.removeColor=removeColor;window.selectColor=selectColor;window.addToCart=addToCart;window.buyDirectWhatsApp=buyDirectWhatsApp;window.updateQuantity=updateQuantity;window.removeItem=removeItem;window.checkout=checkout;window.openCart=openCart;window.closeCart=closeCart;window.filterProducts=filterProducts;window.filterByCategory=filterByCategory;window.handleSearchEnter=handleSearchEnter;window.contactWhatsApp=contactWhatsApp;window.handleLoginEnter=handleLoginEnter;window.previewExcelData=previewExcelData;window.confirmImportExcel=confirmImportExcel;window.cancelImportExcel=cancelImportExcel;window.downloadExcelTemplate=downloadExcelTemplate;window.openFacebook=openFacebook;window.openInstagram=openInstagram;window.openProductModal=openProductModal;window.closeProductModal=closeProductModal;window.selectModalColor=selectModalColor;window.modalAddToCart=modalAddToCart;window.modalBuyNow=modalBuyNow;window.previewNewImage=previewNewImage;window.previewImage=previewImage;window.deleteImage=deleteImage;window.focusPaste=focusPaste;window.focusEditPaste=focusEditPaste;window.focusGalleryPaste=focusGalleryPaste;window.focusEditGalleryPaste=focusEditGalleryPaste;window.addNewColorField=addNewColorField;window.removeNewColor=removeNewColor;window.toggleTheme=toggleTheme;window.openWishlist=openWishlist;window.closeWishlist=closeWishlist;window.toggleWishlist=toggleWishlist;window.applyCoupon=applyCoupon;window.subscribeNewsletter=subscribeNewsletter;window.scrollToTop=scrollToTop;window.exportSalesReport=exportSalesReport;window.applyFilters=applyFilters;window.setRatingFilter=setRatingFilter;window.clearFilters=clearFilters;window.previewGalleryImages=previewGalleryImages;window.addGalleryImagesFromFile=addGalleryImagesFromFile;window.nextImage=nextImage;window.previousImage=previousImage;window.goToImage=goToImage;window.toggleFilters=toggleFilters;window.saveAllProductChanges=saveAllProductChanges;window.updateProductImageFromEditor=updateProductImageFromEditor;window.removeGalleryImage=removeGalleryImage;window.navigateCardCarousel=navigateCardCarousel;window.goToCardImage=goToCardImage;
 </script>
 </body>
 </html>
