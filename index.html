@@ -1330,7 +1330,114 @@
     function filterProducts() { currentSearch = document.getElementById('searchInput').value.toLowerCase(); renderProducts(); }
     function handleSearchEnter(event) { if (event.key === 'Enter') { event.preventDefault(); filterProducts(); } }
     function filterByCategory(cat) { currentCategory = cat; document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.cat === cat)); renderProducts(); }
-    function renderProducts() { let filtered = products.filter(p => currentCategory === 'todos' || p.category === currentCategory); if (currentSearch && currentSearch.trim() !== "") { const searchNorm = normalizeText(currentSearch); filtered = filtered.filter(p => normalizeText(p.name).includes(searchNorm) || normalizeText(p.category).includes(searchNorm)); } filtered = filtered.filter(p => p.price >= currentFilters.priceMin && p.price <= currentFilters.priceMax); if (currentRatingFilter > 0) filtered = filtered.filter(p => (p.rating || 4.5) >= currentRatingFilter); if (currentFilters.inStockOnly) filtered = filtered.filter(p => p.stock > 0); if (currentFilters.onSaleOnly) filtered = filtered.filter(p => p.price < p.oldPrice); const grid = document.getElementById('productGrid'); const noResults = document.getElementById('noResults'); if (filtered.length === 0) { grid.innerHTML = ''; noResults.style.display = 'block'; return; } noResults.style.display = 'none'; grid.innerHTML = filtered.map(p => { const currentSelected = selectedColors[p.id]; const discount = Math.round((1 - p.price / p.oldPrice) * 100); const stockClass = p.stock <= 0 ? 'out-stock' : (p.stock < 10 ? 'low-stock' : 'in-stock'); const stockText = p.stock <= 0 ? 'AGOTADO' : (p.stock < 10 ? `⚠️ ¡Últimas ${p.stock}!` : `${p.stock} disponibles`); const isInWishlist = wishlist.includes(p.id); return `<div class="product-card" onclick="openProductModal(${p.id})"><button class="wishlist-btn ${isInWishlist ? 'active' : ''}" onclick="event.stopPropagation(); toggleWishlist(${p.id})"><i class="fas fa-heart"></i></button><div class="badge">-${discount}%</div><div class="product-img">${p.image ? `<img src="${p.image}" alt="${p.name}">` : `<div class="no-img">${p.icon || '📦'}</div>`}</div><div class="product-info"><div class="product-title">${p.name}</div><div class="rating">${'★'.repeat(Math.floor(p.rating || 4.5))}${'☆'.repeat(5 - Math.floor(p.rating || 4.5))} ${p.rating || 4.5}</div><div class="price">$${p.price.toLocaleString('es-CO')}<span class="old-price">$${p.oldPrice.toLocaleString('es-CO')}</span></div><div class="stock ${stockClass}"><i class="fas fa-box"></i> ${stockText}</div>${p.stock <= 5 && p.stock > 0 ? `<div class="urgency-banner">⚠️ ¡Solo ${p.stock}!</div>` : ''}<div class="color-selector"><span style="color:#6b7280;font-size:0.6rem;"><i class="fas fa-palette"></i> Colores:</span><div class="color-options">${p.colors.map((c,idx) => `<div class="color-option ${currentSelected && currentSelected.index === idx ? 'selected' : ''}" style="background:${c.code}" onclick="event.stopPropagation(); selectColor(${p.id}, '${c.name}', '${c.code}', ${idx})" title="${c.name}"></div>`).join('')}</div></div><div class="button-group"><button class="btn-add" ${p.stock <= 0 ? 'disabled' : ''} onclick="event.stopPropagation(); addToCart(${p.id}, '${p.name.replace(/'/g,"\\'")}', ${p.price})"><i class="fas fa-cart-plus"></i> Carrito</button><button class="btn-whatsapp-product" ${p.stock <= 0 ? 'disabled' : ''} onclick="event.stopPropagation(); buyDirectWhatsApp(${p.id}, '${p.name.replace(/'/g,"\\'")}', ${p.price})"><i class="fab fa-whatsapp"></i> Comprar</button></div></div></div>`; }).join(''); }
+    
+    // ===== RENDERPRODUCTS CON CARRUSEL EN TARJETAS =====
+    function renderProducts() { 
+        let filtered = products.filter(p => currentCategory === 'todos' || p.category === currentCategory); 
+        if (currentSearch && currentSearch.trim() !== "") { 
+            const searchNorm = normalizeText(currentSearch); 
+            filtered = filtered.filter(p => normalizeText(p.name).includes(searchNorm) || normalizeText(p.category).includes(searchNorm)); 
+        } 
+        filtered = filtered.filter(p => p.price >= currentFilters.priceMin && p.price <= currentFilters.priceMax); 
+        if (currentRatingFilter > 0) filtered = filtered.filter(p => (p.rating || 4.5) >= currentRatingFilter); 
+        if (currentFilters.inStockOnly) filtered = filtered.filter(p => p.stock > 0); 
+        if (currentFilters.onSaleOnly) filtered = filtered.filter(p => p.price < p.oldPrice); 
+        const grid = document.getElementById('productGrid'); 
+        const noResults = document.getElementById('noResults'); 
+        if (filtered.length === 0) { grid.innerHTML = ''; noResults.style.display = 'block'; return; } 
+        noResults.style.display = 'none'; 
+        
+        grid.innerHTML = filtered.map(p => { 
+            const currentSelected = selectedColors[p.id]; 
+            const discount = Math.round((1 - p.price / p.oldPrice) * 100); 
+            const stockClass = p.stock <= 0 ? 'out-stock' : (p.stock < 10 ? 'low-stock' : 'in-stock'); 
+            const stockText = p.stock <= 0 ? 'AGOTADO' : (p.stock < 10 ? `⚠️ ¡Últimas ${p.stock}!` : `${p.stock} disponibles`); 
+            const isInWishlist = wishlist.includes(p.id); 
+            
+            // Juntar imagen principal + galería
+            const allImages = [];
+            if (p.image) allImages.push(p.image);
+            if (p.gallery && p.gallery.length > 0) allImages.push(...p.gallery);
+            const hasMultiple = allImages.length > 1;
+            const totalImages = allImages.length || 1;
+            const uniqueId = 'card_' + p.id;
+            
+            // Generar slides
+            const slidesHTML = allImages.length > 0 
+                ? allImages.map(img => `<div class="product-card-slide"><img src="${img}" alt="${p.name}" loading="lazy"></div>`).join('')
+                : `<div class="product-card-slide"><div class="no-img">${p.icon || '📦'}</div></div>`;
+            
+            // Generar dots
+            const dotsHTML = hasMultiple 
+                ? allImages.map((_, i) => `<span class="card-dot ${i===0?'active':''}" onclick="event.stopPropagation();goToCardImage('${uniqueId}',${i})"></span>`).join('')
+                : '';
+            
+            return `<div class="product-card" onclick="openProductModal(${p.id})">
+                <button class="wishlist-btn ${isInWishlist?'active':''}" onclick="event.stopPropagation();toggleWishlist(${p.id})"><i class="fas fa-heart"></i></button>
+                <div class="badge">-${discount}%</div>
+                <div class="product-img" style="padding:0;">
+                    <div style="position:relative;width:100%;height:180px;overflow:hidden;">
+                        <div class="card-slides-${uniqueId}" style="display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;height:100%;scrollbar-width:none;" onscroll="updateCardCounter('${uniqueId}')">
+                            ${slidesHTML}
+                        </div>
+                        ${hasMultiple ? `
+                            <button style="position:absolute;top:50%;left:5px;transform:translateY(-50%);background:rgba(0,0,0,0.5);color:white;border:none;width:26px;height:26px;border-radius:50%;cursor:pointer;z-index:5;font-size:12px;opacity:0;transition:opacity 0.3s;" 
+                                    onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0'"
+                                    onclick="event.stopPropagation();navigateCard('${uniqueId}',-1)">❮</button>
+                            <button style="position:absolute;top:50%;right:5px;transform:translateY(-50%);background:rgba(0,0,0,0.5);color:white;border:none;width:26px;height:26px;border-radius:50%;cursor:pointer;z-index:5;font-size:12px;opacity:0;transition:opacity 0.3s;" 
+                                    onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0'"
+                                    onclick="event.stopPropagation();navigateCard('${uniqueId}',1)">❯</button>
+                            <span class="card-counter-${uniqueId}" style="position:absolute;bottom:5px;right:5px;background:rgba(0,0,0,0.6);color:white;padding:2px 6px;border-radius:10px;font-size:0.55rem;z-index:5;">1/${totalImages}</span>
+                            <div style="position:absolute;bottom:5px;left:50%;transform:translateX(-50%);display:flex;gap:4px;z-index:5;">${dotsHTML}</div>
+                        ` : ''}
+                    </div>
+                </div>
+                <div class="product-info">
+                    <div class="product-title">${p.name}</div>
+                    <div class="rating">${'★'.repeat(Math.floor(p.rating||4.5))}${'☆'.repeat(5-Math.floor(p.rating||4.5))} ${p.rating||4.5}</div>
+                    <div class="price">$${p.price.toLocaleString('es-CO')}<span class="old-price">$${p.oldPrice.toLocaleString('es-CO')}</span></div>
+                    <div class="stock ${stockClass}"><i class="fas fa-box"></i> ${stockText}</div>
+                    ${p.stock<=5&&p.stock>0?`<div class="urgency-banner">⚠️ ¡Solo ${p.stock}!</div>`:''}
+                    <div class="color-selector"><span style="color:#6b7280;font-size:0.6rem;"><i class="fas fa-palette"></i> Colores:</span><div class="color-options">${p.colors.map((c,idx)=>`<div class="color-option ${currentSelected&&currentSelected.index===idx?'selected':''}" style="background:${c.code}" onclick="event.stopPropagation();selectColor(${p.id},'${c.name}','${c.code}',${idx})" title="${c.name}"></div>`).join('')}</div></div>
+                    <div class="button-group"><button class="btn-add" ${p.stock<=0?'disabled':''} onclick="event.stopPropagation();addToCart(${p.id},'${p.name.replace(/'/g,"\\'")}',${p.price})"><i class="fas fa-cart-plus"></i> Carrito</button><button class="btn-whatsapp-product" ${p.stock<=0?'disabled':''} onclick="event.stopPropagation();buyDirectWhatsApp(${p.id},'${p.name.replace(/'/g,"\\'")}',${p.price})"><i class="fab fa-whatsapp"></i> Comprar</button></div>
+                </div>
+            </div>`; 
+        }).join(''); 
+    }
+    
+    // ===== FUNCIONES AUXILIARES PARA CARRUSEL EN TARJETAS =====
+    function navigateCard(uniqueId, direction) {
+        const slides = document.querySelector(`.card-slides-${uniqueId}`);
+        if (!slides) return;
+        const slideWidth = slides.clientWidth;
+        const totalSlides = slides.children.length;
+        const currentIndex = Math.round(slides.scrollLeft / slideWidth);
+        let newIndex = currentIndex + direction;
+        if (newIndex < 0) newIndex = totalSlides - 1;
+        if (newIndex >= totalSlides) newIndex = 0;
+        slides.scrollTo({ left: newIndex * slideWidth, behavior: 'smooth' });
+        updateCardCounter(uniqueId);
+    }
+
+    function goToCardImage(uniqueId, index) {
+        const slides = document.querySelector(`.card-slides-${uniqueId}`);
+        if (!slides) return;
+        slides.scrollTo({ left: index * slides.clientWidth, behavior: 'smooth' });
+        updateCardCounter(uniqueId);
+    }
+
+    function updateCardCounter(uniqueId) {
+        const slides = document.querySelector(`.card-slides-${uniqueId}`);
+        const counter = document.querySelector(`.card-counter-${uniqueId}`);
+        if (!slides || !counter) return;
+        const totalSlides = slides.children.length;
+        const currentIndex = Math.round(slides.scrollLeft / slides.clientWidth);
+        counter.innerText = `${currentIndex + 1}/${totalSlides}`;
+        // Actualizar dots
+        const dots = document.querySelectorAll(`.card-dot[onclick*="${uniqueId}"]`);
+        dots.forEach((dot, i) => dot.classList.toggle('active', i === currentIndex));
+    }
+    
     function renderCategories() { const cats = [{ id:'todos', name:'Todos', icon:'📦' },{ id:'electronica', name:'Electrónica', icon:'📱' },{ id:'moda', name:'Moda', icon:'👕' },{ id:'hogar', name:'Hogar', icon:'🏠' },{ id:'accesorios', name:'Accesorios', icon:'🕶️' },{ id:'belleza', name:'Belleza', icon:'💄' }]; document.getElementById('categoriasContainer').innerHTML = cats.map(c => `<button class="cat-btn ${currentCategory === c.id ? 'active' : ''}" data-cat="${c.id}" onclick="filterByCategory('${c.id}')">${c.icon} ${c.name}</button>`).join(''); }
     function renderAll() { renderCategories(); renderProducts(); if (isAdmin) { updateDashboardStats(); renderAdminPanel(); } }
     
@@ -1559,7 +1666,7 @@
         } catch(e) {}
     }, 30000);
     
-    window.openLoginModal = openLoginModal; window.closeLoginModal = closeLoginModal; window.registerUser = registerUser; window.continueAsGuest = continueAsGuest; window.logout = logout; window.secretAdminAttempt = secretAdminAttempt; window.closeSecretModal = closeSecretModal; window.loginAsAdminFromSecret = loginAsAdminFromSecret; window.goToAdminFromStore = goToAdminFromStore; window.openAdminDashboard = openAdminDashboard; window.closeAdminDashboard = closeAdminDashboard; window.addNewProduct = addNewProduct; window.deleteProduct = deleteProduct; window.updateProduct = updateProduct; window.updateProductImage = updateProductImage; window.updateProductGallery = updateProductGallery; window.addColor = addColor; window.removeColor = removeColor; window.selectColor = selectColor; window.addToCart = addToCart; window.buyDirectWhatsApp = buyDirectWhatsApp; window.updateQuantity = updateQuantity; window.removeItem = removeItem; window.checkout = checkout; window.openCart = openCart; window.closeCart = closeCart; window.filterProducts = filterProducts; window.filterByCategory = filterByCategory; window.handleSearchEnter = handleSearchEnter; window.contactWhatsApp = contactWhatsApp; window.handleLoginEnter = handleLoginEnter; window.previewExcelData = previewExcelData; window.confirmImportExcel = confirmImportExcel; window.cancelImportExcel = cancelImportExcel; window.downloadExcelTemplate = downloadExcelTemplate; window.openFacebook = openFacebook; window.openInstagram = openInstagram; window.openProductModal = openProductModal; window.closeProductModal = closeProductModal; window.selectModalColor = selectModalColor; window.modalAddToCart = modalAddToCart; window.modalBuyNow = modalBuyNow; window.previewNewImage = previewNewImage; window.previewImage = previewImage; window.deleteImage = deleteImage; window.focusPaste = focusPaste; window.focusEditPaste = focusEditPaste; window.focusGalleryPaste = focusGalleryPaste; window.focusEditGalleryPaste = focusEditGalleryPaste; window.addNewColorField = addNewColorField; window.removeNewColor = removeNewColor; window.toggleTheme = toggleTheme; window.openWishlist = openWishlist; window.closeWishlist = closeWishlist; window.toggleWishlist = toggleWishlist; window.applyCoupon = applyCoupon; window.subscribeNewsletter = subscribeNewsletter; window.scrollToTop = scrollToTop; window.exportSalesReport = exportSalesReport; window.applyFilters = applyFilters; window.setRatingFilter = setRatingFilter; window.clearFilters = clearFilters; window.previewGalleryImages = previewGalleryImages; window.addGalleryImagesFromFile = addGalleryImagesFromFile; window.nextImage = nextImage; window.previousImage = previousImage; window.goToImage = goToImage; window.toggleFilters = toggleFilters; window.saveAllProductChanges = saveAllProductChanges; window.updateProductImageFromEditor = updateProductImageFromEditor;
+    window.openLoginModal = openLoginModal; window.closeLoginModal = closeLoginModal; window.registerUser = registerUser; window.continueAsGuest = continueAsGuest; window.logout = logout; window.secretAdminAttempt = secretAdminAttempt; window.closeSecretModal = closeSecretModal; window.loginAsAdminFromSecret = loginAsAdminFromSecret; window.goToAdminFromStore = goToAdminFromStore; window.openAdminDashboard = openAdminDashboard; window.closeAdminDashboard = closeAdminDashboard; window.addNewProduct = addNewProduct; window.deleteProduct = deleteProduct; window.updateProduct = updateProduct; window.updateProductImage = updateProductImage; window.updateProductGallery = updateProductGallery; window.addColor = addColor; window.removeColor = removeColor; window.selectColor = selectColor; window.addToCart = addToCart; window.buyDirectWhatsApp = buyDirectWhatsApp; window.updateQuantity = updateQuantity; window.removeItem = removeItem; window.checkout = checkout; window.openCart = openCart; window.closeCart = closeCart; window.filterProducts = filterProducts; window.filterByCategory = filterByCategory; window.handleSearchEnter = handleSearchEnter; window.contactWhatsApp = contactWhatsApp; window.handleLoginEnter = handleLoginEnter; window.previewExcelData = previewExcelData; window.confirmImportExcel = confirmImportExcel; window.cancelImportExcel = cancelImportExcel; window.downloadExcelTemplate = downloadExcelTemplate; window.openFacebook = openFacebook; window.openInstagram = openInstagram; window.openProductModal = openProductModal; window.closeProductModal = closeProductModal; window.selectModalColor = selectModalColor; window.modalAddToCart = modalAddToCart; window.modalBuyNow = modalBuyNow; window.previewNewImage = previewNewImage; window.previewImage = previewImage; window.deleteImage = deleteImage; window.focusPaste = focusPaste; window.focusEditPaste = focusEditPaste; window.focusGalleryPaste = focusGalleryPaste; window.focusEditGalleryPaste = focusEditGalleryPaste; window.addNewColorField = addNewColorField; window.removeNewColor = removeNewColor; window.toggleTheme = toggleTheme; window.openWishlist = openWishlist; window.closeWishlist = closeWishlist; window.toggleWishlist = toggleWishlist; window.applyCoupon = applyCoupon; window.subscribeNewsletter = subscribeNewsletter; window.scrollToTop = scrollToTop; window.exportSalesReport = exportSalesReport; window.applyFilters = applyFilters; window.setRatingFilter = setRatingFilter; window.clearFilters = clearFilters; window.previewGalleryImages = previewGalleryImages; window.addGalleryImagesFromFile = addGalleryImagesFromFile; window.nextImage = nextImage; window.previousImage = previousImage; window.goToImage = goToImage; window.toggleFilters = toggleFilters; window.saveAllProductChanges = saveAllProductChanges; window.updateProductImageFromEditor = updateProductImageFromEditor; window.navigateCard = navigateCard; window.goToCardImage = goToCardImage; window.updateCardCounter = updateCardCounter;
 </script>
 </body>
 </html>
