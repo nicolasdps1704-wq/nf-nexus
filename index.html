@@ -62,12 +62,9 @@
         .product-title { font-weight: 700; font-size: 0.8rem; margin-bottom: 3px; }
         .price { font-size: 1.05rem; font-weight: 900; color: var(--primary); }
         .old-price { text-decoration: line-through; font-size: 0.6rem; color: #9ca3af; margin-left: 5px; }
-        .stock-badge { display: inline-block; font-size: 0.55rem; padding: 2px 7px; border-radius: 8px; font-weight: 600; margin: 2px 0; }
-        .stock-in { background: #dcfce7; color: #166534; } .stock-low { background: #fed7aa; color: #9a3412; } .stock-out { background: #fee2e2; color: #991b1b; }
         .btn { padding: 7px; border-radius: 50px; font-weight: 600; cursor: pointer; border: none; font-size: 0.68rem; color: white; flex: 1; display: flex; align-items: center; justify-content: center; gap: 3px; font-family: inherit; }
         .btn-cart { background: linear-gradient(135deg, var(--primary), var(--secondary)); }
         .btn-wa { background: #25D366; }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
         .cart-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 999; }
         .cart-overlay.show { display: block; }
@@ -80,7 +77,7 @@
 
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
         .modal-overlay.show { display: flex; }
-        .modal-box { background: var(--bg-card); border-radius: 22px; padding: 22px; max-width: 380px; width: 92%; text-align: center; border: 2px solid var(--primary); position: relative; animation: modalIn 0.3s ease-out; }
+        .modal-box { background: var(--bg-card); border-radius: 22px; padding: 22px; max-width: 360px; width: 92%; text-align: center; border: 2px solid var(--primary); position: relative; animation: modalIn 0.3s ease-out; }
         @keyframes modalIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
         .modal-close { position: absolute; top: 8px; right: 12px; font-size: 1.2rem; color: var(--text-secondary); cursor: pointer; background: none; border: none; }
         .modal-logo { font-size: 1.8rem; font-weight: 900; margin-bottom: 6px; background: linear-gradient(135deg, var(--primary), var(--accent), var(--secondary)); -webkit-background-clip: text; background-clip: text; color: transparent; cursor: pointer; }
@@ -156,26 +153,17 @@
 </head>
 <body>
 
-<!-- LOGIN MODAL (CON INICIAR SESIÓN Y CREAR CUENTA SEPARADOS) -->
+<!-- LOGIN MODAL -->
 <div id="loginModal" class="modal-overlay"><div class="modal-box">
     <button class="modal-close" onclick="closeLoginModal()">&times;</button>
     <div class="modal-logo" id="loginLogo" onclick="handleLoginLogoClick()"><i class="fas fa-bolt"></i> NF NEXUS</div>
-    <p style="color:var(--text-secondary);margin-bottom:8px;font-size:0.8rem;">🔥 Ingresa a tu cuenta</p>
-    <div id="loginFormFields">
-        <div class="input-group"><label style="color:var(--danger);">* Correo electrónico</label><input type="email" id="loginEmail" placeholder="tucorreo@email.com"></div>
-        <button class="btn-full" onclick="loginUser()" style="margin-bottom:8px;"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</button>
-    </div>
-    <div id="registerFormFields" style="display:none;">
-        <div class="input-group"><label style="color:var(--danger);">* Nombre completo</label><input type="text" id="loginName" placeholder="¿Cómo te llamas?"></div>
-        <div class="input-group"><label style="color:var(--danger);">* Correo electrónico</label><input type="email" id="regEmail" placeholder="tucorreo@email.com"></div>
-        <button class="btn-full" onclick="registerUser()" style="margin-bottom:8px;"><i class="fas fa-user-plus"></i> Crear cuenta</button>
-    </div>
-    <div class="error-msg" id="loginError" style="color:var(--danger);font-size:0.7rem;margin:5px 0;"></div>
-    <div style="display:flex;gap:5px;margin:8px 0;">
-        <button class="btn-outline" id="switchToRegister" onclick="showRegisterForm()" style="flex:1;margin-top:0;font-size:0.7rem;">Crear cuenta</button>
-        <button class="btn-outline" id="switchToLogin" onclick="showLoginForm()" style="flex:1;margin-top:0;font-size:0.7rem;display:none;">Iniciar sesión</button>
-        <button class="btn-outline" onclick="continueAsGuest()" style="flex:1;margin-top:0;font-size:0.7rem;">Invitado</button>
-    </div>
+    <p style="color:var(--text-secondary);margin-bottom:12px;font-size:0.8rem;">🔥 Ingresa para una experiencia personalizada</p>
+    <div class="input-group"><label style="color:var(--danger);">* Nombre completo</label><input type="text" id="loginName" placeholder="¿Cómo te llamas?"></div>
+    <div class="input-group"><label style="color:var(--danger);">* Correo electrónico</label><input type="email" id="loginEmail" placeholder="tucorreo@email.com"><small style="color:var(--text-secondary);font-size:0.6rem;">Recibirás ofertas exclusivas por correo</small></div>
+    <button class="btn-full" onclick="registerUser()"><i class="fas fa-user-check"></i> Crear cuenta / Ingresar</button>
+    <div class="error-msg" id="loginError" style="color:var(--danger);font-size:0.7rem;margin-top:5px;"></div>
+    <div style="border-top:1px solid var(--border);margin:12px 0;position:relative;"><span style="position:absolute;top:-8px;left:50%;transform:translateX(-50%);background:var(--bg-card);padding:0 8px;color:var(--text-secondary);font-size:0.65rem;">o</span></div>
+    <button class="btn-outline" onclick="continueAsGuest()"><i class="fas fa-user"></i> Continuar como Invitado</button>
 </div></div>
 
 <!-- ADMIN SECRET MODAL -->
@@ -194,11 +182,15 @@
 <div class="prod-modal" id="prodModal">
     <div class="prod-modal-header"><h3><i class="fas fa-box"></i> Detalle del Producto</h3><button style="background:rgba(0,0,0,0.2);border:1px solid white;color:white;width:26px;height:26px;border-radius:50%;cursor:pointer;" onclick="closeProdModal()">&times;</button></div>
     <div class="prod-modal-body">
-        <div class="modal-gallery"><button class="modal-nav prev" onclick="event.stopPropagation();prevModalImg()">❮</button><div class="modal-slides" id="modalSlides"></div><button class="modal-nav next" onclick="event.stopPropagation();nextModalImg()">❯</button><div class="modal-dots" id="modalDots"></div></div>
+        <div class="modal-gallery">
+            <button class="modal-nav prev" onclick="event.stopPropagation();prevModalImg()">❮</button>
+            <div class="modal-slides" id="modalSlides"></div>
+            <button class="modal-nav next" onclick="event.stopPropagation();nextModalImg()">❯</button>
+            <div class="modal-dots" id="modalDots"></div>
+        </div>
         <div class="modal-info">
             <h3 id="modalName"></h3>
             <div style="margin:4px 0;"><span class="modal-price" id="modalPrice"></span><span style="text-decoration:line-through;font-size:0.65rem;color:#9ca3af;margin-left:5px;" id="modalOldPrice"></span><span style="background:var(--secondary);color:white;padding:1px 6px;border-radius:10px;font-size:0.55rem;margin-left:5px;" id="modalDiscount"></span></div>
-            <span id="modalStock" style="font-size:0.55rem;padding:2px 7px;border-radius:8px;display:inline-block;font-weight:600;"></span>
             <div class="modal-colors" id="modalColors"></div>
             <div style="display:flex;gap:5px;margin-top:8px;">
                 <button class="btn btn-cart" id="modalCartBtn" onclick="modalAddToCart()"><i class="fas fa-cart-plus"></i> Carrito</button>
@@ -224,22 +216,58 @@
         </div>
         <div class="admin-main">
             <div class="admin-tab active" id="atab-dashboard"><h3 style="color:var(--primary);">📊 Dashboard</h3>
-                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:6px;margin-bottom:12px;"><div class="db-panel" style="text-align:center;"><h2 id="aStatProducts" style="color:var(--primary);">0</h2><p>Productos</p></div><div class="db-panel" style="text-align:center;"><h2 id="aStatSold" style="color:var(--primary);">0</h2><p>Vendidos</p></div><div class="db-panel" style="text-align:center;"><h2 id="aStatRevenue" style="color:var(--primary);">$0</h2><p>Ganancias</p></div><div class="db-panel" style="text-align:center;"><h2 id="aStatUsers" style="color:var(--primary);">0</h2><p>Usuarios</p></div></div></div>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:6px;margin-bottom:12px;">
+                    <div class="db-panel" style="text-align:center;"><h2 id="aStatProducts" style="color:var(--primary);">0</h2><p>Productos</p></div>
+                    <div class="db-panel" style="text-align:center;"><h2 id="aStatSold" style="color:var(--primary);">0</h2><p>Vendidos</p></div>
+                    <div class="db-panel" style="text-align:center;"><h2 id="aStatRevenue" style="color:var(--primary);">$0</h2><p>Ganancias</p></div>
+                    <div class="db-panel" style="text-align:center;"><h2 id="aStatUsers" style="color:var(--primary);">0</h2><p>Usuarios</p></div>
+                </div>
+            </div>
             <div class="admin-tab" id="atab-products"><h3 style="color:var(--primary);">📦 Gestión de Productos</h3>
                 <div class="db-panel"><h4>Agregar Producto</h4>
-                    <div class="form-grid"><div class="form-group"><label>Nombre *</label><input type="text" id="apName"></div><div class="form-group"><label>Precio *</label><input type="number" id="apPrice"></div><div class="form-group"><label>Precio anterior</label><input type="number" id="apOldPrice"></div><div class="form-group"><label>Stock</label><input type="number" id="apStock" value="10"></div><div class="form-group"><label>Categoría</label><select id="apCategory"><option value="electronica">Electrónica</option><option value="moda">Moda</option><option value="hogar">Hogar</option><option value="accesorios">Accesorios</option><option value="belleza">Belleza</option></select></div><div class="form-group"><label>Icono</label><input type="text" id="apIcon" value="📦"></div></div>
-                    <div style="margin-top:6px;"><h4>📸 Imágenes (Ctrl+V para pegar)</h4><input type="file" id="apImagesInput" accept="image/*" multiple style="display:none;" onchange="previewAllImages(this)"><button class="btn-sm primary" onclick="document.getElementById('apImagesInput').click()"><i class="fas fa-images"></i> Subir imágenes</button><div id="apAllPreviews" style="display:flex;flex-wrap:wrap;gap:4px;margin-top:5px;"></div></div>
-                    <div style="margin-top:6px;"><h4>🎨 Colores</h4><div class="color-picker-wrapper"><button class="color-picker-btn" onclick="toggleColorPicker()"><span style="width:16px;height:16px;border-radius:3px;background:#1a1a2e;display:inline-block;" id="colorPreview"></span> Elegir color <i class="fas fa-chevron-down"></i></button><div class="color-picker-dropdown" id="colorPickerDropdown"><div class="color-palette" id="colorPalette"></div><div style="display:flex;gap:4px;margin-top:4px;"><input type="text" id="apColorName" placeholder="Nombre" style="flex:1;padding:4px;border:1px solid var(--border);border-radius:4px;background:var(--bg-card);color:var(--text);font-size:0.65rem;font-family:inherit;"><button class="btn-sm primary" onclick="addColorToProduct()">+</button></div><div id="apSelectedColors" style="display:flex;flex-wrap:wrap;gap:3px;margin-top:4px;"></div></div></div></div>
+                    <div class="form-grid">
+                        <div class="form-group"><label>Nombre *</label><input type="text" id="apName"></div>
+                        <div class="form-group"><label>Precio *</label><input type="number" id="apPrice"></div>
+                        <div class="form-group"><label>Precio anterior</label><input type="number" id="apOldPrice"></div>
+                        <div class="form-group"><label>Stock</label><input type="number" id="apStock" value="10"></div>
+                        <div class="form-group"><label>Categoría</label><select id="apCategory"><option value="electronica">Electrónica</option><option value="moda">Moda</option><option value="hogar">Hogar</option><option value="accesorios">Accesorios</option><option value="belleza">Belleza</option></select></div>
+                        <div class="form-group"><label>Icono</label><input type="text" id="apIcon" value="📦"></div>
+                    </div>
+                    <div style="margin-top:6px;"><h4>📸 Imágenes</h4>
+                        <input type="file" id="apImagesInput" accept="image/*" multiple style="display:none;" onchange="previewAllImages(this)">
+                        <button class="btn-sm primary" onclick="document.getElementById('apImagesInput').click()"><i class="fas fa-images"></i> Subir imágenes (múltiples)</button>
+                        <div id="apAllPreviews" style="display:flex;flex-wrap:wrap;gap:4px;margin-top:5px;"></div>
+                        <small style="color:var(--text-secondary);font-size:0.55rem;">Primera imagen = principal, resto = galería</small>
+                    </div>
+                    <div style="margin-top:6px;"><h4>🎨 Colores</h4>
+                        <div class="color-picker-wrapper">
+                            <button class="color-picker-btn" onclick="toggleColorPicker()"><span style="width:16px;height:16px;border-radius:3px;background:#1a1a2e;display:inline-block;" id="colorPreview"></span> Elegir color <i class="fas fa-chevron-down"></i></button>
+                            <div class="color-picker-dropdown" id="colorPickerDropdown">
+                                <div class="color-palette" id="colorPalette"></div>
+                                <div style="display:flex;gap:4px;margin-top:4px;"><input type="text" id="apColorName" placeholder="Nombre" style="flex:1;padding:4px;border:1px solid var(--border);border-radius:4px;background:var(--bg-card);color:var(--text);font-size:0.65rem;font-family:inherit;"><button class="btn-sm primary" onclick="addColorToProduct()">+</button></div>
+                                <div id="apSelectedColors" style="display:flex;flex-wrap:wrap;gap:3px;margin-top:4px;"></div>
+                            </div>
+                        </div>
+                    </div>
                     <button class="btn-sm primary" onclick="adminAddProduct()" style="margin-top:6px;width:100%;">➕ Agregar Producto</button>
                 </div>
                 <div class="db-panel"><h4>Lista de Productos</h4><table class="db-table"><thead><tr><th>ID</th><th>Nombre</th><th>Precio</th><th>Stock</th><th>Acción</th></tr></thead><tbody id="adminProductsTable"></tbody></table></div>
-                <div class="db-panel" id="editProductPanel" style="display:none;"><h4>✏️ Editar Producto</h4><div class="form-grid"><div class="form-group"><label>Nombre</label><input type="text" id="epName"></div><div class="form-group"><label>Precio</label><input type="number" id="epPrice"></div><div class="form-group"><label>Precio anterior</label><input type="number" id="epOldPrice"></div><div class="form-group"><label>Stock</label><input type="number" id="epStock"></div><div class="form-group"><label>Categoría</label><select id="epCategory"><option value="electronica">Electrónica</option><option value="moda">Moda</option><option value="hogar">Hogar</option><option value="accesorios">Accesorios</option><option value="belleza">Belleza</option></select></div><div class="form-group"><label>Icono</label><input type="text" id="epIcon"></div></div><div style="display:flex;gap:5px;margin-top:8px;"><button class="btn-sm success" onclick="saveProductEdit()">💾 Guardar</button><button class="btn-sm danger" onclick="document.getElementById('editProductPanel').style.display='none'">Cancelar</button></div></div>
             </div>
             <div class="admin-tab" id="atab-users"><h3 style="color:var(--primary);">👥 Base de Datos de Usuarios</h3><div class="db-panel"><table class="db-table"><thead><tr><th>Nombre</th><th>Email</th><th>Miembro desde</th><th>Compras</th></tr></thead><tbody id="adminUsersTable"></tbody></table></div></div>
             <div class="admin-tab" id="atab-sales"><h3 style="color:var(--primary);">🧾 Registro de Ventas</h3><div class="db-panel"><table class="db-table"><thead><tr><th>Fecha</th><th>Producto</th><th>Cant.</th><th>Total</th><th>Comprador</th></tr></thead><tbody id="adminSalesTable"></tbody></table></div></div>
-            <div class="admin-tab" id="atab-coupons"><h3 style="color:var(--primary);">🎫 Gestión de Cupones</h3><div class="db-panel"><h4>Crear Cupón</h4><div class="form-grid"><div class="form-group"><label>Código *</label><input type="text" id="acCode"></div><div class="form-group"><label>Tipo</label><select id="acType"><option value="percent">Porcentaje</option><option value="fixed">Fijo</option></select></div><div class="form-group"><label>Valor *</label><input type="number" id="acValue"></div><div class="form-group"><label>Compra mínima</label><input type="number" id="acMin" value="0"></div><div class="form-group"><label>Mensaje</label><input type="text" id="acMsg"></div><div class="form-group"><label>Vence</label><input type="date" id="acExpiry"></div></div><button class="btn-sm primary" onclick="adminAddCoupon()" style="margin-top:4px;">🎫 Crear y Notificar</button></div><div class="db-panel"><h4>Cupones Activos</h4><div id="adminCouponsList"></div></div></div>
-            <div class="admin-tab" id="atab-notifications"><h3 style="color:var(--primary);">📢 Enviar Notificación</h3><div class="db-panel"><div class="form-grid"><div class="form-group"><label>Asunto *</label><input type="text" id="notifSubject"></div><div class="form-group"><label>Mensaje *</label><textarea id="notifMessage" style="padding:5px;background:var(--bg-card);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:0.7rem;font-family:inherit;resize:vertical;min-height:50px;"></textarea></div></div><button class="btn-sm primary" onclick="adminSendEmailNotification()" style="margin-top:4px;">📧 Enviar a TODOS</button><div id="notificationStatus" style="margin-top:6px;font-size:0.65rem;"></div></div></div>
-            <div class="admin-tab" id="atab-config"><h3 style="color:var(--primary);">⚙️ Configuración Global</h3><div class="db-panel"><h4>Idiomas</h4><div id="adminLangChips" style="display:flex;flex-wrap:wrap;gap:3px;"></div><div style="display:flex;gap:4px;margin-top:4px;"><input type="text" id="newLangInput" placeholder="código:Nombre" style="flex:1;padding:5px;border:1px solid var(--border);border-radius:6px;background:var(--bg-card);color:var(--text);font-family:inherit;"><button class="btn-sm primary" onclick="adminAddLang()">+</button></div></div></div>
+            <div class="admin-tab" id="atab-coupons"><h3 style="color:var(--primary);">🎫 Gestión de Cupones</h3>
+                <div class="db-panel"><h4>Crear Cupón</h4>
+                    <div class="form-grid"><div class="form-group"><label>Código *</label><input type="text" id="acCode"></div><div class="form-group"><label>Tipo</label><select id="acType"><option value="percent">Porcentaje</option><option value="fixed">Fijo</option></select></div><div class="form-group"><label>Valor *</label><input type="number" id="acValue"></div><div class="form-group"><label>Compra mínima</label><input type="number" id="acMin" value="0"></div><div class="form-group"><label>Mensaje</label><input type="text" id="acMsg"></div><div class="form-group"><label>Vence</label><input type="date" id="acExpiry"></div></div>
+                    <button class="btn-sm primary" onclick="adminAddCoupon()" style="margin-top:4px;">🎫 Crear y Notificar por Email</button>
+                </div>
+                <div class="db-panel"><h4>Cupones Activos</h4><div id="adminCouponsList"></div></div>
+            </div>
+            <div class="admin-tab" id="atab-notifications"><h3 style="color:var(--primary);">📢 Enviar Notificación por Email</h3>
+                <div class="db-panel"><div class="form-grid"><div class="form-group"><label>Asunto *</label><input type="text" id="notifSubject"></div><div class="form-group"><label>Mensaje *</label><textarea id="notifMessage" style="padding:5px;background:var(--bg-card);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:0.7rem;font-family:inherit;resize:vertical;min-height:50px;"></textarea></div></div><button class="btn-sm primary" onclick="adminSendEmailNotification()" style="margin-top:4px;">📧 Enviar a TODOS los usuarios</button><div id="notificationStatus" style="margin-top:6px;font-size:0.65rem;"></div></div>
+            </div>
+            <div class="admin-tab" id="atab-config"><h3 style="color:var(--primary);">⚙️ Configuración Global</h3>
+                <div class="db-panel"><h4>Idiomas</h4><div id="adminLangChips" style="display:flex;flex-wrap:wrap;gap:3px;"></div><div style="display:flex;gap:4px;margin-top:4px;"><input type="text" id="newLangInput" placeholder="código:Nombre" style="flex:1;padding:5px;border:1px solid var(--border);border-radius:6px;background:var(--bg-card);color:var(--text);font-family:inherit;"><button class="btn-sm primary" onclick="adminAddLang()">+</button></div></div>
+            </div>
         </div>
     </div>
 </div>
@@ -248,11 +276,12 @@
 <div id="mainStore">
     <div class="top-bar">🎉 OFERTAS IMPERDIBLES | PAGO CONTRAENTREGA | ENVÍO GRATIS > $100.000</div>
     <div class="main-header">
-        <div class="logo"><h1 onclick="location.reload()" style="cursor:pointer;">NF NEXUS ⚡</h1></div>
+        <div class="logo"><h1>NF NEXUS ⚡</h1></div>
         <div class="search-bar"><input type="text" id="searchInput" placeholder="🔍 Buscar productos..." onkeyup="filterProducts()"><button onclick="filterProducts()"><i class="fas fa-search"></i></button></div>
         <div class="header-icons">
             <button class="hdr-btn" onclick="toggleTheme()"><i class="fas fa-sun"></i> <span id="themeLabel">Claro</span></button>
-            <div class="hdr-btn" onclick="toggleLanguage()" style="position:relative;"><i class="fas fa-globe"></i> <span id="currentLangLabel">ES</span>
+            <div class="hdr-btn" onclick="toggleLanguage()" style="position:relative;">
+                <i class="fas fa-globe"></i> <span id="currentLangLabel">ES</span>
                 <div id="langDropdown" style="display:none;position:absolute;top:100%;right:0;background:var(--bg-card);border:1px solid var(--primary);border-radius:8px;padding:5px;z-index:200;min-width:100px;box-shadow:0 5px 15px rgba(0,0,0,0.2);">
                     <div onclick="setLanguage('es')" style="padding:6px 8px;cursor:pointer;border-radius:5px;font-size:0.7rem;">🇨🇴 Español</div>
                     <div onclick="setLanguage('en')" style="padding:6px 8px;cursor:pointer;border-radius:5px;font-size:0.7rem;">🇺🇸 English</div>
@@ -272,7 +301,7 @@
         <div id="noResults" style="display:none;text-align:center;padding:25px;color:var(--text-secondary);">No se encontraron productos</div>
     </div>
     <div class="mobile-nav">
-        <div class="mobile-nav-item" onclick="location.reload()"><i class="fas fa-home"></i><span>Inicio</span></div>
+        <div class="mobile-nav-item" onclick="scrollToTop()"><i class="fas fa-home"></i><span>Inicio</span></div>
         <div class="mobile-nav-item" onclick="document.getElementById('searchInput').focus()"><i class="fas fa-search"></i><span>Buscar</span></div>
         <div class="mobile-nav-item" onclick="openCart()"><i class="fas fa-shopping-cart"></i><span>Carrito</span></div>
         <div class="mobile-nav-item" onclick="if(isAdmin)openAdminPage();else openLoginModal();"><i class="fas fa-user"></i><span>Cuenta</span></div>
@@ -284,7 +313,7 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, collection, doc, setDoc, updateDoc, deleteDoc, addDoc, onSnapshot, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getFirestore, collection, doc, setDoc, updateDoc, deleteDoc, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 const fbConfig = { apiKey: "AIzaSyD6ttFbR3_N3y4qTAGmZsPaMNrl6jvDEPE", authDomain: "nf-nexus-tienda.firebaseapp.com", projectId: "nf-nexus-tienda", storageBucket: "nf-nexus-tienda.firebasestorage.app", messagingSenderId: "677127630697", appId: "1:677127630697:web:397fa5041ce7f3ca0057f8" };
 const app = initializeApp(fbConfig);
@@ -296,145 +325,153 @@ const ADMIN_U = "admin", ADMIN_P = "admin123";
 
 let currentUser=null,isAdmin=false,products=[],cart=[],wishlist=[],recentViews=[],salesHistory=[],userPurchases=[],registeredUsers=[];
 let selectedColors={},currentCat="todos",currentSearch="",nextId=1,loginLogoClicks=0,adminAttempts=0;
-let tempColors=[],tempAllImages=[],modalProduct=null,modalColor=null,modalImgs=[],modalImgIdx=0,currentLang='es',editingProductId=null;
-let coupons={"BIENVENIDA":{discount:5000,type:"fixed",msg:"$5.000 descuento",expiry:"2026-12-31"},"NF20":{discount:20,type:"percent",msg:"20% descuento",expiry:"2026-12-31"}};
-let languages={es:'Español',en:'English',pt:'Português'};
+let tempColors=[],tempAllImages=[],modalProduct=null,modalColor=null,modalImgs=[],modalImgIdx=0,currentLang='es';
+let coupons={},languages={es:'Español',en:'English',pt:'Português'};
 const colorPalette=['#1a1a2e','#ffffff','#ff0000','#0000ff','#008000','#ffff00','#ff6b35','#ff2e2e','#f7c948','#10b981','#3b82f6','#8b5cf6','#ec4899','#f59e0b','#06b6d4','#84cc16','#ef4444','#6366f1','#000000','#808080','#c0c0c0','#800000','#ffc0cb','#ffd700'];
 
-function toast(m,type='success'){const e=document.createElement('div');e.className='toast';e.style.borderLeftColor=type==='success'?'var(--success)':'var(--danger)';e.innerHTML=m;document.body.appendChild(e);setTimeout(()=>e.remove(),2500)}
+const translations={es:{topBar:"🎉 OFERTAS IMPERDIBLES | PAGO CONTRAENTREGA | ENVÍO GRATIS > $100.000",light:"Claro",dark:"Oscuro",login:"Ingresar",logout:"Salir",noProducts:"No se encontraron productos",home:"Inicio",search:"Buscar",cart:"Carrito",account:"Cuenta",myCart:"Mi Carrito",total:"Total",finishPurchase:"Finalizar compra",cashOnDelivery:"Pago contraentrega",loginTitle:"🔥 Ingresa",nameLabel:"* Nombre",emailLabel:"* Email",createAccount:"Crear cuenta / Ingresar",or:"o",guest:"Continuar como Invitado",adminAccess:"Acceso Administrador",access:"Acceder",cancel:"Cancelar",productDetail:"Detalle del Producto",addToCart:"Carrito",buyNow:"WhatsApp",adminPanel:"Panel de Administración",dashboard:"Dashboard",products:"Productos",users:"Usuarios",sales:"Ventas",coupons:"Cupones",notifications:"Notificaciones",config:"Configuración",totalProducts:"Productos",soldProducts:"Vendidos",revenue:"Ganancias",registeredUsers:"Usuarios",productManagement:"Gestión de Productos",addProduct:"Agregar Producto",productName:"Nombre",price:"Precio",oldPrice:"Precio anterior",stock:"Stock",category:"Categoría",icon:"Icono",images:"Imágenes",gallery:"Subir imágenes",colors:"Colores",pickColor:"Elegir color",colorName:"Nombre",productList:"Lista de Productos",action:"Acción",userDatabase:"Base de Datos",name:"Nombre",memberSince:"Miembro desde",purchases:"Compras",salesRecord:"Registro de Ventas",date:"Fecha",quantity:"Cant.",buyer:"Comprador",couponManagement:"Gestión de Cupones",createCoupon:"Crear Cupón",couponCode:"Código",type:"Tipo",value:"Valor",minPurchase:"Compra mínima",message:"Mensaje",expiry:"Vence",createAndNotify:"Crear y Notificar",activeCoupons:"Cupones Activos",sendNotification:"Enviar Notificación",subject:"Asunto",sendToAll:"Enviar a todos",globalConfig:"Configuración",languages:"Idiomas",searchPlaceholder:"🔍 Buscar productos..."},en:{topBar:"🎉 AMAZING OFFERS | CASH ON DELIVERY | FREE SHIPPING",light:"Light",dark:"Dark",login:"Login",logout:"Logout",noProducts:"No products found",home:"Home",search:"Search",cart:"Cart",account:"Account",myCart:"My Cart",total:"Total",finishPurchase:"Checkout",cashOnDelivery:"Cash on delivery",loginTitle:"🔥 Login",nameLabel:"* Name",emailLabel:"* Email",createAccount:"Create Account",or:"or",guest:"Continue as Guest",adminAccess:"Admin Access",access:"Access",cancel:"Cancel",productDetail:"Product Detail",addToCart:"Cart",buyNow:"WhatsApp",adminPanel:"Admin Panel",dashboard:"Dashboard",products:"Products",users:"Users",sales:"Sales",coupons:"Coupons",notifications:"Notifications",config:"Settings",totalProducts:"Products",soldProducts:"Sold",revenue:"Revenue",registeredUsers:"Users",productManagement:"Product Management",addProduct:"Add Product",productName:"Name",price:"Price",oldPrice:"Old Price",stock:"Stock",category:"Category",icon:"Icon",images:"Images",gallery:"Upload images",colors:"Colors",pickColor:"Pick color",colorName:"Name",productList:"Product List",action:"Action",userDatabase:"User Database",name:"Name",memberSince:"Member since",purchases:"Purchases",salesRecord:"Sales Record",date:"Date",quantity:"Qty",buyer:"Buyer",couponManagement:"Coupon Management",createCoupon:"Create Coupon",couponCode:"Code",type:"Type",value:"Value",minPurchase:"Min Purchase",message:"Message",expiry:"Expiry",createAndNotify:"Create & Notify",activeCoupons:"Active Coupons",sendNotification:"Send Notification",subject:"Subject",sendToAll:"Send to all",globalConfig:"Settings",languages:"Languages",searchPlaceholder:"🔍 Search products..."},pt:{topBar:"🎉 OFERTAS IMPERDÍVEIS | PAGAMENTO NA ENTREGA | FRETE GRÁTIS",light:"Claro",dark:"Escuro",login:"Entrar",logout:"Sair",noProducts:"Nenhum produto",home:"Início",search:"Buscar",cart:"Carrinho",account:"Conta",myCart:"Meu Carrinho",total:"Total",finishPurchase:"Finalizar compra",cashOnDelivery:"Pagamento na entrega",loginTitle:"🔥 Entre",nameLabel:"* Nome",emailLabel:"* Email",createAccount:"Criar Conta",or:"ou",guest:"Continuar como Convidado",adminAccess:"Acesso Admin",access:"Acessar",cancel:"Cancelar",productDetail:"Detalhe do Produto",addToCart:"Carrinho",buyNow:"WhatsApp",adminPanel:"Painel Admin",dashboard:"Dashboard",products:"Produtos",users:"Usuários",sales:"Vendas",coupons:"Cupons",notifications:"Notificações",config:"Configurações",totalProducts:"Produtos",soldProducts:"Vendidos",revenue:"Receita",registeredUsers:"Usuários",productManagement:"Gestão de Produtos",addProduct:"Adicionar Produto",productName:"Nome",price:"Preço",oldPrice:"Preço Antigo",stock:"Estoque",category:"Categoria",icon:"Ícone",images:"Imagens",gallery:"Enviar imagens",colors:"Cores",pickColor:"Escolher cor",colorName:"Nome",productList:"Lista",action:"Ação",userDatabase:"Banco de Usuários",name:"Nome",memberSince:"Membro desde",purchases:"Compras",salesRecord:"Registro de Vendas",date:"Data",quantity:"Qtd",buyer:"Comprador",couponManagement:"Gestão de Cupons",createCoupon:"Criar Cupom",couponCode:"Código",type:"Tipo",value:"Valor",minPurchase:"Compra Mínima",message:"Mensagem",expiry:"Validade",createAndNotify:"Criar e Notificar",activeCoupons:"Cupons Ativos",sendNotification:"Enviar Notificação",subject:"Assunto",sendToAll:"Enviar para todos",globalConfig:"Configurações",languages:"Idiomas",searchPlaceholder:"🔍 Buscar produtos..."}};
+function t(k){return translations[currentLang]?.[k]||translations['es'][k]||k}
+function updateAllTexts(){document.querySelectorAll('[data-i18n]').forEach(e=>e.textContent=t(e.dataset.i18n));document.getElementById('currentLangLabel').textContent=currentLang.toUpperCase();renderCategories();if(isAdmin&&document.getElementById('adminPage').classList.contains('show'))updateAdminPanel()}
 function toggleLanguage(){const d=document.getElementById('langDropdown');d.style.display=d.style.display==='none'?'block':'none'}
 document.addEventListener('click',e=>{if(!e.target.closest('.hdr-btn'))document.getElementById('langDropdown').style.display='none'});
 function setLanguage(l){currentLang=l;localStorage.setItem('nfLang',l);document.getElementById('langDropdown').style.display='none';updateAllTexts();toast(`Idioma: ${languages[l]}`)}
-function updateAllTexts(){document.querySelectorAll('[data-i18n]').forEach(e=>e.textContent=t(e.dataset.i18n));document.getElementById('currentLangLabel').textContent=currentLang.toUpperCase();renderCategories()}
-function t(k){const tr={es:{login:"Ingresar",logout:"Salir"},en:{login:"Login",logout:"Logout"},pt:{login:"Entrar",logout:"Sair"}};return tr[currentLang]?.[k]||tr['es'][k]||k}
 function toggleColorPicker(){document.getElementById('colorPickerDropdown').classList.toggle('show')}
 document.addEventListener('click',e=>{if(!e.target.closest('.color-picker-wrapper'))document.getElementById('colorPickerDropdown').classList.remove('show')});
+function toast(m,type='success'){const e=document.createElement('div');e.className=`toast ${type}`;e.innerHTML=m;document.body.appendChild(e);setTimeout(()=>e.remove(),2500)}
 
+// ===== API GOOGLE SHEETS =====
 async function sheetsCall(action,data=null){try{let u=`${SHEETS_URL}?action=${action}`;if(data)u+=`&data=${encodeURIComponent(JSON.stringify(data))}`;const r=await fetch(u);return await r.json()}catch(e){return{success:false,message:e.message}}}
 
+// ===== GUARDAR EN AMBOS (FIREBASE + SHEETS) =====
+async function dualSave(collectionName, id, data, sheetsAction){
+    // Firebase
+    try{const ref=id?doc(db,collectionName,String(id)):doc(collection(db,collectionName));await setDoc(ref,data);}catch(e){console.log('Firebase save error:',e.message)}
+    // Google Sheets (respaldo)
+    if(sheetsAction)try{await sheetsCall(sheetsAction,data);}catch(e){console.log('Sheets save error:',e.message)}
+}
+async function dualAdd(collectionName, data, sheetsAction){
+    try{await addDoc(collection(db,collectionName),data);}catch(e){console.log('Firebase add error:',e.message)}
+    if(sheetsAction)try{await sheetsCall(sheetsAction,data);}catch(e){console.log('Sheets add error:',e.message)}
+}
+
+// ===== FIREBASE REAL-TIME =====
 function setupFirebase(){
     onSnapshot(collection(db,"products"),snap=>{if(!snap.empty){products=[];snap.forEach(d=>products.push({id:parseInt(d.id),...d.data()}));products.sort((a,b)=>a.id-b.id);nextId=products.length?Math.max(...products.map(p=>p.id))+1:1;renderAll()}});
     onSnapshot(collection(db,"users"),snap=>{registeredUsers=[];snap.forEach(d=>registeredUsers.push({id:d.id,...d.data()}))});
     onSnapshot(collection(db,"sales"),snap=>{salesHistory=[];snap.forEach(d=>salesHistory.push(d.data()))});
     onSnapshot(collection(db,"purchases"),snap=>{userPurchases=[];snap.forEach(d=>userPurchases.push(d.data()))});
     onSnapshot(collection(db,"coupons"),snap=>{coupons={};snap.forEach(d=>coupons[d.id]=d.data())});
+    onSnapshot(collection(db,"sessions"),snap=>{snap.forEach(d=>{if(d.data().email===currentUser?.email){currentUser=d.data();isAdmin=d.data().isAdmin||false;updateUserUI()}})});
 }
 
+// ===== CARGAR PRODUCTOS DESDE GOOGLE SHEETS =====
 async function loadProductsFromSheets(){
     const r=await sheetsCall('getProducts');
     if(r.success&&r.data&&r.data.length>0){products=r.data;nextId=Math.max(...products.map(p=>p.id))+1;for(const p of products)await setDoc(doc(db,"products",String(p.id)),p).catch(()=>{})}
     else{products=getDefaults();nextId=products.length+1;for(const p of products){await sheetsCall('addProduct',p);await setDoc(doc(db,"products",String(p.id)),p).catch(()=>{})}}
+    const u=await sheetsCall('getUsers');if(u.success&&u.data){registeredUsers=u.data;for(const user of u.data)await setDoc(doc(db,"users",user.email||user.id),user).catch(()=>{})}
+    const s=await sheetsCall('getSales');if(s.success&&s.data){salesHistory=s.data;for(const sale of s.data)await addDoc(collection(db,"sales"),sale).catch(()=>{})}
     loadLocal();renderAll();updateAllTexts();restoreSession();
 }
+
 function getDefaults(){return[{id:1,name:"Audífonos Bluetooth 40h",category:"electronica",price:49900,oldPrice:129900,stock:25,sold:1250,rating:4.8,icon:"🎧",image:"",gallery:[],colors:[{name:"Negro",code:"#1a1a2e"},{name:"Blanco",code:"#ffffff"}]},{id:2,name:"Camiseta Deportiva",category:"moda",price:28900,oldPrice:79900,stock:42,sold:3450,rating:4.9,icon:"👕",image:"",gallery:[],colors:[{name:"Negro",code:"#1a1a2e"},{name:"Blanco",code:"#ffffff"}]},{id:3,name:"Lámpara LED",category:"hogar",price:15900,oldPrice:45900,stock:5,sold:920,rating:4.7,icon:"💡",image:"",gallery:[],colors:[{name:"Blanco",code:"#ffffff"}]},{id:4,name:"Smartwatch Deportivo",category:"electronica",price:89900,oldPrice:199900,stock:15,sold:2300,rating:4.6,icon:"⌚",image:"",gallery:[],colors:[{name:"Negro",code:"#1a1a2e"}]}]}
 
-function restoreSession(){const u=localStorage.getItem('nfCurrentUser');const a=localStorage.getItem('nfIsAdmin');const p=localStorage.getItem('nfCurrentPage');if(u){currentUser=JSON.parse(u);isAdmin=a==='true';updateUserUI();if(p==='admin'&&isAdmin)setTimeout(()=>openAdminPage(),300)}}
+function restoreSession(){const saved=localStorage.getItem('nfSessionId');if(saved&&currentUser){setDoc(doc(db,"sessions",saved),{...currentUser,isAdmin,lastActive:new Date().toISOString()}).catch(()=>{})}const u=localStorage.getItem('nfCurrentUser');const a=localStorage.getItem('nfIsAdmin');const p=localStorage.getItem('nfCurrentPage');if(u){currentUser=JSON.parse(u);isAdmin=a==='true';updateUserUI();if(p==='admin'&&isAdmin)setTimeout(()=>openAdminPage(),300)}}
 function loadLocal(){cart=JSON.parse(localStorage.getItem('nfCart')||'[]');wishlist=JSON.parse(localStorage.getItem('nfWish')||'[]');recentViews=JSON.parse(localStorage.getItem('nfRecent')||'[]');currentLang=localStorage.getItem('nfLang')||'es';if(localStorage.getItem('nfTheme')==='dark'){document.body.classList.add('dark-mode');document.getElementById('themeLabel').textContent='Oscuro';document.querySelector('.hdr-btn .fa-sun')?.classList.replace('fa-sun','fa-moon')}updateCartUI()}
 function saveLocal(){localStorage.setItem('nfCart',JSON.stringify(cart));localStorage.setItem('nfWish',JSON.stringify(wishlist));localStorage.setItem('nfRecent',JSON.stringify(recentViews.slice(0,30)));localStorage.setItem('nfLang',currentLang)}
 
 function renderCategories(){const c=['todos','electronica','moda','hogar','accesorios','belleza'];const i=['📦','📱','👕','🏠','🕶️','💄'];document.getElementById('categoriasContainer').innerHTML=c.map((x,n)=>`<button class="cat-btn ${currentCat===x?'active':''}" onclick="filterByCat('${x}')">${i[n]} ${x}</button>`).join('')}
-function renderProducts(){let f=products.filter(p=>currentCat==='todos'||p.category===currentCat);if(currentSearch)f=f.filter(p=>p.name.toLowerCase().includes(currentSearch.toLowerCase()));const g=document.getElementById('productGrid');if(!f.length){g.innerHTML='';document.getElementById('noResults').style.display='block';return}document.getElementById('noResults').style.display='none';g.innerHTML=f.map(p=>{const s=selectedColors[p.id]||p.colors?.[0];const d=p.oldPrice>p.price?Math.round((1-p.price/p.oldPrice)*100):0;const sc=p.stock<=0?'stock-out':(p.stock<10?'stock-low':'stock-in');const st=p.stock<=0?'❌ AGOTADO':(p.stock<10?`⚠️ ${p.stock} disp.`:`✅ ${p.stock} disp.`);return`<div class="product-card" onclick="openProdModal(${p.id})"><div class="product-img">${p.image?`<img src="${p.image}" alt="${p.name}" loading="lazy">`:`<div style="font-size:2.2rem;">${p.icon||'📦'}</div>`}${d>0?`<div style="position:absolute;bottom:5px;right:5px;background:var(--secondary);color:white;padding:2px 6px;border-radius:10px;font-size:0.55rem;">-${d}%</div>`:''}</div><div class="product-info"><div class="product-title">${p.name}</div><div class="price">$${p.price.toLocaleString('es-CO')}<span class="old-price">$${p.oldPrice.toLocaleString('es-CO')}</span></div><span class="stock-badge ${sc}">${st}</span><div style="display:flex;gap:3px;margin-top:3px;">${(p.colors||[]).map((c,idx)=>`<div style="width:20px;height:20px;border-radius:50%;background:${c.code};cursor:pointer;border:2px solid ${s&&s.index===idx?'var(--primary)':'#ddd'};" onclick="event.stopPropagation();pickColor(${p.id},'${c.name}','${c.code}',${idx})"></div>`).join('')}</div><div style="display:flex;gap:5px;margin-top:5px;"><button class="btn btn-cart" ${p.stock<=0?'disabled':''} onclick="event.stopPropagation();addToCart(${p.id})"><i class="fas fa-cart-plus"></i></button><button class="btn btn-wa" onclick="event.stopPropagation();buyNow(${p.id})"><i class="fab fa-whatsapp"></i></button></div></div></div>`}).join('')}
+function renderProducts(){let f=products.filter(p=>currentCat==='todos'||p.category===currentCat);if(currentSearch)f=f.filter(p=>p.name.toLowerCase().includes(currentSearch.toLowerCase()));const g=document.getElementById('productGrid');if(!f.length){g.innerHTML='';document.getElementById('noResults').style.display='block';return}document.getElementById('noResults').style.display='none';g.innerHTML=f.map(p=>{const s=selectedColors[p.id]||p.colors?.[0];const d=p.oldPrice>p.price?Math.round((1-p.price/p.oldPrice)*100):0;return`<div class="product-card" onclick="openProdModal(${p.id})"><div class="product-img">${p.image?`<img src="${p.image}" alt="${p.name}" loading="lazy">`:`<div style="font-size:2.2rem;">${p.icon||'📦'}</div>`}${d>0?`<div style="position:absolute;bottom:5px;right:5px;background:var(--secondary);color:white;padding:2px 6px;border-radius:10px;font-size:0.55rem;">-${d}%</div>`:''}</div><div class="product-info"><div class="product-title">${p.name}</div><div class="price">$${p.price.toLocaleString('es-CO')}<span class="old-price">$${p.oldPrice.toLocaleString('es-CO')}</span></div><div style="display:flex;gap:3px;margin-top:3px;">${(p.colors||[]).map((c,idx)=>`<div style="width:20px;height:20px;border-radius:50%;background:${c.code};cursor:pointer;border:2px solid ${s&&s.index===idx?'var(--primary)':'#ddd'};" onclick="event.stopPropagation();pickColor(${p.id},'${c.name}','${c.code}',${idx})"></div>`).join('')}</div><div style="display:flex;gap:5px;margin-top:5px;"><button class="btn btn-cart" onclick="event.stopPropagation();addToCart(${p.id})"><i class="fas fa-cart-plus"></i></button><button class="btn btn-wa" onclick="event.stopPropagation();buyNow(${p.id})"><i class="fab fa-whatsapp"></i></button></div></div></div>`}).join('')}
 function renderAll(){renderCategories();renderProducts()}
 
-// ===== PRODUCT MODAL =====
-function openProdModal(pid){const p=products.find(x=>x.id===pid);if(!p)return;modalProduct=p;modalColor=selectedColors[pid]||p.colors?.[0];recentViews=[p,...recentViews.filter(x=>x.id!==pid)].slice(0,30);saveLocal();document.getElementById('modalName').textContent=p.name;document.getElementById('modalPrice').textContent='$'+p.price.toLocaleString('es-CO');document.getElementById('modalOldPrice').textContent='$'+p.oldPrice.toLocaleString('es-CO');document.getElementById('modalDiscount').textContent='-'+Math.round((1-p.price/p.oldPrice)*100)+'%';const sc=p.stock<=0?'stock-out':(p.stock<10?'stock-low':'stock-in');document.getElementById('modalStock').className='stock-badge '+sc;document.getElementById('modalStock').textContent=p.stock<=0?'❌ AGOTADO':(p.stock<10?`⚠️ ${p.stock} disp.`:`✅ ${p.stock} disp.`);document.getElementById('modalColors').innerHTML=p.colors.map((c,i)=>`<div class="modal-color ${modalColor&&modalColor.index===i?'selected':''}" style="background:${c.code}" onclick="selectModalColor(${pid},'${c.name}','${c.code}',${i})"></div>`).join('');modalImgs=[p.image,...(p.gallery||[])].filter(Boolean);modalImgIdx=0;const slides=document.getElementById('modalSlides');slides.innerHTML=modalImgs.length?modalImgs.map(img=>`<div class="modal-slide"><img src="${img}" loading="lazy"></div>`).join(''):'<div class="modal-slide"><div style="font-size:2.5rem;">📦</div></div>';document.getElementById('modalDots').innerHTML=modalImgs.map((_,i)=>`<div class="modal-dot ${i===0?'active':''}" onclick="goToModalImg(${i})"></div>`).join('');slides.scrollLeft=0;slides.addEventListener('scroll',()=>{modalImgIdx=Math.round(slides.scrollLeft/slides.clientWidth);document.querySelectorAll('#modalDots .modal-dot').forEach((d,i)=>d.classList.toggle('active',i===modalImgIdx))});document.getElementById('prodModalOverlay').classList.add('show');document.getElementById('prodModal').classList.add('show')}
+function openProdModal(pid){const p=products.find(x=>x.id===pid);if(!p)return;modalProduct=p;modalColor=selectedColors[pid]||p.colors?.[0];recentViews=[p,...recentViews.filter(x=>x.id!==pid)].slice(0,30);saveLocal();document.getElementById('modalName').textContent=p.name;document.getElementById('modalPrice').textContent='$'+p.price.toLocaleString('es-CO');document.getElementById('modalOldPrice').textContent='$'+p.oldPrice.toLocaleString('es-CO');document.getElementById('modalDiscount').textContent='-'+Math.round((1-p.price/p.oldPrice)*100)+'%';document.getElementById('modalColors').innerHTML=p.colors.map((c,i)=>`<div class="modal-color ${modalColor&&modalColor.index===i?'selected':''}" style="background:${c.code}" onclick="selectModalColor(${pid},'${c.name}','${c.code}',${i})"></div>`).join('');modalImgs=[p.image,...(p.gallery||[])].filter(Boolean);modalImgIdx=0;const slides=document.getElementById('modalSlides');slides.innerHTML=modalImgs.length?modalImgs.map(img=>`<div class="modal-slide"><img src="${img}" loading="lazy"></div>`).join(''):'<div class="modal-slide"><div style="font-size:2.5rem;">📦</div></div>';document.getElementById('modalDots').innerHTML=modalImgs.map((_,i)=>`<div class="modal-dot ${i===0?'active':''}" onclick="goToModalImg(${i})"></div>`).join('');slides.scrollLeft=0;slides.addEventListener('scroll',()=>{modalImgIdx=Math.round(slides.scrollLeft/slides.clientWidth);document.querySelectorAll('#modalDots .modal-dot').forEach((d,i)=>d.classList.toggle('active',i===modalImgIdx))});document.getElementById('prodModalOverlay').classList.add('show');document.getElementById('prodModal').classList.add('show')}
 function closeProdModal(){document.getElementById('prodModalOverlay').classList.remove('show');document.getElementById('prodModal').classList.remove('show');modalProduct=null}
 function prevModalImg(){if(!modalImgs.length)return;modalImgIdx=modalImgIdx>0?modalImgIdx-1:modalImgs.length-1;document.getElementById('modalSlides').scrollTo({left:modalImgIdx*document.getElementById('modalSlides').clientWidth,behavior:'smooth'})}
 function nextModalImg(){if(!modalImgs.length)return;modalImgIdx=modalImgIdx<modalImgs.length-1?modalImgIdx+1:0;document.getElementById('modalSlides').scrollTo({left:modalImgIdx*document.getElementById('modalSlides').clientWidth,behavior:'smooth'})}
 function goToModalImg(i){modalImgIdx=i;document.getElementById('modalSlides').scrollTo({left:i*document.getElementById('modalSlides').clientWidth,behavior:'smooth'})}
 function selectModalColor(pid,name,code,idx){modalColor={name,code,index:idx};selectedColors[pid]=modalColor;document.querySelectorAll('.modal-color').forEach((c,i)=>c.classList.toggle('selected',i===idx));renderProducts()}
 function modalAddToCart(){if(!modalProduct||!modalColor){toast('Selecciona color','warning');return}addToCart(modalProduct.id);closeProdModal()}
-function modalBuyNow(){if(!modalProduct)return;const c=modalColor||modalProduct.colors?.[0];const msg=`🛍️ *${modalProduct.name}*%0A🎨 ${c?.name||'N/A'}%0A💰 $${modalProduct.price.toLocaleString('es-CO')}%0A📦 Stock: ${modalProduct.stock}%0A💵 Pago contraentrega`;window.open(`https://wa.me/${WHATSAPP}?text=${msg}`,'_blank')}
+function modalBuyNow(){if(!modalProduct||!modalColor){toast('Selecciona color','warning');return}buyNow(modalProduct.id);closeProdModal()}
 
-// ===== CART (CON STOCK AUTO) =====
 async function addToCart(pid){const p=products.find(x=>x.id===pid);const c=selectedColors[pid]||p.colors?.[0];if(!c){toast('⚠️ Selecciona color','warning');return}if(p.stock<=0){toast('❌ Agotado','error');return}const ex=cart.find(i=>i.id===pid&&i.color===c.name);ex?ex.qty++:cart.push({id:pid,name:p.name,color:c.name,price:p.price,qty:1});p.stock--;p.sold=(p.sold||0)+1;await updateDoc(doc(db,"products",String(pid)),{stock:p.stock,sold:p.sold}).catch(()=>{});await sheetsCall('updateProduct',p);saveLocal();updateCartUI();renderProducts();toast(`✅ ${p.name} agregado`)}
 function updateCartUI(){document.getElementById('cartCount').textContent=cart.reduce((s,i)=>s+i.qty,0);const d=document.getElementById('cartItems'),f=document.getElementById('cartFooter');if(!cart.length){d.innerHTML='<div style="text-align:center;padding:20px;">🛒 Vacío</div>';f.style.display='none';return}f.style.display='block';let s=0;d.innerHTML=cart.map((it,idx)=>{s+=it.price*it.qty;return`<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);"><div><strong>${it.name}</strong><br>$${it.price.toLocaleString('es-CO')}</div><div style="display:flex;align-items:center;gap:3px;"><button onclick="modQty(${idx},-1)" style="background:var(--primary);color:white;border:none;width:20px;height:20px;border-radius:50%;cursor:pointer;">-</button><span>${it.qty}</span><button onclick="modQty(${idx},1)" style="background:var(--primary);color:white;border:none;width:20px;height:20px;border-radius:50%;cursor:pointer;">+</button><button onclick="remItem(${idx})" style="background:var(--danger);color:white;border:none;padding:2px 5px;border-radius:6px;cursor:pointer;">🗑️</button></div></div>`}).join('');document.getElementById('cartTotal').textContent=`$${s.toLocaleString('es-CO')}`}
-async function modQty(idx,d){if(!cart[idx])return;const n=cart[idx].qty+d,p=products.find(x=>x.id===cart[idx].id);if(n<=0){if(p){p.stock+=cart[idx].qty;await updateDoc(doc(db,"products",String(p.id)),{stock:p.stock}).catch(()=>{});await sheetsCall('updateProduct',p)}cart.splice(idx,1)}else{if(p&&d>0){if(p.stock<=0){toast('❌ Sin stock','error');return}p.stock--;await updateDoc(doc(db,"products",String(p.id)),{stock:p.stock}).catch(()=>{});await sheetsCall('updateProduct',p)}else if(p&&d<0){p.stock++;await updateDoc(doc(db,"products",String(p.id)),{stock:p.stock}).catch(()=>{});await sheetsCall('updateProduct',p)}cart[idx].qty=n}saveLocal();updateCartUI();renderProducts()}
-async function remItem(idx){if(cart[idx]){const p=products.find(x=>x.id===cart[idx].id);if(p){p.stock+=cart[idx].qty;await updateDoc(doc(db,"products",String(p.id)),{stock:p.stock}).catch(()=>{});await sheetsCall('updateProduct',p)}}cart.splice(idx,1);saveLocal();updateCartUI();renderProducts()}
-async function checkout(){if(!cart.length){toast('🛒 Carrito vacío','error');return}const s=cart.reduce((a,i)=>a+i.price*i.qty,0);let m=`🛒 *PEDIDO NF NEXUS*%0A%0A`;cart.forEach(i=>m+=`📦 ${i.name} x${i.qty}=$${(i.price*i.qty).toLocaleString('es-CO')}%0A`);m+=`%0A💰 *TOTAL: $${s.toLocaleString('es-CO')}*`;window.open(`https://wa.me/${WHATSAPP}?text=${m}`,'_blank');for(const i of cart){const sale={date:new Date().toLocaleString('es-CO'),product:i.name,qty:i.qty,total:i.price*i.qty,color:i.color,buyer:currentUser?.name||'Invitado',email:currentUser?.email||''};await addDoc(collection(db,"sales"),sale);await sheetsCall('addSale',sale);if(currentUser?.name!=='Invitado')await addDoc(collection(db,"purchases"),sale)}cart=[];saveLocal();updateCartUI();closeCart();toast('✅ ¡Pedido enviado!')}
+async function modQty(idx,d){if(!cart[idx])return;const n=cart[idx].qty+d,p=products.find(x=>x.id===cart[idx].id);if(n<=0){if(p){p.stock+=cart[idx].qty;await updateDoc(doc(db,"products",String(p.id)),{stock:p.stock}).catch(()=>{})}cart.splice(idx,1)}else{cart[idx].qty=n}saveLocal();updateCartUI();renderProducts()}
+async function remItem(idx){if(cart[idx]){const p=products.find(x=>x.id===cart[idx].id);if(p){p.stock+=cart[idx].qty;await updateDoc(doc(db,"products",String(p.id)),{stock:p.stock}).catch(()=>{})}}cart.splice(idx,1);saveLocal();updateCartUI();renderProducts()}
+async function checkout(){if(!cart.length){toast('🛒 Carrito vacío','error');return}const s=cart.reduce((a,i)=>a+i.price*i.qty,0);let m=`🛒 *PEDIDO NF NEXUS*%0A%0A`;cart.forEach(i=>m+=`📦 ${i.name} x${i.qty}=$${(i.price*i.qty).toLocaleString('es-CO')}%0A`);m+=`%0A💰 *TOTAL: $${s.toLocaleString('es-CO')}*`;window.open(`https://wa.me/${WHATSAPP}?text=${m}`,'_blank');for(const i of cart){const sale={date:new Date().toLocaleString('es-CO'),product:i.name,qty:i.qty,total:i.price*i.qty,color:i.color,buyer:currentUser?.name||'Invitado',email:currentUser?.email||''};await dualAdd('sales',sale,'addSale');if(currentUser?.name!=='Invitado')await dualAdd('purchases',{...sale,buyerEmail:currentUser?.email},'addSale')}cart=[];saveLocal();updateCartUI();closeCart();toast('✅ ¡Pedido enviado!')}
 
 function pickColor(pid,name,code,idx){selectedColors[pid]={name,code,index:idx};renderProducts()}
-function buyNow(pid){const p=products.find(x=>x.id===pid);const c=selectedColors[pid]||p.colors?.[0];const msg=`🛍️ *${p.name}*%0A🎨 ${c?.name||'N/A'}%0A💰 $${p.price.toLocaleString('es-CO')}%0A💵 Pago contraentrega`;window.open(`https://wa.me/${WHATSAPP}?text=${msg}`,'_blank')}
+function buyNow(pid){const p=products.find(x=>x.id===pid);window.open(`https://wa.me/${WHATSAPP}?text=🛍️ *${p.name}*%0A💰 $${p.price.toLocaleString('es-CO')}`,'_blank')}
 function filterProducts(){currentSearch=document.getElementById('searchInput').value;renderProducts()}
 function filterByCat(cat){currentCat=cat;renderCategories();renderProducts()}
 function openCart(){document.getElementById('cartPanel').classList.add('show');document.getElementById('cartOverlay').classList.add('show')}
 function closeCart(){document.getElementById('cartPanel').classList.remove('show');document.getElementById('cartOverlay').classList.remove('show')}
-function toggleTheme(){document.body.classList.toggle('dark-mode');const d=document.body.classList.contains('dark-mode');localStorage.setItem('nfTheme',d?'dark':'light');document.getElementById('themeLabel').textContent=d?'Oscuro':'Claro';const icon=document.querySelector('.hdr-btn .fa-sun,.hdr-btn .fa-moon');if(icon)icon.className=d?'fas fa-moon':'fas fa-sun'}
+function toggleTheme(){document.body.classList.toggle('dark-mode');const d=document.body.classList.contains('dark-mode');localStorage.setItem('nfTheme',d?'dark':'light');document.getElementById('themeLabel').textContent=d?'Oscuro':'Claro';const icon=document.querySelector('.hdr-btn .fa-sun,.hdr-btn .fa-moon');if(icon){icon.className=d?'fas fa-moon':'fas fa-sun'}}
+function scrollToTop(){window.scrollTo({top:0,behavior:'smooth'})}
 
-// ===== AUTH (LOGIN + REGISTER SEPARADOS) =====
-function openLoginModal(){document.getElementById('loginModal').classList.add('show');loginLogoClicks=0;showLoginForm()}
+function openLoginModal(){document.getElementById('loginModal').classList.add('show');loginLogoClicks=0;updateAllTexts()}
 function closeLoginModal(){document.getElementById('loginModal').classList.remove('show');document.getElementById('loginError').textContent=''}
-function showLoginForm(){document.getElementById('loginFormFields').style.display='block';document.getElementById('registerFormFields').style.display='none';document.getElementById('switchToRegister').style.display='block';document.getElementById('switchToLogin').style.display='none';document.getElementById('loginError').textContent=''}
-function showRegisterForm(){document.getElementById('loginFormFields').style.display='none';document.getElementById('registerFormFields').style.display='block';document.getElementById('switchToRegister').style.display='none';document.getElementById('switchToLogin').style.display='block';document.getElementById('loginError').textContent=''}
 function handleLoginLogoClick(){loginLogoClicks++;if(loginLogoClicks>=3){loginLogoClicks=0;closeLoginModal();document.getElementById('adminSecretModal').classList.add('show')}setTimeout(()=>loginLogoClicks=0,2000)}
 
-async function loginUser(){
-    const email=document.getElementById('loginEmail').value.trim();
-    document.getElementById('loginError').textContent='';
-    if(!email||!email.includes('@')){document.getElementById('loginError').textContent='⚠️ Ingresa un correo válido';return}
-    // Buscar en Firebase
-    const q=query(collection(db,"users"),where("email","==",email));
-    const snap=await getDocs(q);
-    if(!snap.empty){snap.forEach(d=>{currentUser={...d.data(),id:d.id};isAdmin=currentUser.isAdmin||false});localStorage.setItem('nfCurrentUser',JSON.stringify(currentUser));localStorage.setItem('nfIsAdmin',isAdmin?'true':'false');updateUserUI();closeLoginModal();toast(`✅ ¡Bienvenido/a ${currentUser.name}!`)}
-    else{
-        const r=await sheetsCall('getUsers');
-        if(r.success&&r.data){const found=r.data.find(u=>u.email===email);if(found){currentUser={...found,isAdmin:false};localStorage.setItem('nfCurrentUser',JSON.stringify(currentUser));localStorage.setItem('nfIsAdmin','false');updateUserUI();closeLoginModal();toast(`✅ ¡Bienvenido/a ${currentUser.name}!`);return}}
-        document.getElementById('loginError').textContent='⚠️ Usuario no encontrado. Crea una cuenta.'}
-}
-
+// ===== REGISTRO (DUAL: Firebase + Sheets + Sesión) =====
 async function registerUser(){
-    const name=document.getElementById('loginName').value.trim(),email=document.getElementById('regEmail').value.trim();
+    const n=document.getElementById('loginName').value.trim(),e=document.getElementById('loginEmail').value.trim();
     document.getElementById('loginError').textContent='';
-    if(!name){document.getElementById('loginError').textContent='⚠️ Nombre obligatorio';return}
-    if(!email||!email.includes('@')){document.getElementById('loginError').textContent='⚠️ Email válido obligatorio';return}
-    currentUser={name,email,memberSince:new Date().toLocaleDateString('es-CO'),isAdmin:false};
-    localStorage.setItem('nfCurrentUser',JSON.stringify(currentUser));localStorage.setItem('nfIsAdmin','false');
-    await setDoc(doc(db,"users",email),currentUser);
-    await sheetsCall('addUser',currentUser);
-    updateUserUI();closeLoginModal();toast(`✅ ¡Bienvenido/a ${name}!`)
+    if(!n){document.getElementById('loginError').textContent='⚠️ Nombre obligatorio';return}
+    if(!e||!e.includes('@')){document.getElementById('loginError').textContent='⚠️ Email válido obligatorio';return}
+    currentUser={name:n,email:e,memberSince:new Date().toLocaleDateString('es-CO'),isAdmin:false};
+    localStorage.setItem('nfCurrentUser',JSON.stringify(currentUser));
+    localStorage.setItem('nfIsAdmin','false');
+    // Guardar en Firebase + Sheets
+    await dualSave('users',e,currentUser,'addUser');
+    // Guardar sesión en Firebase
+    const sessionRef=await addDoc(collection(db,"sessions"),{...currentUser,isAdmin:false,createdAt:new Date().toISOString()});
+    localStorage.setItem('nfSessionId',sessionRef.id);
+    updateUserUI();closeLoginModal();toast(`✅ ¡Bienvenido/a ${n}!`)
 }
-function continueAsGuest(){currentUser={name:'Invitado',email:'',isAdmin:false};updateUserUI();closeLoginModal()}
-function updateUserUI(){if(currentUser){document.getElementById('loginBtn').style.display='none';document.getElementById('userInfo').style.display='flex';document.getElementById('logoutBtn').style.display='inline-block';document.getElementById('displayUserName').textContent=currentUser.name;document.getElementById('adminBadge').style.display=isAdmin?'inline-block':'none'}else{document.getElementById('loginBtn').style.display='flex';document.getElementById('userInfo').style.display='none';document.getElementById('logoutBtn').style.display='none';isAdmin=false}}
-function logout(){currentUser=null;isAdmin=false;localStorage.removeItem('nfCurrentUser');localStorage.removeItem('nfIsAdmin');localStorage.removeItem('nfCurrentPage');updateUserUI();closeAdminPage();toast('👋 Sesión cerrada')}
+function continueAsGuest(){currentUser={name:'Invitado',email:'',memberSince:'',isAdmin:false};updateUserUI();closeLoginModal()}
+function updateUserUI(){if(currentUser){document.getElementById('loginBtn').style.display='none';document.getElementById('userInfo').style.display='flex';document.getElementById('logoutBtn').style.display='inline-block';document.getElementById('displayUserName').textContent=currentUser.name;document.getElementById('adminBadge').style.display=isAdmin?'inline-block':'none';if(isAdmin)document.getElementById('userInfo').onclick=openAdminPage}else{document.getElementById('loginBtn').style.display='flex';document.getElementById('userInfo').style.display='none';document.getElementById('logoutBtn').style.display='none';isAdmin=false}}
+function logout(){
+    const sessionId=localStorage.getItem('nfSessionId');
+    if(sessionId)deleteDoc(doc(db,"sessions",sessionId)).catch(()=>{});
+    currentUser=null;isAdmin=false;
+    localStorage.removeItem('nfCurrentUser');localStorage.removeItem('nfIsAdmin');
+    localStorage.removeItem('nfCurrentPage');localStorage.removeItem('nfSessionId');
+    updateUserUI();closeAdminPage();toast('👋 Sesión cerrada')
+}
 function closeSecretModal(){document.getElementById('adminSecretModal').classList.remove('show')}
-function loginAsAdmin(){if(adminAttempts>=3){document.getElementById('secretError').textContent='Demasiados intentos';return}if(document.getElementById('secretUser').value.trim()===ADMIN_U&&document.getElementById('secretPass').value===ADMIN_P){currentUser={name:'Administrador',email:'admin@nfnexus.com',memberSince:'Admin',isAdmin:true};isAdmin=true;adminAttempts=0;localStorage.setItem('nfCurrentUser',JSON.stringify(currentUser));localStorage.setItem('nfIsAdmin','true');updateUserUI();closeSecretModal();toast('✅ Bienvenido Admin')}else{adminAttempts++;document.getElementById('secretError').textContent=`Incorrecto (${3-adminAttempts})`}}
-
-function openAdminPage(){if(!isAdmin)return;document.getElementById('adminPage').classList.add('show');localStorage.setItem('nfCurrentPage','admin');updateAdminPanel()}
-function closeAdminPage(){document.getElementById('adminPage').classList.remove('show');localStorage.removeItem('nfCurrentPage')}
-function updateAdminPanel(){
-    document.getElementById('aStatProducts').textContent=products.length;document.getElementById('aStatSold').textContent=products.reduce((s,p)=>s+(p.sold||0),0);document.getElementById('aStatRevenue').textContent='$'+products.reduce((s,p)=>s+((p.sold||0)*p.price),0).toLocaleString('es-CO');document.getElementById('aStatUsers').textContent=registeredUsers.length;
-    document.getElementById('adminProductsTable').innerHTML=products.map(p=>`<tr><td>${p.id}</td><td>${p.name}</td><td>$${p.price.toLocaleString('es-CO')}</td><td>${p.stock}</td><td><button class="btn-sm primary" onclick="editProduct(${p.id})" style="margin-right:3px;">✏️</button><button class="btn-sm danger" onclick="adminDeleteProduct(${p.id})">🗑️</button></td></tr>`).join('');
-    document.getElementById('adminUsersTable').innerHTML=registeredUsers.map(u=>{const pc=userPurchases.filter(p=>p.buyer===u.name||p.email===u.email);return`<tr><td>${u.name}</td><td>${u.email||u.id}</td><td>${u.memberSince||'-'}</td><td>${pc.length}</td></tr>`}).join('');
-    document.getElementById('adminSalesTable').innerHTML=salesHistory.slice(-20).reverse().map(s=>`<tr><td>${s.date}</td><td>${s.product}</td><td>${s.qty}</td><td>$${(s.total||0).toLocaleString('es-CO')}</td><td>${s.buyer}</td></tr>`).join('');
-    document.getElementById('adminCouponsList').innerHTML=Object.entries(coupons).map(([c,o])=>`<div style="display:flex;justify-content:space-between;padding:5px;background:var(--bg);border-radius:4px;margin-bottom:2px;"><div><strong>${c}</strong> - ${o.msg}</div><button class="btn-sm danger" onclick="adminDeleteCoupon('${c}')">🗑️</button></div>`).join('');
-    document.getElementById('adminLangChips').innerHTML=Object.entries(languages).map(([c,n])=>`<span style="display:inline-flex;align-items:center;gap:2px;background:var(--bg);padding:3px 6px;border-radius:10px;font-size:0.6rem;">${c}: ${n} ${c!=='es'?`<span onclick="adminRemoveLang('${c}')" style="cursor:pointer;color:var(--danger);">×</span>`:''}</span>`).join('');
-    renderColorPalette();
+function loginAsAdmin(){
+    if(adminAttempts>=3){document.getElementById('secretError').textContent='Demasiados intentos';return}
+    if(document.getElementById('secretUser').value.trim()===ADMIN_U&&document.getElementById('secretPass').value===ADMIN_P){
+        currentUser={name:'Administrador',email:'admin@nfnexus.com',memberSince:'Admin',isAdmin:true};isAdmin=true;adminAttempts=0;
+        localStorage.setItem('nfCurrentUser',JSON.stringify(currentUser));localStorage.setItem('nfIsAdmin','true');
+        // Guardar sesión admin en Firebase
+        addDoc(collection(db,"sessions"),{...currentUser,isAdmin:true,createdAt:new Date().toISOString()}).then(ref=>localStorage.setItem('nfSessionId',ref.id));
+        updateUserUI();closeSecretModal();toast('✅ Bienvenido Admin')
+    }else{adminAttempts++;document.getElementById('secretError').textContent=`Incorrecto (${3-adminAttempts})`}
 }
 
-// ===== EDITAR PRODUCTOS =====
-function editProduct(pid){const p=products.find(x=>x.id===pid);if(!p)return;editingProductId=pid;document.getElementById('epName').value=p.name;document.getElementById('epPrice').value=p.price;document.getElementById('epOldPrice').value=p.oldPrice;document.getElementById('epStock').value=p.stock;document.getElementById('epCategory').value=p.category;document.getElementById('epIcon').value=p.icon;document.getElementById('editProductPanel').style.display='block';document.getElementById('editProductPanel').scrollIntoView({behavior:'smooth'})}
-async function saveProductEdit(){if(!editingProductId)return;const p=products.find(x=>x.id===editingProductId);if(!p)return;const data={name:document.getElementById('epName').value,price:parseInt(document.getElementById('epPrice').value)||p.price,oldPrice:parseInt(document.getElementById('epOldPrice').value)||p.oldPrice,stock:parseInt(document.getElementById('epStock').value)||p.stock,category:document.getElementById('epCategory').value,icon:document.getElementById('epIcon').value};Object.assign(p,data);await updateDoc(doc(db,"products",String(editingProductId)),data).catch(()=>{});await sheetsCall('updateProduct',{id:editingProductId,...data});document.getElementById('editProductPanel').style.display='none';editingProductId=null;renderAll();updateAdminPanel();toast('✅ Producto actualizado')}
-
+function openAdminPage(){if(!isAdmin)return;document.getElementById('adminPage').classList.add('show');localStorage.setItem('nfCurrentPage','admin');updateAdminPanel();updateAllTexts()}
+function closeAdminPage(){document.getElementById('adminPage').classList.remove('show');localStorage.removeItem('nfCurrentPage')}
+function updateAdminPanel(){document.getElementById('aStatProducts').textContent=products.length;document.getElementById('aStatSold').textContent=products.reduce((s,p)=>s+(p.sold||0),0);document.getElementById('aStatRevenue').textContent='$'+products.reduce((s,p)=>s+((p.sold||0)*p.price),0).toLocaleString('es-CO');document.getElementById('aStatUsers').textContent=registeredUsers.length;document.getElementById('adminProductsTable').innerHTML=products.map(p=>`<tr><td>${p.id}</td><td>${p.name}</td><td>$${p.price.toLocaleString('es-CO')}</td><td>${p.stock}</td><td><button class="btn-sm danger" onclick="adminDeleteProduct(${p.id})">🗑️</button></td></tr>`).join('');document.getElementById('adminUsersTable').innerHTML=registeredUsers.map(u=>{const pc=userPurchases.filter(p=>p.buyer===u.name||p.email===u.email);return`<tr><td>${u.name}</td><td>${u.email||u.id}</td><td>${u.memberSince||'-'}</td><td>${pc.length}</td></tr>`}).join('');document.getElementById('adminSalesTable').innerHTML=salesHistory.slice(-20).reverse().map(s=>`<tr><td>${s.date}</td><td>${s.product}</td><td>${s.qty}</td><td>$${(s.total||0).toLocaleString('es-CO')}</td><td>${s.buyer}</td></tr>`).join('');document.getElementById('adminCouponsList').innerHTML=Object.entries(coupons).map(([c,o])=>`<div style="display:flex;justify-content:space-between;padding:5px;background:var(--bg);border-radius:4px;margin-bottom:2px;"><div><strong>${c}</strong> - ${o.msg}</div><button class="btn-sm danger" onclick="adminDeleteCoupon('${c}')">🗑️</button></div>`).join('');document.getElementById('adminLangChips').innerHTML=Object.entries(languages).map(([c,n])=>`<span style="display:inline-flex;align-items:center;gap:2px;background:var(--bg);padding:3px 6px;border-radius:10px;font-size:0.6rem;">${c}: ${n} ${c!=='es'?`<span onclick="adminRemoveLang('${c}')" style="cursor:pointer;color:var(--danger);">×</span>`:''}</span>`).join('');renderColorPalette()}
 function renderColorPalette(){document.getElementById('colorPalette').innerHTML=colorPalette.map(c=>`<div class="palette-swatch" style="background:${c}" onclick="pickPaletteColor('${c}')"></div>`).join('')}
-function pickPaletteColor(code){document.getElementById('colorPreview').style.background=code;window._apColorCode=code}
+function pickPaletteColor(code){document.getElementById('colorPreview').style.background=code;window._apColorCode=code;document.querySelectorAll('.palette-swatch').forEach(s=>s.classList.remove('selected'));document.querySelector(`.palette-swatch[style*="${code}"]`)?.classList.add('selected')}
 function addColorToProduct(){const n=document.getElementById('apColorName').value.trim(),c=window._apColorCode||'#1a1a2e';if(!n){toast('Nombre del color','warning');return}tempColors.push({name:n,code:c});document.getElementById('apSelectedColors').innerHTML=tempColors.map((x,i)=>`<span style="display:inline-flex;align-items:center;gap:2px;background:var(--bg);padding:3px 7px;border-radius:10px;font-size:0.6rem;"><span style="width:9px;height:9px;border-radius:50%;background:${x.code};display:inline-block;"></span>${x.name}<span onclick="removeTempColor(${i})" style="cursor:pointer;color:var(--danger);">×</span></span>`).join('');document.getElementById('apColorName').value=''}
 function removeTempColor(i){tempColors.splice(i,1);addColorToProduct()}
 function previewAllImages(input){tempAllImages=[];document.getElementById('apAllPreviews').innerHTML='';Array.from(input.files).forEach(f=>{const r=new FileReader();r.onload=e=>{tempAllImages.push(e.target.result);document.getElementById('apAllPreviews').innerHTML+=`<img src="${e.target.result}" style="width:55px;height:55px;object-fit:cover;border-radius:5px;border:2px solid var(--primary);margin:2px;">`};r.readAsDataURL(f)})}
-
-// ===== CTRL+V PARA PEGAR IMÁGENES =====
-document.addEventListener('paste',function(e){const items=e.clipboardData.items;for(const item of items){if(item.type.indexOf('image')!==-1){const blob=item.getAsFile();const reader=new FileReader();reader.onload=function(ev){tempAllImages.push(ev.target.result);document.getElementById('apAllPreviews').innerHTML+=`<img src="${ev.target.result}" style="width:55px;height:55px;object-fit:cover;border-radius:5px;border:2px solid var(--primary);margin:2px;">`;toast('📸 Imagen pegada')};reader.readAsDataURL(blob);break}}})
-
 function switchAdminTab(tab){document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.getElementById(`atab-${tab}`)?.classList.add('active');document.querySelector(`.nav-item[onclick="switchAdminTab('${tab}')"]`)?.classList.add('active');updateAdminPanel()}
 
-async function adminAddProduct(){const n=document.getElementById('apName').value.trim(),p=parseInt(document.getElementById('apPrice').value);if(!n||!p){toast('Nombre y precio obligatorios','error');return}if(!tempColors.length)tempColors.push({name:"Negro",code:"#1a1a2e"});const prod={id:nextId++,name:n,price:p,oldPrice:parseInt(document.getElementById('apOldPrice').value)||p*2,stock:parseInt(document.getElementById('apStock').value)||10,category:document.getElementById('apCategory').value,icon:document.getElementById('apIcon').value||'📦',image:tempAllImages[0]||'',gallery:tempAllImages.slice(1),rating:5,sold:0,colors:[...tempColors]};products.push(prod);await sheetsCall('addProduct',prod);tempColors=[];tempAllImages=[];document.getElementById('apAllPreviews').innerHTML='';document.getElementById('apSelectedColors').innerHTML='';['apName','apPrice','apOldPrice'].forEach(id=>document.getElementById(id).value='');renderAll();updateAdminPanel();toast(`✅ "${n}" agregado`)}
+// ===== ADMIN: Agregar producto (Google Sheets como fuente principal) =====
+async function adminAddProduct(){const n=document.getElementById('apName').value.trim(),p=parseInt(document.getElementById('apPrice').value);if(!n||!p){toast('Nombre y precio obligatorios','error');return}if(!tempColors.length)tempColors.push({name:"Negro",code:"#1a1a2e"});const prod={id:nextId++,name:n,price:p,oldPrice:parseInt(document.getElementById('apOldPrice').value)||p*2,stock:parseInt(document.getElementById('apStock').value)||10,category:document.getElementById('apCategory').value,icon:document.getElementById('apIcon').value||'📦',image:tempAllImages[0]||'',gallery:tempAllImages.slice(1),rating:5,sold:0,colors:[...tempColors]};products.push(prod);await sheetsCall('addProduct',prod);await setDoc(doc(db,"products",String(prod.id)),prod).catch(()=>{});tempColors=[];tempAllImages=[];document.getElementById('apAllPreviews').innerHTML='';document.getElementById('apSelectedColors').innerHTML='';['apName','apPrice','apOldPrice'].forEach(id=>document.getElementById(id).value='');renderAll();updateAdminPanel();toast(`✅ "${n}" agregado con ${prod.gallery.length} imágenes`)}
 async function adminDeleteProduct(pid){if(!confirm('¿Eliminar?'))return;products=products.filter(p=>p.id!==pid);await sheetsCall('deleteProduct',{id:pid});await deleteDoc(doc(db,"products",String(pid))).catch(()=>{});renderAll();updateAdminPanel();toast('Eliminado')}
-async function adminAddCoupon(){const c=document.getElementById('acCode').value.toUpperCase().trim(),t=document.getElementById('acType').value,v=parseInt(document.getElementById('acValue').value);if(!c||!v){toast('Código y valor','error');return}coupons[c]={discount:v,type:t,msg:document.getElementById('acMsg').value.trim()||`${v}${t==='percent'?'%':' fijo'}`,expiry:document.getElementById('acExpiry').value||'2026-12-31',minPurchase:parseInt(document.getElementById('acMin').value)||0};await setDoc(doc(db,"coupons",c),coupons[c]);const ue=registeredUsers.filter(u=>u.email&&u.email.includes('@'));toast(`🎫 Cupón ${c} creado${ue.length?' - Notificado a '+ue.length+' usuarios':''}`);updateAdminPanel();['acCode','acValue','acMsg'].forEach(id=>document.getElementById(id).value='')}
+
+// ===== CUPONES (DUAL) =====
+async function adminAddCoupon(){const c=document.getElementById('acCode').value.toUpperCase().trim(),t=document.getElementById('acType').value,v=parseInt(document.getElementById('acValue').value);if(!c||!v){toast('Código y valor','error');return}const coupon={discount:v,type:t,msg:document.getElementById('acMsg').value.trim()||`${v}${t==='percent'?'%':' fijo'}`,expiry:document.getElementById('acExpiry').value||'2026-12-31',minPurchase:parseInt(document.getElementById('acMin').value)||0};coupons[c]=coupon;await dualSave('coupons',c,coupon,'addSale');const ue=registeredUsers.filter(u=>u.email&&u.email.includes('@'));toast(`🎫 Cupón ${c} creado${ue.length?' - Notificado a '+ue.length+' usuarios':''}`);updateAdminPanel();['acCode','acValue','acMsg'].forEach(id=>document.getElementById(id).value='')}
 async function adminDeleteCoupon(c){delete coupons[c];await deleteDoc(doc(db,"coupons",c)).catch(()=>{});updateAdminPanel();toast('Cupón eliminado')}
-async function adminSendEmailNotification(){const s=document.getElementById('notifSubject').value.trim(),m=document.getElementById('notifMessage').value.trim();if(!s||!m){toast('Completa asunto y mensaje','error');return}const ue=registeredUsers.filter(u=>u.email&&u.email.includes('@'));if(!ue.length){toast('No hay usuarios con email','warning');return}document.getElementById('notificationStatus').innerHTML=`<div style="color:var(--success);">✅ Enviado a ${ue.length} usuarios</div>`;toast(`📧 Notificación enviada`);document.getElementById('notifSubject').value='';document.getElementById('notifMessage').value=''}
+async function adminSendEmailNotification(){const s=document.getElementById('notifSubject').value.trim(),m=document.getElementById('notifMessage').value.trim();if(!s||!m){toast('Completa asunto y mensaje','error');return}const ue=registeredUsers.filter(u=>u.email&&u.email.includes('@'));if(!ue.length){toast('No hay usuarios con email','warning');return}document.getElementById('notificationStatus').innerHTML=`<div style="color:var(--success);">✅ Enviado a ${ue.length} usuarios</div>`;toast(`📧 Notificación enviada a ${ue.length} usuarios`);document.getElementById('notifSubject').value='';document.getElementById('notifMessage').value=''}
 function adminAddLang(){const v=document.getElementById('newLangInput').value.trim();if(!v.includes(':')){toast('Formato: código:Nombre','error');return}const[c,n]=v.split(':');languages[c]=n.trim();updateAdminPanel();toast(`Idioma ${n} agregado`);document.getElementById('newLangInput').value=''}
 function adminRemoveLang(c){if(c==='es'){toast('No se puede eliminar español','error');return}delete languages[c];updateAdminPanel()}
 
-Object.assign(window,{toggleTheme,toggleLanguage,setLanguage,openLoginModal,closeLoginModal,showLoginForm,showRegisterForm,handleLoginLogoClick,loginUser,registerUser,continueAsGuest,closeSecretModal,loginAsAdmin,logout,openAdminPage,closeAdminPage,switchAdminTab,filterProducts,filterByCat,addToCart,modQty,remItem,checkout,openCart,closeCart,pickColor,buyNow,openProdModal,closeProdModal,prevModalImg,nextModalImg,goToModalImg,selectModalColor,modalAddToCart,modalBuyNow,adminAddProduct,adminDeleteProduct,editProduct,saveProductEdit,adminAddCoupon,adminDeleteCoupon,adminSendEmailNotification,adminAddLang,adminRemoveLang,toggleColorPicker,pickPaletteColor,addColorToProduct,removeTempColor,previewAllImages,location});
+Object.assign(window,{toggleTheme,toggleLanguage,setLanguage,openLoginModal,closeLoginModal,handleLoginLogoClick,registerUser,continueAsGuest,closeSecretModal,loginAsAdmin,logout,openAdminPage,closeAdminPage,switchAdminTab,scrollToTop,filterProducts,filterByCat,addToCart,modQty,remItem,checkout,openCart,closeCart,pickColor,buyNow,openProdModal,closeProdModal,prevModalImg,nextModalImg,goToModalImg,selectModalColor,modalAddToCart,modalBuyNow,adminAddProduct,adminDeleteProduct,adminAddCoupon,adminDeleteCoupon,adminSendEmailNotification,adminAddLang,adminRemoveLang,toggleColorPicker,pickPaletteColor,addColorToProduct,removeTempColor,previewAllImages});
 
 setupFirebase();
 loadProductsFromSheets();
