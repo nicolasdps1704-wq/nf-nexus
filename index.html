@@ -11,257 +11,213 @@
     <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
     <script defer src="/_vercel/insights/script.js"></script>
     <style>
-        :root {
-            --primary: #ff6b35; --secondary: #ff2e2e; --accent: #f7c948;
-            --success: #10b981; --danger: #ef4444; --bg: #f3f4f6;
-            --bg-card: #ffffff; --text: #1f2937; --text-secondary: #6b7280;
-            --border: #e5e7eb; --radius: 10px; --radius-lg: 16px; --radius-full: 50px;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body { width: 100%; height: 100%; overflow-x: hidden; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg); color: var(--text); transition: background 0.3s; padding-bottom: 65px; }
-        body.dark-mode { background: #0a0a0a; color: white; --bg: #1a1a2a; --bg-card: rgba(25,25,35,0.95); --text: #fff; --text-secondary: #aaa; --border: #333; }
-        body.dark-mode .main-header { background: rgba(15,15,25,0.98); }
-        body.dark-mode .product-card { background: var(--bg-card); border-color: rgba(255,107,53,0.3); }
-        body.dark-mode input, body.dark-mode select, body.dark-mode textarea { background: rgba(0,0,0,0.3); color: white; border-color: #555; }
-        ::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 8px; }
-
-        .top-bar { background: linear-gradient(90deg, var(--primary), var(--accent), var(--secondary), var(--primary)); background-size: 300% 100%; color: #1a1a2e; text-align: center; padding: 6px; font-size: 0.65rem; font-weight: 800; animation: gradientShift 4s ease infinite; }
-        @keyframes gradientShift { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
-
-        .main-header { background: var(--bg-card); padding: 8px 12px; display: flex; flex-direction: column; gap: 6px; position: sticky; top: 0; z-index: 100; border-bottom: 3px solid var(--primary); }
-        @media (min-width: 768px) { .main-header { flex-direction: row; align-items: center; justify-content: space-between; padding: 10px 20px; } }
-        .logo h1 { font-size: 1.3rem; font-weight: 900; background: linear-gradient(135deg, var(--primary), var(--accent), var(--secondary)); -webkit-background-clip: text; background-clip: text; color: transparent; cursor: pointer; }
-        .search-bar { display: flex; border: 2px solid var(--primary); border-radius: 50px; overflow: hidden; background: var(--bg); flex: 1; max-width: 380px; }
-        .search-bar input { flex: 1; padding: 7px 12px; border: none; outline: none; background: transparent; color: var(--text); font-size: 0.8rem; font-family: inherit; }
-        .search-bar button { background: var(--primary); border: none; padding: 0 15px; color: white; cursor: pointer; }
-        .header-icons { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; }
-        .hdr-btn { background: var(--bg); border: 2px solid var(--primary); border-radius: 50px; padding: 5px 10px; cursor: pointer; font-size: 0.7rem; display: flex; align-items: center; gap: 4px; color: var(--text); font-family: inherit; }
-        .hdr-btn:hover { background: rgba(255,107,53,0.1); }
-        .user-btn { background: rgba(255,107,53,0.1); border: 2px solid var(--primary); color: var(--text); padding: 5px 12px; border-radius: 50px; cursor: pointer; font-weight: 600; font-size: 0.75rem; font-family: inherit; }
-        .user-badge { display: flex; align-items: center; gap: 6px; background: rgba(255,107,53,0.1); padding: 5px 12px; border-radius: 50px; border: 1px solid var(--primary); font-size: 0.75rem; cursor: pointer; }
-        .admin-tag { background: linear-gradient(135deg, var(--accent), var(--primary)); color: black; padding: 2px 6px; border-radius: 12px; font-size: 0.55rem; font-weight: 800; }
-        .cart-icon { position: relative; cursor: pointer; font-size: 1.2rem; color: var(--primary); padding: 4px; }
-        .cart-badge { position: absolute; top: -4px; right: -7px; background: var(--secondary); color: white; font-size: 0.5rem; padding: 1px 4px; border-radius: 50%; font-weight: 700; }
-
-        .hero { background: linear-gradient(135deg, var(--primary), var(--accent), var(--secondary), var(--primary)); background-size: 300% 300%; border-radius: var(--radius-lg); padding: 22px 18px; color: white; text-align: center; margin-bottom: 16px; animation: gradientShift 5s ease infinite; }
-        .hero h2 { font-size: 1.6rem; font-weight: 900; }
-        .hero p { font-size: 0.85rem; opacity: 0.95; margin-top: 4px; }
-
-        .categorias { display: flex; gap: 5px; overflow-x: auto; margin-bottom: 12px; padding-bottom: 5px; }
-        .cat-btn { background: var(--bg-card); border: 1.5px solid var(--primary); padding: 6px 14px; border-radius: 50px; cursor: pointer; font-weight: 600; color: var(--text); white-space: nowrap; font-size: 0.72rem; font-family: inherit; }
-        .cat-btn.active { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border-color: transparent; }
-
-        .product-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
-        @media (min-width: 480px) { .product-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (min-width: 768px) { .product-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; } }
-
-        .product-card { background: var(--bg-card); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border); cursor: pointer; position: relative; transition: all 0.3s; }
-        .product-card:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(255,107,53,0.15); border-color: var(--primary); }
-        .product-img { background: var(--bg); height: 170px; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
-        .product-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
-        .product-card:hover .product-img img { transform: scale(1.04); }
-        .product-info { padding: 10px; }
-        .product-title { font-weight: 700; font-size: 0.8rem; margin-bottom: 3px; }
-        .price { font-size: 1.05rem; font-weight: 900; color: var(--primary); }
-        .old-price { text-decoration: line-through; font-size: 0.6rem; color: #9ca3af; margin-left: 5px; }
-        
-        .stock-badge { position: absolute; top: 8px; left: 8px; padding: 3px 8px; border-radius: 12px; font-size: 0.6rem; font-weight: 700; z-index: 5; background: rgba(0,0,0,0.7); color: white; backdrop-filter: blur(4px); }
-        .stock-high { border-left: 3px solid #10b981; }
-        .stock-medium { border-left: 3px solid #f59e0b; }
-        .stock-low { border-left: 3px solid #ef4444; }
-        .stock-out { border-left: 3px solid #6b7280; opacity: 0.7; }
-
-        .btn { padding: 7px; border-radius: 50px; font-weight: 600; cursor: pointer; border: none; font-size: 0.68rem; color: white; flex: 1; display: flex; align-items: center; justify-content: center; gap: 3px; font-family: inherit; }
-        .btn-cart { background: linear-gradient(135deg, var(--primary), var(--secondary)); }
-        .btn-wa { background: #25D366; }
-        .btn-edit { background: #3b82f6; }
-
-        .cart-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 999; }
-        .cart-overlay.show { display: block; }
-        .cart-panel { display: none; position: fixed; top: 0; right: 0; width: 100%; max-width: 360px; height: 100%; background: var(--bg-card); z-index: 1000; flex-direction: column; border-left: 4px solid var(--primary); animation: slideIn 0.3s ease-out; }
-        .cart-panel.show { display: flex; }
-        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
-        .cart-header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; }
-        .cart-items { flex: 1; overflow-y: auto; padding: 10px; }
-        .cart-footer { padding: 14px; border-top: 2px solid var(--primary); background: var(--bg); }
-        .cart-empty { text-align: center; padding: 30px; color: var(--text-secondary); font-size: 0.8rem; }
-
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
-        .modal-overlay.show { display: flex; }
-        .modal-box { background: var(--bg-card); border-radius: 22px; padding: 22px; max-width: 360px; width: 92%; text-align: center; border: 2px solid var(--primary); position: relative; animation: modalIn 0.3s ease-out; max-height: 90vh; overflow-y: auto; }
-        @keyframes modalIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-        .modal-close { position: absolute; top: 8px; right: 12px; font-size: 1.2rem; color: var(--text-secondary); cursor: pointer; background: none; border: none; z-index: 10; }
-        .modal-logo { font-size: 1.8rem; font-weight: 900; margin-bottom: 6px; background: linear-gradient(135deg, var(--primary), var(--accent), var(--secondary)); -webkit-background-clip: text; background-clip: text; color: transparent; cursor: pointer; user-select: none; padding: 10px; transition: all 0.2s; }
-        .modal-logo:hover { transform: scale(1.05); }
-        .modal-logo:active { transform: scale(0.95); }
-        .secret-hint { font-size: 0.5rem; color: var(--text-secondary); margin-top: 5px; opacity: 0; transition: opacity 0.3s; }
-        .secret-hint.visible { opacity: 1; }
-        .input-group { margin-bottom: 10px; text-align: left; }
-        .input-group label { display: block; margin-bottom: 3px; color: var(--text-secondary); font-weight: 600; font-size: 0.7rem; }
-        .input-group input { width: 100%; padding: 9px 12px; background: var(--bg); border: 2px solid var(--border); border-radius: 10px; color: var(--text); font-size: 0.8rem; outline: none; font-family: inherit; }
-        .btn-full { width: 100%; padding: 11px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border: none; border-radius: 50px; color: white; font-weight: 800; font-size: 0.85rem; cursor: pointer; font-family: inherit; }
-        .btn-outline { width: 100%; padding: 9px; background: transparent; border: 2px solid var(--primary); border-radius: 50px; color: var(--primary); font-weight: 700; cursor: pointer; margin-top: 8px; font-family: inherit; }
-        .error-msg { color: var(--danger); font-size: 0.7rem; margin-top: 5px; min-height: 18px; }
-        .divider { border-top: 1px solid var(--border); margin: 12px 0; position: relative; }
-        .divider span { position: absolute; top: -8px; left: 50%; transform: translateX(-50%); background: var(--bg-card); padding: 0 8px; color: var(--text-secondary); font-size: 0.65rem; }
-
-        .prod-modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 2000; backdrop-filter: blur(5px); }
-        .prod-modal-overlay.show { display: block; }
-        .prod-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 94%; max-width: 560px; max-height: 82vh; background: var(--bg-card); border-radius: 18px; z-index: 2001; border: 2px solid var(--primary); overflow: hidden; }
-        .prod-modal.show { display: block; }
-        .prod-modal-header { background: linear-gradient(135deg, var(--primary), var(--secondary)); padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; color: white; }
-        .prod-modal-body { display: flex; flex-direction: column; gap: 10px; padding: 10px; overflow-y: auto; max-height: calc(82vh - 46px); }
-        @media (min-width: 768px) { .prod-modal-body { flex-direction: row; } }
-        .modal-gallery { position: relative; width: 100%; max-width: 280px; overflow: hidden; border-radius: 10px; background: var(--bg); flex-shrink: 0; }
-        .modal-slides { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; }
-        .modal-slides::-webkit-scrollbar { display: none; }
-        .modal-slide { flex: 0 0 100%; scroll-snap-align: start; display: flex; align-items: center; justify-content: center; min-height: 220px; }
-        .modal-slide img { width: 100%; height: 100%; max-height: 230px; object-fit: contain; }
-        .modal-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; border: none; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; z-index: 5; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; }
-        .modal-nav.prev { left: 3px; } .modal-nav.next { right: 3px; }
-        .modal-dots { display: flex; justify-content: center; gap: 4px; margin-top: 5px; }
-        .modal-dot { width: 5px; height: 5px; border-radius: 50%; background: #ccc; cursor: pointer; }
-        .modal-dot.active { background: var(--primary); width: 14px; border-radius: 7px; }
-        .modal-info { flex: 1; }
-        .modal-info h3 { font-size: 0.95rem; font-weight: 800; margin-bottom: 3px; }
-        .modal-price { font-size: 1.1rem; font-weight: 900; color: var(--primary); }
-        .modal-colors { display: flex; gap: 5px; flex-wrap: wrap; margin: 6px 0; }
-        .modal-color { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 3px solid #ddd; }
-        .modal-color.selected { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(255,107,53,0.3); }
-
-        .account-page, .admin-page { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 1500; overflow-y: auto; }
-        .account-page.show, .admin-page.show { display: block; }
-        .account-topbar, .admin-topbar { background: linear-gradient(135deg, var(--primary), var(--secondary)); padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; color: white; position: sticky; top: 0; z-index: 10; }
-        .account-topbar h2, .admin-topbar h2 { font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
-        .account-layout, .admin-layout { display: flex; max-width: 1100px; margin: 12px auto; padding: 0 12px; gap: 12px; }
-        @media (max-width: 768px) { .account-layout, .admin-layout { flex-direction: column; } }
-        .account-sidebar, .admin-sidebar { width: 220px; background: var(--bg-card); border-radius: var(--radius-lg); padding: 12px; border: 1px solid var(--border); flex-shrink: 0; }
-        .account-main, .admin-main { flex: 1; background: var(--bg-card); border-radius: var(--radius-lg); padding: 20px; border: 1px solid var(--border); }
-        .account-nav-item, .nav-item { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: var(--radius); cursor: pointer; margin-bottom: 3px; color: var(--text); font-size: 0.78rem; transition: all 0.2s; }
-        .account-nav-item:hover, .nav-item:hover { background: rgba(255,107,53,0.1); color: var(--primary); }
-        .account-nav-item.active, .nav-item.active { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; font-weight: 600; }
-        .account-tab, .admin-tab { display: none; }
-        .account-tab.active, .admin-tab.active { display: block; }
-        .account-avatar { width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--accent)); display: flex; align-items: center; justify-content: center; font-size: 2rem; color: white; margin: 0 auto 10px; }
-        .account-name { font-size: 1.1rem; font-weight: 800; text-align: center; margin-bottom: 2px; }
-        .account-email { font-size: 0.7rem; color: var(--text-secondary); text-align: center; margin-bottom: 10px; }
-        .account-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; margin: 12px 0; }
-        .account-stat { background: var(--bg); border-radius: var(--radius); padding: 12px; text-align: center; border: 1px solid var(--border); }
-        .account-stat h3 { font-size: 1.3rem; color: var(--primary); }
-        .account-stat p { font-size: 0.6rem; color: var(--text-secondary); margin-top: 2px; }
-        .order-card { background: var(--bg); border-radius: var(--radius); padding: 10px 12px; margin-bottom: 8px; border: 1px solid var(--border); }
-        .order-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
-        .order-date { font-size: 0.6rem; color: var(--text-secondary); }
-        .order-total { font-weight: 700; color: var(--primary); font-size: 0.8rem; }
-        .wishlist-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
-        .wishlist-card { background: var(--bg); border-radius: var(--radius); padding: 8px; text-align: center; cursor: pointer; border: 1px solid var(--border); }
-        .wishlist-card:hover { border-color: var(--primary); transform: translateY(-2px); }
-        .wishlist-card img { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; }
-        .wishlist-card .wish-name { font-size: 0.65rem; font-weight: 600; margin-top: 4px; }
-        .wishlist-card .wish-price { font-size: 0.7rem; color: var(--primary); font-weight: 700; }
-        .empty-state { text-align: center; padding: 30px; color: var(--text-secondary); }
-        .empty-state i { font-size: 3rem; display: block; margin-bottom: 10px; color: var(--border); }
-        .profile-form { max-width: 400px; }
-        .profile-form .form-group { margin-bottom: 12px; }
-        .profile-form label { display: block; margin-bottom: 4px; font-size: 0.7rem; font-weight: 600; color: var(--text-secondary); }
-        .profile-form input { width: 100%; padding: 8px 12px; border: 2px solid var(--border); border-radius: var(--radius); background: var(--bg); color: var(--text); font-family: inherit; font-size: 0.78rem; }
-        .address-card { background: var(--bg); border-radius: var(--radius); padding: 10px; margin-bottom: 8px; border: 1px solid var(--border); font-size: 0.72rem; }
-        .address-card .address-tag { background: var(--primary); color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.55rem; }
-
-        .db-panel { background: var(--bg); border-radius: var(--radius); padding: 12px; margin-bottom: 10px; border: 1px solid var(--border); }
-        .db-panel h4 { margin-bottom: 8px; color: var(--primary); font-size: 0.8rem; }
-        .db-table { width: 100%; border-collapse: collapse; font-size: 0.65rem; }
-        .db-table th { background: rgba(255,107,53,0.1); padding: 6px; text-align: left; color: var(--primary); border-bottom: 2px solid var(--primary); }
-        .db-table td { padding: 6px; border-bottom: 1px solid var(--border); }
-        .form-grid { display: grid; grid-template-columns: 1fr; gap: 5px; }
-        @media (min-width: 768px) { .form-grid { grid-template-columns: repeat(2, 1fr); } }
-        .form-group { display: flex; flex-direction: column; gap: 2px; }
-        .form-group label { font-size: 0.65rem; font-weight: 600; color: var(--text-secondary); }
-        .form-group input, .form-group select, .form-group textarea { padding: 6px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 0.7rem; font-family: inherit; }
-        .btn-sm { padding: 4px 10px; border-radius: 6px; font-weight: 600; font-size: 0.65rem; cursor: pointer; border: none; color: white; font-family: inherit; }
-        .btn-sm.primary { background: var(--primary); } .btn-sm.danger { background: var(--danger); } .btn-sm.success { background: var(--success); } .btn-sm.edit { background: #3b82f6; }
-        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 6px; margin-bottom: 12px; }
-        .stat-card { text-align: center; padding: 10px; }
-        .stat-card h2 { font-size: 1.5rem; color: var(--primary); }
-
-        .mobile-nav { display: flex; position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-card); border-top: 2px solid var(--primary); padding: 7px 10px; justify-content: space-around; z-index: 998; }
-        .mobile-nav-item { display: flex; flex-direction: column; align-items: center; gap: 1px; cursor: pointer; color: var(--text-secondary); font-size: 0.55rem; }
-        .mobile-nav-item:hover { color: var(--primary); } .mobile-nav-item i { font-size: 1.1rem; }
-        footer { background: var(--bg-card); text-align: center; padding: 12px; margin-top: 20px; border-radius: 14px 14px 0 0; border-top: 2px solid var(--primary); font-size: 0.6rem; color: var(--text-secondary); }
-        .toast { position: fixed; top: 12px; right: 12px; background: #1a1a2a; color: white; padding: 8px 15px; border-radius: 50px; z-index: 10000; font-size: 0.7rem; border-left: 4px solid var(--primary); animation: toastIn 0.3s ease forwards; }
-        @keyframes toastIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        .toast.success { border-left-color: var(--success); } .toast.error { border-left-color: var(--danger); } .toast.warning { border-left-color: var(--accent); }
-        
-        .auth-tabs { display: flex; gap: 5px; margin-bottom: 15px; }
-        .auth-tab { flex: 1; padding: 8px; border: 2px solid var(--primary); background: transparent; color: var(--text); border-radius: 50px; cursor: pointer; font-weight: 600; font-size: 0.75rem; font-family: inherit; }
-        .auth-tab.active { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; }
-        .auth-form { display: none; } .auth-form.active { display: block; }
-        
-        .paste-area { border: 2px dashed var(--primary); border-radius: 10px; padding: 15px; text-align: center; cursor: pointer; background: var(--bg); margin: 8px 0; font-size: 0.7rem; color: var(--text-secondary); }
-        .paste-area:hover, .paste-area:focus { border-color: var(--secondary); background: rgba(255,107,53,0.05); }
-        
-        .status-badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.6rem; font-weight: 600; }
-        .status-pending { background: #fef3c7; color: #92400e; }
-        .status-processing { background: #dbeafe; color: #1e40af; }
-        .status-shipped { background: #d1fae5; color: #065f46; }
-        .status-delivered { background: #d1fae5; color: #065f46; }
-        .status-cancelled { background: #fee2e2; color: #991b1b; }
-        .color-picker-wrapper { position: relative; display: inline-block; }
-        .color-picker-btn { padding: 6px 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; font-size: 0.7rem; display: flex; align-items: center; gap: 5px; color: var(--text); font-family: inherit; }
-        .color-picker-dropdown { display: none; position: absolute; top: 100%; left: 0; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 6px; z-index: 100; box-shadow: 0 5px 15px rgba(0,0,0,0.12); width: 240px; }
-        .color-picker-dropdown.show { display: block; }
-        .color-palette { display: flex; flex-wrap: wrap; gap: 2px; }
-        .palette-swatch { width: 24px; height: 24px; border-radius: 4px; cursor: pointer; border: 2px solid transparent; }
-        .palette-swatch:hover { transform: scale(1.1); border-color: var(--primary); }
-        .palette-swatch.selected { border-color: var(--primary); box-shadow: 0 0 5px rgba(255,107,53,0.4); }
+        :root{--primary:#ff6b35;--secondary:#ff2e2e;--accent:#f7c948;--success:#10b981;--danger:#ef4444;--bg:#f3f4f6;--bg-card:#ffffff;--text:#1f2937;--text-secondary:#6b7280;--border:#e5e7eb;--radius:10px;--radius-lg:16px;--radius-full:50px}
+        *{margin:0;padding:0;box-sizing:border-box}
+        html,body{width:100%;height:100%;overflow-x:hidden;font-family:'Poppins',sans-serif}
+        body{background:var(--bg);color:var(--text);transition:background 0.3s;padding-bottom:65px}
+        body.dark-mode{background:#0a0a0a;color:white;--bg:#1a1a2a;--bg-card:rgba(25,25,35,0.95);--text:#fff;--text-secondary:#aaa;--border:#333}
+        body.dark-mode .main-header{background:rgba(15,15,25,0.98)}
+        body.dark-mode .product-card{background:var(--bg-card);border-color:rgba(255,107,53,0.3)}
+        body.dark-mode input,body.dark-mode select,body.dark-mode textarea{background:rgba(0,0,0,0.3);color:white;border-color:#555}
+        ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--primary);border-radius:8px}
+        .top-bar{background:linear-gradient(90deg,var(--primary),var(--accent),var(--secondary),var(--primary));background-size:300% 100%;color:#1a1a2e;text-align:center;padding:6px;font-size:0.65rem;font-weight:800;animation:gradientShift 4s ease infinite}
+        @keyframes gradientShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+        .main-header{background:var(--bg-card);padding:8px 12px;display:flex;flex-direction:column;gap:6px;position:sticky;top:0;z-index:100;border-bottom:3px solid var(--primary)}
+        @media(min-width:768px){.main-header{flex-direction:row;align-items:center;justify-content:space-between;padding:10px 20px}}
+        .logo h1{font-size:1.3rem;font-weight:900;background:linear-gradient(135deg,var(--primary),var(--accent),var(--secondary));-webkit-background-clip:text;background-clip:text;color:transparent;cursor:pointer}
+        .search-bar{display:flex;border:2px solid var(--primary);border-radius:50px;overflow:hidden;background:var(--bg);flex:1;max-width:380px}
+        .search-bar input{flex:1;padding:7px 12px;border:none;outline:none;background:transparent;color:var(--text);font-size:0.8rem;font-family:inherit}
+        .search-bar button{background:var(--primary);border:none;padding:0 15px;color:white;cursor:pointer}
+        .header-icons{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+        .hdr-btn{background:var(--bg);border:2px solid var(--primary);border-radius:50px;padding:5px 10px;cursor:pointer;font-size:0.7rem;display:flex;align-items:center;gap:4px;color:var(--text);font-family:inherit}
+        .hdr-btn:hover{background:rgba(255,107,53,0.1)}
+        .user-btn{background:rgba(255,107,53,0.1);border:2px solid var(--primary);color:var(--text);padding:5px 12px;border-radius:50px;cursor:pointer;font-weight:600;font-size:0.75rem;font-family:inherit}
+        .user-badge{display:flex;align-items:center;gap:6px;background:rgba(255,107,53,0.1);padding:5px 12px;border-radius:50px;border:1px solid var(--primary);font-size:0.75rem;cursor:pointer}
+        .admin-tag{background:linear-gradient(135deg,var(--accent),var(--primary));color:black;padding:2px 6px;border-radius:12px;font-size:0.55rem;font-weight:800}
+        .cart-icon{position:relative;cursor:pointer;font-size:1.2rem;color:var(--primary);padding:4px}
+        .cart-badge{position:absolute;top:-4px;right:-7px;background:var(--secondary);color:white;font-size:0.5rem;padding:1px 4px;border-radius:50%;font-weight:700}
+        .hero{background:linear-gradient(135deg,var(--primary),var(--accent),var(--secondary),var(--primary));background-size:300% 300%;border-radius:var(--radius-lg);padding:22px 18px;color:white;text-align:center;margin-bottom:16px;animation:gradientShift 5s ease infinite}
+        .hero h2{font-size:1.6rem;font-weight:900}
+        .hero p{font-size:0.85rem;opacity:0.95;margin-top:4px}
+        .categorias{display:flex;gap:5px;overflow-x:auto;margin-bottom:12px;padding-bottom:5px}
+        .cat-btn{background:var(--bg-card);border:1.5px solid var(--primary);padding:6px 14px;border-radius:50px;cursor:pointer;font-weight:600;color:var(--text);white-space:nowrap;font-size:0.72rem;font-family:inherit}
+        .cat-btn.active{background:linear-gradient(135deg,var(--primary),var(--secondary));color:white;border-color:transparent}
+        .product-grid{display:grid;grid-template-columns:1fr;gap:10px}
+        @media(min-width:480px){.product-grid{grid-template-columns:repeat(2,1fr)}}
+        @media(min-width:768px){.product-grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}}
+        .product-card{background:var(--bg-card);border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--border);cursor:pointer;position:relative;transition:all 0.3s}
+        .product-card:hover{transform:translateY(-3px);box-shadow:0 10px 20px rgba(255,107,53,0.15);border-color:var(--primary)}
+        .product-img{background:var(--bg);height:170px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+        .product-img img{width:100%;height:100%;object-fit:cover;transition:transform 0.3s}
+        .product-card:hover .product-img img{transform:scale(1.04)}
+        .product-info{padding:10px}
+        .product-title{font-weight:700;font-size:0.8rem;margin-bottom:3px}
+        .price{font-size:1.05rem;font-weight:900;color:var(--primary)}
+        .old-price{text-decoration:line-through;font-size:0.6rem;color:#9ca3af;margin-left:5px}
+        .stock-badge{position:absolute;top:8px;left:8px;padding:3px 8px;border-radius:12px;font-size:0.6rem;font-weight:700;z-index:5;background:rgba(0,0,0,0.7);color:white;backdrop-filter:blur(4px)}
+        .stock-high{border-left:3px solid #10b981}.stock-medium{border-left:3px solid #f59e0b}.stock-low{border-left:3px solid #ef4444}.stock-out{border-left:3px solid #6b7280;opacity:0.7}
+        .btn{padding:7px;border-radius:50px;font-weight:600;cursor:pointer;border:none;font-size:0.68rem;color:white;flex:1;display:flex;align-items:center;justify-content:center;gap:3px;font-family:inherit}
+        .btn-cart{background:linear-gradient(135deg,var(--primary),var(--secondary))}
+        .btn-wa{background:#25D366}.btn-edit{background:#3b82f6}
+        .cart-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:999}
+        .cart-overlay.show{display:block}
+        .cart-panel{display:none;position:fixed;top:0;right:0;width:100%;max-width:360px;height:100%;background:var(--bg-card);z-index:1000;flex-direction:column;border-left:4px solid var(--primary);animation:slideIn 0.3s ease-out}
+        .cart-panel.show{display:flex}
+        @keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
+        .cart-header{background:linear-gradient(135deg,var(--primary),var(--secondary));color:white;padding:12px 15px;display:flex;justify-content:space-between;align-items:center}
+        .cart-items{flex:1;overflow-y:auto;padding:10px}
+        .cart-footer{padding:14px;border-top:2px solid var(--primary);background:var(--bg)}
+        .cart-empty{text-align:center;padding:30px;color:var(--text-secondary);font-size:0.8rem}
+        .modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(5px)}
+        .modal-overlay.show{display:flex}
+        .modal-box{background:var(--bg-card);border-radius:22px;padding:22px;max-width:360px;width:92%;text-align:center;border:2px solid var(--primary);position:relative;animation:modalIn 0.3s ease-out;max-height:90vh;overflow-y:auto}
+        @keyframes modalIn{from{opacity:0;transform:scale(0.9)}to{opacity:1;transform:scale(1)}}
+        .modal-close{position:absolute;top:8px;right:12px;font-size:1.2rem;color:var(--text-secondary);cursor:pointer;background:none;border:none;z-index:10}
+        .modal-logo{font-size:1.8rem;font-weight:900;margin-bottom:6px;background:linear-gradient(135deg,var(--primary),var(--accent),var(--secondary));-webkit-background-clip:text;background-clip:text;color:transparent;cursor:pointer;user-select:none;padding:10px;transition:all 0.2s}
+        .modal-logo:hover{transform:scale(1.05)}.modal-logo:active{transform:scale(0.95)}
+        .secret-hint{font-size:0.5rem;color:var(--text-secondary);margin-top:5px;opacity:0;transition:opacity 0.3s}
+        .secret-hint.visible{opacity:1}
+        .input-group{margin-bottom:10px;text-align:left}
+        .input-group label{display:block;margin-bottom:3px;color:var(--text-secondary);font-weight:600;font-size:0.7rem}
+        .input-group input{width:100%;padding:9px 12px;background:var(--bg);border:2px solid var(--border);border-radius:10px;color:var(--text);font-size:0.8rem;outline:none;font-family:inherit}
+        .btn-full{width:100%;padding:11px;background:linear-gradient(135deg,var(--primary),var(--secondary));border:none;border-radius:50px;color:white;font-weight:800;font-size:0.85rem;cursor:pointer;font-family:inherit}
+        .btn-outline{width:100%;padding:9px;background:transparent;border:2px solid var(--primary);border-radius:50px;color:var(--primary);font-weight:700;cursor:pointer;margin-top:8px;font-family:inherit}
+        .error-msg{color:var(--danger);font-size:0.7rem;margin-top:5px;min-height:18px}
+        .divider{border-top:1px solid var(--border);margin:12px 0;position:relative}
+        .divider span{position:absolute;top:-8px;left:50%;transform:translateX(-50%);background:var(--bg-card);padding:0 8px;color:var(--text-secondary);font-size:0.65rem}
+        .prod-modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:2000;backdrop-filter:blur(5px)}
+        .prod-modal-overlay.show{display:block}
+        .prod-modal{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:94%;max-width:560px;max-height:82vh;background:var(--bg-card);border-radius:18px;z-index:2001;border:2px solid var(--primary);overflow:hidden}
+        .prod-modal.show{display:block}
+        .prod-modal-header{background:linear-gradient(135deg,var(--primary),var(--secondary));padding:10px 14px;display:flex;justify-content:space-between;align-items:center;color:white}
+        .prod-modal-body{display:flex;flex-direction:column;gap:10px;padding:10px;overflow-y:auto;max-height:calc(82vh - 46px)}
+        @media(min-width:768px){.prod-modal-body{flex-direction:row}}
+        .modal-gallery{position:relative;width:100%;max-width:280px;overflow:hidden;border-radius:10px;background:var(--bg);flex-shrink:0}
+        .modal-slides{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none}
+        .modal-slides::-webkit-scrollbar{display:none}
+        .modal-slide{flex:0 0 100%;scroll-snap-align:start;display:flex;align-items:center;justify-content:center;min-height:220px}
+        .modal-slide img{width:100%;height:100%;max-height:230px;object-fit:contain}
+        .modal-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.5);color:white;border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;z-index:5;font-size:0.8rem;display:flex;align-items:center;justify-content:center}
+        .modal-nav.prev{left:3px}.modal-nav.next{right:3px}
+        .modal-dots{display:flex;justify-content:center;gap:4px;margin-top:5px}
+        .modal-dot{width:5px;height:5px;border-radius:50%;background:#ccc;cursor:pointer}
+        .modal-dot.active{background:var(--primary);width:14px;border-radius:7px}
+        .modal-info{flex:1}.modal-info h3{font-size:0.95rem;font-weight:800;margin-bottom:3px}
+        .modal-price{font-size:1.1rem;font-weight:900;color:var(--primary)}
+        .modal-colors{display:flex;gap:5px;flex-wrap:wrap;margin:6px 0}
+        .modal-color{width:30px;height:30px;border-radius:50%;cursor:pointer;border:3px solid #ddd}
+        .modal-color.selected{border-color:var(--primary);box-shadow:0 0 0 2px rgba(255,107,53,0.3)}
+        .account-page,.admin-page{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg);z-index:1500;overflow-y:auto}
+        .account-page.show,.admin-page.show{display:block}
+        .account-topbar,.admin-topbar{background:linear-gradient(135deg,var(--primary),var(--secondary));padding:14px 20px;display:flex;align-items:center;justify-content:space-between;color:white;position:sticky;top:0;z-index:10}
+        .account-topbar h2,.admin-topbar h2{font-size:1.1rem;display:flex;align-items:center;gap:8px}
+        .account-layout,.admin-layout{display:flex;max-width:1100px;margin:12px auto;padding:0 12px;gap:12px}
+        @media(max-width:768px){.account-layout,.admin-layout{flex-direction:column}}
+        .account-sidebar,.admin-sidebar{width:220px;background:var(--bg-card);border-radius:var(--radius-lg);padding:12px;border:1px solid var(--border);flex-shrink:0}
+        .account-main,.admin-main{flex:1;background:var(--bg-card);border-radius:var(--radius-lg);padding:20px;border:1px solid var(--border)}
+        .account-nav-item,.nav-item{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--radius);cursor:pointer;margin-bottom:3px;color:var(--text);font-size:0.78rem;transition:all 0.2s}
+        .account-nav-item:hover,.nav-item:hover{background:rgba(255,107,53,0.1);color:var(--primary)}
+        .account-nav-item.active,.nav-item.active{background:linear-gradient(135deg,var(--primary),var(--secondary));color:white;font-weight:600}
+        .account-tab,.admin-tab{display:none}.account-tab.active,.admin-tab.active{display:block}
+        .account-avatar{width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;font-size:2rem;color:white;margin:0 auto 10px}
+        .account-name{font-size:1.1rem;font-weight:800;text-align:center;margin-bottom:2px}
+        .account-email{font-size:0.7rem;color:var(--text-secondary);text-align:center;margin-bottom:10px}
+        .account-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin:12px 0}
+        .account-stat{background:var(--bg);border-radius:var(--radius);padding:12px;text-align:center;border:1px solid var(--border)}
+        .account-stat h3{font-size:1.3rem;color:var(--primary)}.account-stat p{font-size:0.6rem;color:var(--text-secondary);margin-top:2px}
+        .order-card{background:var(--bg);border-radius:var(--radius);padding:10px 12px;margin-bottom:8px;border:1px solid var(--border)}
+        .order-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+        .order-date{font-size:0.6rem;color:var(--text-secondary)}.order-total{font-weight:700;color:var(--primary);font-size:0.8rem}
+        .wishlist-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+        .wishlist-card{background:var(--bg);border-radius:var(--radius);padding:8px;text-align:center;cursor:pointer;border:1px solid var(--border)}
+        .wishlist-card:hover{border-color:var(--primary);transform:translateY(-2px)}
+        .wishlist-card img{width:60px;height:60px;object-fit:cover;border-radius:8px}
+        .wishlist-card .wish-name{font-size:0.65rem;font-weight:600;margin-top:4px}
+        .wishlist-card .wish-price{font-size:0.7rem;color:var(--primary);font-weight:700}
+        .empty-state{text-align:center;padding:30px;color:var(--text-secondary)}
+        .empty-state i{font-size:3rem;display:block;margin-bottom:10px;color:var(--border)}
+        .profile-form{max-width:400px}.profile-form .form-group{margin-bottom:12px}
+        .profile-form label{display:block;margin-bottom:4px;font-size:0.7rem;font-weight:600;color:var(--text-secondary)}
+        .profile-form input{width:100%;padding:8px 12px;border:2px solid var(--border);border-radius:var(--radius);background:var(--bg);color:var(--text);font-family:inherit;font-size:0.78rem}
+        .address-card{background:var(--bg);border-radius:var(--radius);padding:10px;margin-bottom:8px;border:1px solid var(--border);font-size:0.72rem}
+        .address-card .address-tag{background:var(--primary);color:white;padding:2px 8px;border-radius:10px;font-size:0.55rem}
+        .db-panel{background:var(--bg);border-radius:var(--radius);padding:12px;margin-bottom:10px;border:1px solid var(--border)}
+        .db-panel h4{margin-bottom:8px;color:var(--primary);font-size:0.8rem}
+        .db-table{width:100%;border-collapse:collapse;font-size:0.65rem}
+        .db-table th{background:rgba(255,107,53,0.1);padding:6px;text-align:left;color:var(--primary);border-bottom:2px solid var(--primary)}
+        .db-table td{padding:6px;border-bottom:1px solid var(--border)}
+        .form-grid{display:grid;grid-template-columns:1fr;gap:5px}
+        @media(min-width:768px){.form-grid{grid-template-columns:repeat(2,1fr)}}
+        .form-group{display:flex;flex-direction:column;gap:2px}
+        .form-group label{font-size:0.65rem;font-weight:600;color:var(--text-secondary)}
+        .form-group input,.form-group select,.form-group textarea{padding:6px;background:var(--bg-card);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:0.7rem;font-family:inherit}
+        .btn-sm{padding:4px 10px;border-radius:6px;font-weight:600;font-size:0.65rem;cursor:pointer;border:none;color:white;font-family:inherit}
+        .btn-sm.primary{background:var(--primary)}.btn-sm.danger{background:var(--danger)}.btn-sm.success{background:var(--success)}.btn-sm.edit{background:#3b82f6}
+        .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:6px;margin-bottom:12px}
+        .stat-card{text-align:center;padding:10px}.stat-card h2{font-size:1.5rem;color:var(--primary)}
+        .mobile-nav{display:flex;position:fixed;bottom:0;left:0;right:0;background:var(--bg-card);border-top:2px solid var(--primary);padding:7px 10px;justify-content:space-around;z-index:998}
+        .mobile-nav-item{display:flex;flex-direction:column;align-items:center;gap:1px;cursor:pointer;color:var(--text-secondary);font-size:0.55rem}
+        .mobile-nav-item:hover{color:var(--primary)}.mobile-nav-item i{font-size:1.1rem}
+        footer{background:var(--bg-card);text-align:center;padding:12px;margin-top:20px;border-radius:14px 14px 0 0;border-top:2px solid var(--primary);font-size:0.6rem;color:var(--text-secondary)}
+        .toast{position:fixed;top:12px;right:12px;background:#1a1a2a;color:white;padding:8px 15px;border-radius:50px;z-index:10000;font-size:0.7rem;border-left:4px solid var(--primary);animation:toastIn 0.3s ease forwards}
+        @keyframes toastIn{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}
+        .toast.success{border-left-color:var(--success)}.toast.error{border-left-color:var(--danger)}.toast.warning{border-left-color:var(--accent)}
+        .auth-tabs{display:flex;gap:5px;margin-bottom:15px}
+        .auth-tab{flex:1;padding:8px;border:2px solid var(--primary);background:transparent;color:var(--text);border-radius:50px;cursor:pointer;font-weight:600;font-size:0.75rem;font-family:inherit}
+        .auth-tab.active{background:linear-gradient(135deg,var(--primary),var(--secondary));color:white}
+        .auth-form{display:none}.auth-form.active{display:block}
+        .paste-area{border:2px dashed var(--primary);border-radius:10px;padding:15px;text-align:center;cursor:pointer;background:var(--bg);margin:8px 0;font-size:0.7rem;color:var(--text-secondary)}
+        .paste-area:hover,.paste-area:focus{border-color:var(--secondary);background:rgba(255,107,53,0.05)}
+        .status-badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:0.6rem;font-weight:600}
+        .status-pending{background:#fef3c7;color:#92400e}.status-processing{background:#dbeafe;color:#1e40af}
+        .status-shipped{background:#d1fae5;color:#065f46}.status-delivered{background:#d1fae5;color:#065f46}.status-cancelled{background:#fee2e2;color:#991b1b}
+        .color-picker-wrapper{position:relative;display:inline-block}
+        .color-picker-btn{padding:6px 12px;background:var(--bg);border:1px solid var(--border);border-radius:6px;cursor:pointer;font-size:0.7rem;display:flex;align-items:center;gap:5px;color:var(--text);font-family:inherit}
+        .color-picker-dropdown{display:none;position:absolute;top:100%;left:0;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:6px;z-index:100;box-shadow:0 5px 15px rgba(0,0,0,0.12);width:240px}
+        .color-picker-dropdown.show{display:block}
+        .color-palette{display:flex;flex-wrap:wrap;gap:2px}
+        .palette-swatch{width:24px;height:24px;border-radius:4px;cursor:pointer;border:2px solid transparent}
+        .palette-swatch:hover{transform:scale(1.1);border-color:var(--primary)}
+        .palette-swatch.selected{border-color:var(--primary);box-shadow:0 0 5px rgba(255,107,53,0.4)}
     </style>
 </head>
 <body>
-
-<!-- LOGIN/REGISTER MODAL -->
 <div id="loginModal" class="modal-overlay"><div class="modal-box">
     <button class="modal-close" onclick="closeLoginModal()">&times;</button>
-    <!-- ✅ CAMBIO 1: Logo ahora cuenta clics para admin -->
     <div class="modal-logo" id="loginLogo" onclick="handleLoginLogoClick()"><i class="fas fa-bolt"></i> NF NEXUS</div>
-    <!-- ✅ CAMBIO 2: Hint visual -->
     <div class="secret-hint" id="secretHint">Sigue haciendo clic... (3 clics para admin)</div>
     <div class="auth-tabs">
         <button class="auth-tab active" onclick="switchAuthTab('login')">🔐 <span data-i18n="loginTab">Ingresar</span></button>
         <button class="auth-tab" onclick="switchAuthTab('register')">✨ <span data-i18n="registerTab">Registrarse</span></button>
     </div>
     <div class="auth-form active" id="loginForm">
-        <p style="color:var(--text-secondary);margin-bottom:12px;font-size:0.8rem;" data-i18n="loginSubtitle">🔥 Ingresa para una experiencia personalizada</p>
-        <div class="input-group"><label style="color:var(--danger);" data-i18n="emailLabel">* Correo electrónico</label><input type="email" id="loginEmailInput" placeholder="tucorreo@email.com"></div>
+        <p style="color:var(--text-secondary);margin-bottom:12px;font-size:0.8rem" data-i18n="loginSubtitle">🔥 Ingresa para una experiencia personalizada</p>
+        <div class="input-group"><label style="color:var(--danger)" data-i18n="emailLabel">* Correo electrónico</label><input type="email" id="loginEmailInput" placeholder="tucorreo@email.com"></div>
         <button class="btn-full" onclick="loginUser()"><i class="fas fa-sign-in-alt"></i> <span data-i18n="loginBtn">Ingresar</span></button>
         <div class="error-msg" id="loginError"></div>
         <div class="divider"><span data-i18n="or">o</span></div>
         <button class="btn-outline" onclick="continueAsGuest()"><i class="fas fa-user"></i> <span data-i18n="guest">Continuar como Invitado</span></button>
     </div>
     <div class="auth-form" id="registerForm">
-        <p style="color:var(--text-secondary);margin-bottom:12px;font-size:0.8rem;" data-i18n="registerSubtitle">✨ Crea tu cuenta y recibe ofertas exclusivas</p>
-        <div class="input-group"><label style="color:var(--danger);" data-i18n="nameLabel">* Nombre completo</label><input type="text" id="registerName" placeholder="¿Cómo te llamas?"></div>
-        <div class="input-group"><label style="color:var(--danger);" data-i18n="emailLabel">* Correo electrónico</label><input type="email" id="registerEmail" placeholder="tucorreo@email.com"><small data-i18n="emailOffer">Recibirás ofertas exclusivas por correo</small></div>
+        <p style="color:var(--text-secondary);margin-bottom:12px;font-size:0.8rem" data-i18n="registerSubtitle">✨ Crea tu cuenta y recibe ofertas exclusivas</p>
+        <div class="input-group"><label style="color:var(--danger)" data-i18n="nameLabel">* Nombre completo</label><input type="text" id="registerName" placeholder="¿Cómo te llamas?"></div>
+        <div class="input-group"><label style="color:var(--danger)" data-i18n="emailLabel">* Correo electrónico</label><input type="email" id="registerEmail" placeholder="tucorreo@email.com"><small data-i18n="emailOffer">Recibirás ofertas exclusivas por correo</small></div>
         <button class="btn-full" onclick="registerUser()"><i class="fas fa-user-plus"></i> <span data-i18n="createAccount">Crear cuenta</span></button>
         <div class="error-msg" id="registerError"></div>
     </div>
 </div></div>
-
-<!-- ADMIN SECRET MODAL -->
 <div id="adminSecretModal" class="modal-overlay"><div class="modal-box">
     <button class="modal-close" onclick="closeSecretModal()">&times;</button>
-    <h3 style="color:var(--primary);margin-bottom:10px;"><i class="fas fa-user-shield"></i> <span data-i18n="adminAccess">Acceso Administrador</span></h3>
+    <h3 style="color:var(--primary);margin-bottom:10px"><i class="fas fa-user-shield"></i> <span data-i18n="adminAccess">Acceso Administrador</span></h3>
     <div class="input-group"><input type="text" id="secretUser" placeholder="Usuario" value="admin"></div>
     <div class="input-group"><input type="password" id="secretPass" placeholder="Contraseña"></div>
-    <div style="display:flex;gap:5px;"><button class="btn-full" onclick="loginAsAdmin()" style="flex:1;" data-i18n="access">Acceder</button><button class="btn-outline" onclick="closeSecretModal()" style="flex:1;margin-top:0;" data-i18n="cancel">Cancelar</button></div>
+    <div style="display:flex;gap:5px"><button class="btn-full" onclick="loginAsAdmin()" style="flex:1" data-i18n="access">Acceder</button><button class="btn-outline" onclick="closeSecretModal()" style="flex:1;margin-top:0" data-i18n="cancel">Cancelar</button></div>
     <div class="error-msg" id="secretError"></div>
-    <p style="font-size:0.5rem;margin-top:6px;color:var(--text-secondary);">Demo: admin / admin123</p>
+    <p style="font-size:0.5rem;margin-top:6px;color:var(--text-secondary)">Demo: admin / admin123</p>
 </div></div>
-
-<!-- PRODUCT MODAL -->
 <div class="prod-modal-overlay" id="prodModalOverlay" onclick="closeProdModal()"></div>
 <div class="prod-modal" id="prodModal">
-    <div class="prod-modal-header"><h3><i class="fas fa-box"></i> <span data-i18n="productDetail">Detalle del Producto</span></h3><button style="background:rgba(0,0,0,0.2);border:1px solid white;color:white;width:26px;height:26px;border-radius:50%;cursor:pointer;" onclick="closeProdModal()">&times;</button></div>
+    <div class="prod-modal-header"><h3><i class="fas fa-box"></i> <span data-i18n="productDetail">Detalle del Producto</span></h3><button style="background:rgba(0,0,0,0.2);border:1px solid white;color:white;width:26px;height:26px;border-radius:50%;cursor:pointer" onclick="closeProdModal()">&times;</button></div>
     <div class="prod-modal-body">
         <div class="modal-gallery">
             <button class="modal-nav prev" onclick="event.stopPropagation();prevModalImg()">❮</button>
@@ -271,21 +227,19 @@
         </div>
         <div class="modal-info">
             <h3 id="modalName"></h3>
-            <div style="margin:4px 0;"><span class="modal-price" id="modalPrice"></span><span style="text-decoration:line-through;font-size:0.65rem;color:#9ca3af;margin-left:5px;" id="modalOldPrice"></span><span style="background:var(--secondary);color:white;padding:1px 6px;border-radius:10px;font-size:0.55rem;margin-left:5px;" id="modalDiscount"></span></div>
-            <div id="modalStockInfo" style="font-size:0.65rem;margin:3px 0;"></div>
+            <div style="margin:4px 0"><span class="modal-price" id="modalPrice"></span><span style="text-decoration:line-through;font-size:0.65rem;color:#9ca3af;margin-left:5px" id="modalOldPrice"></span><span style="background:var(--secondary);color:white;padding:1px 6px;border-radius:10px;font-size:0.55rem;margin-left:5px" id="modalDiscount"></span></div>
+            <div id="modalStockInfo" style="font-size:0.65rem;margin:3px 0"></div>
             <div class="modal-colors" id="modalColors"></div>
-            <div style="display:flex;gap:5px;margin-top:8px;">
+            <div style="display:flex;gap:5px;margin-top:8px">
                 <button class="btn btn-cart" onclick="modalAddToCart()"><i class="fas fa-cart-plus"></i> <span data-i18n="addToCart">Carrito</span></button>
                 <button class="btn btn-wa" onclick="modalBuyNow()"><i class="fab fa-whatsapp"></i> <span data-i18n="buyNow">WhatsApp</span></button>
             </div>
         </div>
     </div>
 </div>
-
-<!-- EDIT PRODUCT MODAL -->
-<div id="editProductModal" class="modal-overlay"><div class="modal-box" style="max-width:500px;">
+<div id="editProductModal" class="modal-overlay"><div class="modal-box" style="max-width:500px">
     <button class="modal-close" onclick="closeEditModal()">&times;</button>
-    <h3 style="color:var(--primary);">✏️ <span data-i18n="editProduct">Editar Producto</span></h3>
+    <h3 style="color:var(--primary)">✏️ <span data-i18n="editProduct">Editar Producto</span></h3>
     <div class="form-grid">
         <div class="form-group"><label data-i18n="productName">Nombre</label><input type="text" id="epName"></div>
         <div class="form-group"><label data-i18n="price">Precio</label><input type="number" id="epPrice"></div>
@@ -294,46 +248,35 @@
         <div class="form-group"><label data-i18n="category">Categoría</label><select id="epCategory"><option value="electronica">Electrónica</option><option value="moda">Moda</option><option value="hogar">Hogar</option><option value="accesorios">Accesorios</option><option value="belleza">Belleza</option></select></div>
         <div class="form-group"><label data-i18n="icon">Icono</label><input type="text" id="epIcon"></div>
     </div>
-    <div class="paste-area" id="epPasteArea" tabindex="0">📸 <span data-i18n="pasteImage">Pega una imagen aquí (Ctrl+V)</span><br><small data-i18n="mainImage">Imagen principal</small><div id="epPastePreview" style="margin-top:6px;"></div></div>
-    <input type="file" id="epImageInput" accept="image/*" style="display:none;" onchange="handleEditImage(this)">
-    <div style="display:flex;gap:5px;margin-top:10px;">
-        <button class="btn-full" onclick="saveEditedProduct()" style="flex:1;">💾 <span data-i18n="saveChanges">Guardar cambios</span></button>
-        <button class="btn-outline" onclick="closeEditModal()" style="flex:1;margin-top:0;" data-i18n="cancel">Cancelar</button>
-    </div>
+    <div class="paste-area" id="epPasteArea" tabindex="0">📸 <span data-i18n="pasteImage">Pega una imagen (Ctrl+V)</span><br><small data-i18n="mainImage">Imagen principal</small><div id="epPastePreview" style="margin-top:6px"></div></div>
+    <input type="file" id="epImageInput" accept="image/*" style="display:none" onchange="handleEditImage(this)">
+    <div style="display:flex;gap:5px;margin-top:10px"><button class="btn-full" onclick="saveEditedProduct()" style="flex:1">💾 <span data-i18n="saveChanges">Guardar cambios</span></button><button class="btn-outline" onclick="closeEditModal()" style="flex:1;margin-top:0" data-i18n="cancel">Cancelar</button></div>
 </div></div>
-
-<!-- ACCOUNT PAGE (Cliente) -->
 <div id="accountPage" class="account-page">
-    <div class="account-topbar"><h2><i class="fas fa-user-circle"></i> <span data-i18n="myAccount">Mi Cuenta</span></h2><button onclick="closeAccountPage()" style="background:rgba(255,255,255,0.2);border:none;color:white;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:1rem;">&times;</button></div>
+    <div class="account-topbar"><h2><i class="fas fa-user-circle"></i> <span data-i18n="myAccount">Mi Cuenta</span></h2><button onclick="closeAccountPage()" style="background:rgba(255,255,255,0.2);border:none;color:white;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:1rem">&times;</button></div>
     <div class="account-layout">
         <div class="account-sidebar">
-            <div style="text-align:center;margin-bottom:12px;"><div class="account-avatar"><i class="fas fa-user"></i></div><div class="account-name" id="accName">Usuario</div><div class="account-email" id="accEmail">email@example.com</div></div>
+            <div style="text-align:center;margin-bottom:12px"><div class="account-avatar"><i class="fas fa-user"></i></div><div class="account-name" id="accName">Usuario</div><div class="account-email" id="accEmail">email@example.com</div></div>
             <div class="account-nav-item active" onclick="switchAccountTab('dashboard')"><i class="fas fa-chart-pie"></i> <span data-i18n="dashboard">Dashboard</span></div>
             <div class="account-nav-item" onclick="switchAccountTab('orders')"><i class="fas fa-shopping-bag"></i> <span data-i18n="myOrders">Mis Pedidos</span></div>
             <div class="account-nav-item" onclick="switchAccountTab('wishlist')"><i class="fas fa-heart"></i> <span data-i18n="wishlist">Lista de Deseos</span></div>
             <div class="account-nav-item" onclick="switchAccountTab('addresses')"><i class="fas fa-map-marker-alt"></i> <span data-i18n="addresses">Direcciones</span></div>
             <div class="account-nav-item" onclick="switchAccountTab('profile')"><i class="fas fa-user-cog"></i> <span data-i18n="profile">Perfil</span></div>
             <div class="account-nav-item" onclick="switchAccountTab('notifications')"><i class="fas fa-bell"></i> <span data-i18n="myNotifications">Notificaciones</span></div>
-            <div class="account-nav-item" onclick="logout()" style="color:var(--secondary);"><i class="fas fa-sign-out-alt"></i> <span data-i18n="logout">Cerrar Sesión</span></div>
+            <div class="account-nav-item" onclick="logout()" style="color:var(--secondary)"><i class="fas fa-sign-out-alt"></i> <span data-i18n="logout">Cerrar Sesión</span></div>
         </div>
         <div class="account-main">
-            <div class="account-tab active" id="atab-account-dashboard"><h3 style="color:var(--primary);margin-bottom:12px;">📊 <span data-i18n="myDashboard">Mi Dashboard</span></h3>
-                <div class="account-stats"><div class="account-stat"><h3 id="accTotalOrders">0</h3><p data-i18n="totalOrders">Pedidos Totales</p></div><div class="account-stat"><h3 id="accActiveOrders">0</h3><p data-i18n="activeOrders">Pedidos Activos</p></div><div class="account-stat"><h3 id="accTotalSpent">$0</h3><p data-i18n="totalSpent">Total Gastado</p></div><div class="account-stat"><h3 id="accWishCount">0</h3><p data-i18n="wishlistItems">En Deseos</p></div></div>
-                <div style="margin-top:15px;"><h4 style="color:var(--primary);" data-i18n="recentOrders">Pedidos Recientes</h4><div id="accRecentOrders"></div></div>
-                <div style="margin-top:15px;"><h4 style="color:var(--primary);" data-i18n="recommended">Recomendado para ti</h4><div id="accRecommended" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;"></div></div>
-            </div>
-            <div class="account-tab" id="atab-account-orders"><h3 style="color:var(--primary);">📦 <span data-i18n="myOrders">Mis Pedidos</span></h3><div id="accOrdersList"></div><div id="accOrdersEmpty" class="empty-state" style="display:none;"><i class="fas fa-shopping-bag"></i><p data-i18n="noOrders">No has hecho ningún pedido aún</p></div></div>
-            <div class="account-tab" id="atab-account-wishlist"><h3 style="color:var(--primary);">❤️ <span data-i18n="wishlist">Lista de Deseos</span></h3><div class="wishlist-grid" id="accWishlistGrid"></div><div id="accWishlistEmpty" class="empty-state" style="display:none;"><i class="fas fa-heart"></i><p data-i18n="emptyWishlist">Tu lista de deseos está vacía</p></div></div>
-            <div class="account-tab" id="atab-account-addresses"><h3 style="color:var(--primary);">📍 <span data-i18n="addresses">Mis Direcciones</span></h3><div id="accAddressesList"></div><button class="btn-sm primary" onclick="addNewAddress()" style="margin-top:8px;">+ <span data-i18n="addAddress">Agregar Dirección</span></button><div id="addressForm" style="display:none;margin-top:10px;" class="db-panel"><h4 data-i18n="newAddress">Nueva Dirección</h4><div class="form-grid"><div class="form-group"><label data-i18n="addressLabel">Etiqueta</label><input type="text" id="addrLabel" placeholder="Casa, Trabajo..."></div><div class="form-group"><label data-i18n="fullAddress">Dirección completa</label><input type="text" id="addrFull"></div><div class="form-group"><label data-i18n="city">Ciudad</label><input type="text" id="addrCity"></div><div class="form-group"><label data-i18n="phone">Teléfono</label><input type="text" id="addrPhone"></div></div><div style="display:flex;gap:5px;margin-top:8px;"><button class="btn-sm success" onclick="saveAddress()" data-i18n="save">Guardar</button><button class="btn-sm danger" onclick="cancelAddress()" data-i18n="cancel">Cancelar</button></div></div></div>
-            <div class="account-tab" id="atab-account-profile"><h3 style="color:var(--primary);">👤 <span data-i18n="profile">Mi Perfil</span></h3><div class="profile-form"><div class="form-group"><label data-i18n="name">Nombre</label><input type="text" id="profName"></div><div class="form-group"><label>Email</label><input type="email" id="profEmail" disabled style="opacity:0.7;"></div><div class="form-group"><label data-i18n="phone">Teléfono</label><input type="text" id="profPhone"></div><div class="form-group"><label data-i18n="birthdate">Fecha de nacimiento</label><input type="date" id="profBirthdate"></div><button class="btn-full" onclick="saveProfile()" style="margin-top:10px;" data-i18n="saveChanges">Guardar cambios</button></div></div>
-            <div class="account-tab" id="atab-account-notifications"><h3 style="color:var(--primary);">🔔 <span data-i18n="myNotifications">Mis Notificaciones</span></h3><div id="accNotificationsList"></div><div id="accNotificationsEmpty" class="empty-state" style="display:none;"><i class="fas fa-bell-slash"></i><p data-i18n="noNotifications">No tienes notificaciones</p></div></div>
+            <div class="account-tab active" id="atab-account-dashboard"><h3 style="color:var(--primary);margin-bottom:12px">📊 <span data-i18n="myDashboard">Mi Dashboard</span></h3><div class="account-stats"><div class="account-stat"><h3 id="accTotalOrders">0</h3><p data-i18n="totalOrders">Pedidos Totales</p></div><div class="account-stat"><h3 id="accActiveOrders">0</h3><p data-i18n="activeOrders">Pedidos Activos</p></div><div class="account-stat"><h3 id="accTotalSpent">$0</h3><p data-i18n="totalSpent">Total Gastado</p></div><div class="account-stat"><h3 id="accWishCount">0</h3><p data-i18n="wishlistItems">En Deseos</p></div></div><div style="margin-top:15px"><h4 style="color:var(--primary)" data-i18n="recentOrders">Pedidos Recientes</h4><div id="accRecentOrders"></div></div><div style="margin-top:15px"><h4 style="color:var(--primary)" data-i18n="recommended">Recomendado para ti</h4><div id="accRecommended" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px"></div></div></div>
+            <div class="account-tab" id="atab-account-orders"><h3 style="color:var(--primary)">📦 <span data-i18n="myOrders">Mis Pedidos</span></h3><div id="accOrdersList"></div><div id="accOrdersEmpty" class="empty-state" style="display:none"><i class="fas fa-shopping-bag"></i><p data-i18n="noOrders">No has hecho ningún pedido aún</p></div></div>
+            <div class="account-tab" id="atab-account-wishlist"><h3 style="color:var(--primary)">❤️ <span data-i18n="wishlist">Lista de Deseos</span></h3><div class="wishlist-grid" id="accWishlistGrid"></div><div id="accWishlistEmpty" class="empty-state" style="display:none"><i class="fas fa-heart"></i><p data-i18n="emptyWishlist">Tu lista de deseos está vacía</p></div></div>
+            <div class="account-tab" id="atab-account-addresses"><h3 style="color:var(--primary)">📍 <span data-i18n="addresses">Mis Direcciones</span></h3><div id="accAddressesList"></div><button class="btn-sm primary" onclick="addNewAddress()" style="margin-top:8px">+ <span data-i18n="addAddress">Agregar Dirección</span></button><div id="addressForm" style="display:none;margin-top:10px" class="db-panel"><h4 data-i18n="newAddress">Nueva Dirección</h4><div class="form-grid"><div class="form-group"><label data-i18n="addressLabel">Etiqueta</label><input type="text" id="addrLabel" placeholder="Casa, Trabajo..."></div><div class="form-group"><label data-i18n="fullAddress">Dirección completa</label><input type="text" id="addrFull"></div><div class="form-group"><label data-i18n="city">Ciudad</label><input type="text" id="addrCity"></div><div class="form-group"><label data-i18n="phone">Teléfono</label><input type="text" id="addrPhone"></div></div><div style="display:flex;gap:5px;margin-top:8px"><button class="btn-sm success" onclick="saveAddress()" data-i18n="save">Guardar</button><button class="btn-sm danger" onclick="cancelAddress()" data-i18n="cancel">Cancelar</button></div></div></div>
+            <div class="account-tab" id="atab-account-profile"><h3 style="color:var(--primary)">👤 <span data-i18n="profile">Mi Perfil</span></h3><div class="profile-form"><div class="form-group"><label data-i18n="name">Nombre</label><input type="text" id="profName"></div><div class="form-group"><label>Email</label><input type="email" id="profEmail" disabled style="opacity:0.7"></div><div class="form-group"><label data-i18n="phone">Teléfono</label><input type="text" id="profPhone"></div><div class="form-group"><label data-i18n="birthdate">Fecha de nacimiento</label><input type="date" id="profBirthdate"></div><button class="btn-full" onclick="saveProfile()" style="margin-top:10px" data-i18n="saveChanges">Guardar cambios</button></div></div>
+            <div class="account-tab" id="atab-account-notifications"><h3 style="color:var(--primary)">🔔 <span data-i18n="myNotifications">Mis Notificaciones</span></h3><div id="accNotificationsList"></div><div id="accNotificationsEmpty" class="empty-state" style="display:none"><i class="fas fa-bell-slash"></i><p data-i18n="noNotifications">No tienes notificaciones</p></div></div>
         </div>
     </div>
 </div>
-
-<!-- ADMIN PAGE -->
 <div id="adminPage" class="admin-page">
-    <div class="admin-topbar"><h2><i class="fas fa-chart-pie"></i> <span data-i18n="adminPanel">Panel de Administración</span></h2><button onclick="closeAdminPage()" style="background:rgba(255,255,255,0.2);border:none;color:white;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:1rem;">&times;</button></div>
+    <div class="admin-topbar"><h2><i class="fas fa-chart-pie"></i> <span data-i18n="adminPanel">Panel de Administración</span></h2><button onclick="closeAdminPage()" style="background:rgba(255,255,255,0.2);border:none;color:white;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:1rem">&times;</button></div>
     <div class="admin-layout">
         <div class="admin-sidebar">
             <div class="nav-item active" onclick="switchAdminTab('dashboard')"><i class="fas fa-chart-pie"></i> <span data-i18n="dashboard">Dashboard</span></div>
@@ -343,30 +286,19 @@
             <div class="nav-item" onclick="switchAdminTab('coupons')"><i class="fas fa-ticket-alt"></i> <span data-i18n="coupons">Cupones</span></div>
             <div class="nav-item" onclick="switchAdminTab('notifications')"><i class="fas fa-bell"></i> <span data-i18n="notifications">Notificaciones</span></div>
             <div class="nav-item" onclick="switchAdminTab('config')"><i class="fas fa-sliders-h"></i> <span data-i18n="config">Configuración</span></div>
-            <div class="nav-item" onclick="logout()" style="color:var(--secondary);"><i class="fas fa-sign-out-alt"></i> <span data-i18n="logout">Cerrar Sesión</span></div>
+            <div class="nav-item" onclick="logout()" style="color:var(--secondary)"><i class="fas fa-sign-out-alt"></i> <span data-i18n="logout">Cerrar Sesión</span></div>
         </div>
         <div class="admin-main">
-            <div class="admin-tab active" id="atab-dashboard"><h3 style="color:var(--primary);">📊 <span data-i18n="dashboard">Dashboard</span></h3><div class="stat-grid"><div class="db-panel stat-card"><h2 id="aStatProducts">0</h2><p data-i18n="totalProducts">Productos</p></div><div class="db-panel stat-card"><h2 id="aStatSold">0</h2><p data-i18n="soldProducts">Vendidos</p></div><div class="db-panel stat-card"><h2 id="aStatRevenue">$0</h2><p data-i18n="revenue">Ganancias</p></div><div class="db-panel stat-card"><h2 id="aStatUsers">0</h2><p data-i18n="registeredUsers">Usuarios</p></div></div></div>
-            <div class="admin-tab" id="atab-products"><h3 style="color:var(--primary);">📦 <span data-i18n="productManagement">Gestión de Productos</span></h3>
-                <div class="db-panel"><h4 data-i18n="addProduct">Agregar Producto</h4>
-                    <div class="form-grid"><div class="form-group"><label data-i18n="productName">Nombre *</label><input type="text" id="apName"></div><div class="form-group"><label data-i18n="price">Precio *</label><input type="number" id="apPrice"></div><div class="form-group"><label data-i18n="oldPrice">Precio anterior</label><input type="number" id="apOldPrice"></div><div class="form-group"><label data-i18n="stock">Stock</label><input type="number" id="apStock" value="10"></div><div class="form-group"><label data-i18n="category">Categoría</label><select id="apCategory"><option value="electronica">Electrónica</option><option value="moda">Moda</option><option value="hogar">Hogar</option><option value="accesorios">Accesorios</option><option value="belleza">Belleza</option></select></div><div class="form-group"><label data-i18n="icon">Icono</label><input type="text" id="apIcon" value="📦"></div></div>
-                    <div class="paste-area" id="apPasteArea" tabindex="0">📸 <span data-i18n="pasteImages">Pega imágenes (Ctrl+V)</span><br><small data-i18n="galleryHint">Primera = principal</small><div id="apPastePreview" style="display:flex;flex-wrap:wrap;gap:4px;margin-top:5px;"></div></div>
-                    <input type="file" id="apImagesInput" accept="image/*" multiple style="display:none;" onchange="previewAllImages(this)">
-                    <div style="margin-top:6px;"><h4>🎨 <span data-i18n="colors">Colores</span></h4><div class="color-picker-wrapper"><button class="color-picker-btn" onclick="toggleColorPicker()"><span style="width:16px;height:16px;border-radius:3px;background:#1a1a2e;display:inline-block;" id="colorPreview"></span> <span data-i18n="pickColor">Elegir color</span></button><div class="color-picker-dropdown" id="colorPickerDropdown"><div class="color-palette" id="colorPalette"></div><div style="display:flex;gap:4px;margin-top:4px;"><input type="text" id="apColorName" placeholder="Nombre" style="flex:1;padding:4px;border:1px solid var(--border);border-radius:4px;background:var(--bg-card);color:var(--text);font-size:0.65rem;font-family:inherit;"><button class="btn-sm primary" onclick="addColorToProduct()">+</button></div><div id="apSelectedColors" style="display:flex;flex-wrap:wrap;gap:3px;margin-top:4px;"></div></div></div></div>
-                    <button class="btn-sm primary" onclick="adminAddProduct()" style="margin-top:6px;width:100%;">➕ <span data-i18n="addProduct">Agregar Producto</span></button>
-                </div>
-                <div class="db-panel"><h4 data-i18n="productList">Lista de Productos</h4><table class="db-table"><thead><tr><th>ID</th><th data-i18n="productName">Nombre</th><th data-i18n="price">Precio</th><th data-i18n="stock">Stock</th><th data-i18n="action">Acción</th></tr></thead><tbody id="adminProductsTable"></tbody></table></div>
-            </div>
-            <div class="admin-tab" id="atab-users"><h3 style="color:var(--primary);">👥 <span data-i18n="userDatabase">Base de Datos de Usuarios</span></h3><div class="db-panel"><table class="db-table"><thead><tr><th data-i18n="name">Nombre</th><th>Email</th><th data-i18n="memberSince">Miembro desde</th><th data-i18n="purchases">Compras</th></tr></thead><tbody id="adminUsersTable"></tbody></table></div></div>
-            <div class="admin-tab" id="atab-sales"><h3 style="color:var(--primary);">🧾 <span data-i18n="salesRecord">Registro de Ventas</span></h3><div class="db-panel"><table class="db-table"><thead><tr><th data-i18n="date">Fecha</th><th data-i18n="product">Producto</th><th data-i18n="quantity">Cant.</th><th data-i18n="total">Total</th><th data-i18n="buyer">Comprador</th></tr></thead><tbody id="adminSalesTable"></tbody></table></div></div>
-            <div class="admin-tab" id="atab-coupons"><h3 style="color:var(--primary);">🎫 <span data-i18n="couponManagement">Gestión de Cupones</span></h3><div class="db-panel"><h4 data-i18n="createCoupon">Crear Cupón</h4><div class="form-grid"><div class="form-group"><label data-i18n="couponCode">Código *</label><input type="text" id="acCode"></div><div class="form-group"><label data-i18n="type">Tipo</label><select id="acType"><option value="percent">Porcentaje</option><option value="fixed">Fijo</option></select></div><div class="form-group"><label data-i18n="value">Valor *</label><input type="number" id="acValue"></div><div class="form-group"><label data-i18n="minPurchase">Compra mínima</label><input type="number" id="acMin" value="0"></div><div class="form-group"><label data-i18n="message">Mensaje</label><input type="text" id="acMsg"></div><div class="form-group"><label data-i18n="expiry">Vence</label><input type="date" id="acExpiry"></div></div><button class="btn-sm primary" onclick="adminAddCoupon()" style="margin-top:4px;">🎫 <span data-i18n="createAndNotify">Crear y Notificar</span></button></div><div class="db-panel"><h4 data-i18n="activeCoupons">Cupones Activos</h4><div id="adminCouponsList"></div></div></div>
-            <div class="admin-tab" id="atab-notifications"><h3 style="color:var(--primary);">📢 <span data-i18n="sendNotification">Enviar Notificación</span></h3><div class="db-panel"><div class="form-grid"><div class="form-group"><label data-i18n="subject">Asunto *</label><input type="text" id="notifSubject"></div><div class="form-group"><label data-i18n="message">Mensaje *</label><textarea id="notifMessage" style="padding:5px;background:var(--bg-card);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:0.7rem;font-family:inherit;resize:vertical;min-height:50px;"></textarea></div></div><button class="btn-sm primary" onclick="adminSendEmailNotification()" style="margin-top:4px;">📧 <span data-i18n="sendToAll">Enviar a TODOS</span></button><div id="notificationStatus" style="margin-top:6px;font-size:0.65rem;"></div></div></div>
-            <div class="admin-tab" id="atab-config"><h3 style="color:var(--primary);">⚙️ <span data-i18n="globalConfig">Configuración Global</span></h3><div class="db-panel"><h4 data-i18n="languages">Idiomas</h4><div id="adminLangChips" style="display:flex;flex-wrap:wrap;gap:3px;"></div><div style="display:flex;gap:4px;margin-top:4px;"><input type="text" id="newLangInput" placeholder="código:Nombre" style="flex:1;padding:5px;border:1px solid var(--border);border-radius:6px;background:var(--bg-card);color:var(--text);font-family:inherit;"><button class="btn-sm primary" onclick="adminAddLang()">+</button></div></div></div>
+            <div class="admin-tab active" id="atab-dashboard"><h3 style="color:var(--primary)">📊 <span data-i18n="dashboard">Dashboard</span></h3><div class="stat-grid"><div class="db-panel stat-card"><h2 id="aStatProducts">0</h2><p data-i18n="totalProducts">Productos</p></div><div class="db-panel stat-card"><h2 id="aStatSold">0</h2><p data-i18n="soldProducts">Vendidos</p></div><div class="db-panel stat-card"><h2 id="aStatRevenue">$0</h2><p data-i18n="revenue">Ganancias</p></div><div class="db-panel stat-card"><h2 id="aStatUsers">0</h2><p data-i18n="registeredUsers">Usuarios</p></div></div></div>
+            <div class="admin-tab" id="atab-products"><h3 style="color:var(--primary)">📦 <span data-i18n="productManagement">Gestión de Productos</span></h3><div class="db-panel"><h4 data-i18n="addProduct">Agregar Producto</h4><div class="form-grid"><div class="form-group"><label data-i18n="productName">Nombre *</label><input type="text" id="apName"></div><div class="form-group"><label data-i18n="price">Precio *</label><input type="number" id="apPrice"></div><div class="form-group"><label data-i18n="oldPrice">Precio anterior</label><input type="number" id="apOldPrice"></div><div class="form-group"><label data-i18n="stock">Stock</label><input type="number" id="apStock" value="10"></div><div class="form-group"><label data-i18n="category">Categoría</label><select id="apCategory"><option value="electronica">Electrónica</option><option value="moda">Moda</option><option value="hogar">Hogar</option><option value="accesorios">Accesorios</option><option value="belleza">Belleza</option></select></div><div class="form-group"><label data-i18n="icon">Icono</label><input type="text" id="apIcon" value="📦"></div></div><div class="paste-area" id="apPasteArea" tabindex="0">📸 <span data-i18n="pasteImages">Pega imágenes (Ctrl+V)</span><br><small data-i18n="galleryHint">Primera = principal</small><div id="apPastePreview" style="display:flex;flex-wrap:wrap;gap:4px;margin-top:5px"></div></div><input type="file" id="apImagesInput" accept="image/*" multiple style="display:none" onchange="previewAllImages(this)"><div style="margin-top:6px"><h4>🎨 <span data-i18n="colors">Colores</span></h4><div class="color-picker-wrapper"><button class="color-picker-btn" onclick="toggleColorPicker()"><span style="width:16px;height:16px;border-radius:3px;background:#1a1a2e;display:inline-block" id="colorPreview"></span> <span data-i18n="pickColor">Elegir color</span></button><div class="color-picker-dropdown" id="colorPickerDropdown"><div class="color-palette" id="colorPalette"></div><div style="display:flex;gap:4px;margin-top:4px"><input type="text" id="apColorName" placeholder="Nombre" style="flex:1;padding:4px;border:1px solid var(--border);border-radius:4px;background:var(--bg-card);color:var(--text);font-size:0.65rem;font-family:inherit"><button class="btn-sm primary" onclick="addColorToProduct()">+</button></div><div id="apSelectedColors" style="display:flex;flex-wrap:wrap;gap:3px;margin-top:4px"></div></div></div></div><button class="btn-sm primary" onclick="adminAddProduct()" style="margin-top:6px;width:100%">➕ <span data-i18n="addProduct">Agregar Producto</span></button></div><div class="db-panel"><h4 data-i18n="productList">Lista de Productos</h4><table class="db-table"><thead><tr><th>ID</th><th data-i18n="productName">Nombre</th><th data-i18n="price">Precio</th><th data-i18n="stock">Stock</th><th data-i18n="action">Acción</th></tr></thead><tbody id="adminProductsTable"></tbody></table></div></div>
+            <div class="admin-tab" id="atab-users"><h3 style="color:var(--primary)">👥 <span data-i18n="userDatabase">Base de Datos de Usuarios</span></h3><div class="db-panel"><table class="db-table"><thead><tr><th data-i18n="name">Nombre</th><th>Email</th><th data-i18n="memberSince">Miembro desde</th><th data-i18n="purchases">Compras</th></tr></thead><tbody id="adminUsersTable"></tbody></table></div></div>
+            <div class="admin-tab" id="atab-sales"><h3 style="color:var(--primary)">🧾 <span data-i18n="salesRecord">Registro de Ventas</span></h3><div class="db-panel"><table class="db-table"><thead><tr><th data-i18n="date">Fecha</th><th data-i18n="product">Producto</th><th data-i18n="quantity">Cant.</th><th data-i18n="total">Total</th><th data-i18n="buyer">Comprador</th></tr></thead><tbody id="adminSalesTable"></tbody></table></div></div>
+            <div class="admin-tab" id="atab-coupons"><h3 style="color:var(--primary)">🎫 <span data-i18n="couponManagement">Gestión de Cupones</span></h3><div class="db-panel"><h4 data-i18n="createCoupon">Crear Cupón</h4><div class="form-grid"><div class="form-group"><label data-i18n="couponCode">Código *</label><input type="text" id="acCode"></div><div class="form-group"><label data-i18n="type">Tipo</label><select id="acType"><option value="percent">Porcentaje</option><option value="fixed">Fijo</option></select></div><div class="form-group"><label data-i18n="value">Valor *</label><input type="number" id="acValue"></div><div class="form-group"><label data-i18n="minPurchase">Compra mínima</label><input type="number" id="acMin" value="0"></div><div class="form-group"><label data-i18n="message">Mensaje</label><input type="text" id="acMsg"></div><div class="form-group"><label data-i18n="expiry">Vence</label><input type="date" id="acExpiry"></div></div><button class="btn-sm primary" onclick="adminAddCoupon()" style="margin-top:4px">🎫 <span data-i18n="createAndNotify">Crear y Notificar</span></button></div><div class="db-panel"><h4 data-i18n="activeCoupons">Cupones Activos</h4><div id="adminCouponsList"></div></div></div>
+            <div class="admin-tab" id="atab-notifications"><h3 style="color:var(--primary)">📢 <span data-i18n="sendNotification">Enviar Notificación</span></h3><div class="db-panel"><div class="form-grid"><div class="form-group"><label data-i18n="subject">Asunto *</label><input type="text" id="notifSubject"></div><div class="form-group"><label data-i18n="message">Mensaje *</label><textarea id="notifMessage" style="padding:5px;background:var(--bg-card);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:0.7rem;font-family:inherit;resize:vertical;min-height:50px"></textarea></div></div><button class="btn-sm primary" onclick="adminSendEmailNotification()" style="margin-top:4px">📧 <span data-i18n="sendToAll">Enviar a TODOS</span></button><div id="notificationStatus" style="margin-top:6px;font-size:0.65rem"></div></div></div>
+            <div class="admin-tab" id="atab-config"><h3 style="color:var(--primary)">⚙️ <span data-i18n="globalConfig">Configuración Global</span></h3><div class="db-panel"><h4 data-i18n="languages">Idiomas</h4><div id="adminLangChips" style="display:flex;flex-wrap:wrap;gap:3px"></div><div style="display:flex;gap:4px;margin-top:4px"><input type="text" id="newLangInput" placeholder="código:Nombre" style="flex:1;padding:5px;border:1px solid var(--border);border-radius:6px;background:var(--bg-card);color:var(--text);font-family:inherit"><button class="btn-sm primary" onclick="adminAddLang()">+</button></div></div></div>
         </div>
     </div>
 </div>
-
-<!-- MAIN STORE -->
 <div id="mainStore">
     <div class="top-bar" data-i18n="topBar">🎉 OFERTAS IMPERDIBLES | PAGO CONTRAENTREGA | ENVÍO GRATIS > $100.000</div>
     <div class="main-header">
@@ -374,18 +306,18 @@
         <div class="search-bar"><input type="text" id="searchInput" placeholder="🔍 Buscar productos..." onkeyup="filterProducts()"><button onclick="filterProducts()"><i class="fas fa-search"></i></button></div>
         <div class="header-icons">
             <button class="hdr-btn" onclick="toggleTheme()"><i class="fas fa-sun" id="themeIcon"></i> <span id="themeLabel" data-i18n="light">Claro</span></button>
-            <div class="hdr-btn" onclick="toggleLanguage()" style="position:relative;"><i class="fas fa-globe"></i> <span id="currentLangLabel">ES</span><div id="langDropdown" style="display:none;position:absolute;top:100%;right:0;background:var(--bg-card);border:1px solid var(--primary);border-radius:8px;padding:5px;z-index:200;min-width:100px;"><div onclick="setLanguage('es')" style="padding:6px 8px;cursor:pointer;border-radius:5px;font-size:0.7rem;">🇨🇴 Español</div><div onclick="setLanguage('en')" style="padding:6px 8px;cursor:pointer;border-radius:5px;font-size:0.7rem;">🇺🇸 English</div><div onclick="setLanguage('pt')" style="padding:6px 8px;cursor:pointer;border-radius:5px;font-size:0.7rem;">🇧🇷 Português</div></div></div>
+            <div class="hdr-btn" onclick="toggleLanguage()" style="position:relative"><i class="fas fa-globe"></i> <span id="currentLangLabel">ES</span><div id="langDropdown" style="display:none;position:absolute;top:100%;right:0;background:var(--bg-card);border:1px solid var(--primary);border-radius:8px;padding:5px;z-index:200;min-width:100px"><div onclick="setLanguage('es')" style="padding:6px 8px;cursor:pointer;border-radius:5px;font-size:0.7rem">🇨🇴 Español</div><div onclick="setLanguage('en')" style="padding:6px 8px;cursor:pointer;border-radius:5px;font-size:0.7rem">🇺🇸 English</div><div onclick="setLanguage('pt')" style="padding:6px 8px;cursor:pointer;border-radius:5px;font-size:0.7rem">🇧🇷 Português</div></div></div>
             <div id="loginBtn" class="user-btn" onclick="openLoginModal()"><i class="far fa-user-circle"></i> <span data-i18n="login">Ingresar</span></div>
-            <div id="userInfo" class="user-badge" style="display:none;" onclick="handleAccountClick()"><i class="far fa-user-circle"></i> <span id="displayUserName"></span><span id="adminBadge" class="admin-tag" style="display:none;">ADMIN</span></div>
-            <button id="logoutBtn" class="btn-sm danger" style="display:none;" onclick="event.stopPropagation();logout()"><span data-i18n="logout">Salir</span></button>
+            <div id="userInfo" class="user-badge" style="display:none" onclick="handleAccountClick()"><i class="far fa-user-circle"></i> <span id="displayUserName"></span><span id="adminBadge" class="admin-tag" style="display:none">ADMIN</span></div>
+            <button id="logoutBtn" class="btn-sm danger" style="display:none" onclick="event.stopPropagation();logout()"><span data-i18n="logout">Salir</span></button>
             <div class="cart-icon" onclick="openCart()"><i class="fas fa-shopping-cart"></i><span class="cart-badge" id="cartCount">0</span></div>
         </div>
     </div>
-    <div style="max-width:1200px;margin:0 auto;padding:8px;">
-        <div class="hero"><h2>NF<span style="color:var(--primary);">NEXUS</span></h2><p data-i18n="heroSubtitle">Descubre una nueva forma de comprar</p></div>
+    <div style="max-width:1200px;margin:0 auto;padding:8px">
+        <div class="hero"><h2>NF<span style="color:var(--primary)">NEXUS</span></h2><p data-i18n="heroSubtitle">Descubre una nueva forma de comprar</p></div>
         <div class="categorias" id="categoriasContainer"></div>
         <div class="product-grid" id="productGrid"></div>
-        <div id="noResults" style="display:none;text-align:center;padding:25px;color:var(--text-secondary);" data-i18n="noProducts">No se encontraron productos</div>
+        <div id="noResults" style="display:none;text-align:center;padding:25px;color:var(--text-secondary)" data-i18n="noProducts">No se encontraron productos</div>
     </div>
     <div class="mobile-nav">
         <div class="mobile-nav-item" onclick="location.reload()"><i class="fas fa-home"></i><span data-i18n="home">Inicio</span></div>
@@ -394,46 +326,103 @@
         <div class="mobile-nav-item" onclick="handleAccountClick()"><i class="fas fa-user"></i><span data-i18n="account">Cuenta</span></div>
     </div>
     <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
-    <div class="cart-panel" id="cartPanel"><div class="cart-header"><h3 data-i18n="myCart">Mi Carrito</h3><button onclick="closeCart()" style="background:rgba(255,255,255,0.2);border:none;color:white;width:26px;height:26px;border-radius:50%;cursor:pointer;">&times;</button></div><div class="cart-items" id="cartItems"></div><div class="cart-footer" id="cartFooter" style="display:none;"><div style="display:flex;justify-content:space-between;font-weight:700;margin-bottom:5px;"><span data-i18n="total">Total:</span><span id="cartTotal">$0</span></div><button class="btn-full" onclick="checkout()" style="background:#25D366;"><i class="fab fa-whatsapp"></i> <span data-i18n="finishPurchase">Finalizar compra</span></button></div></div>
+    <div class="cart-panel" id="cartPanel"><div class="cart-header"><h3 data-i18n="myCart">Mi Carrito</h3><button onclick="closeCart()" style="background:rgba(255,255,255,0.2);border:none;color:white;width:26px;height:26px;border-radius:50%;cursor:pointer">&times;</button></div><div class="cart-items" id="cartItems"></div><div class="cart-footer" id="cartFooter" style="display:none"><div style="display:flex;justify-content:space-between;font-weight:700;margin-bottom:5px"><span data-i18n="total">Total:</span><span id="cartTotal">$0</span></div><button class="btn-full" onclick="checkout()" style="background:#25D366"><i class="fab fa-whatsapp"></i> <span data-i18n="finishPurchase">Finalizar compra</span></button></div></div>
     <footer><p data-i18n="footer">🇨🇴 NF NEXUS | 📧 hola@nfnexus.com | 💵 Pago contraentrega</p></footer>
 </div>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, collection, doc, setDoc, updateDoc, deleteDoc, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-const fbConfig = { apiKey: "AIzaSyD6ttFbR3_N3y4qTAGmZsPaMNrl6jvDEPE", authDomain: "nf-nexus-tienda.firebaseapp.com", projectId: "nf-nexus-tienda", storageBucket: "nf-nexus-tienda.firebasestorage.app", messagingSenderId: "677127630697", appId: "1:677127630697:web:397fa5041ce7f3ca0057f8" };
-const app = initializeApp(fbConfig); const db = getFirestore(app);
-window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
-va('event', 'pageview', { path: window.location.pathname });
-
-const WHATSAPP = "573115851938";
-const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwHotNyiz7tLL0Y1vuVhDIeL3yK94GuVldG1i2bjLyw9tBJQ2UQh6AmcJ1SXix74mszNg/exec';
-const ADMIN_U = "admin", ADMIN_P = "admin123";
-
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import{getFirestore,collection,doc,setDoc,updateDoc,deleteDoc,addDoc,onSnapshot}from"https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+const fbConfig={apiKey:"AIzaSyD6ttFbR3_N3y4qTAGmZsPaMNrl6jvDEPE",authDomain:"nf-nexus-tienda.firebaseapp.com",projectId:"nf-nexus-tienda",storageBucket:"nf-nexus-tienda.firebasestorage.app",messagingSenderId:"677127630697",appId:"1:677127630697:web:397fa5041ce7f3ca0057f8"};
+const app=initializeApp(fbConfig);const db=getFirestore(app);
+window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};
+va('event','pageview',{path:window.location.pathname});
+const WHATSAPP="573115851938";
+const SHEETS_URL='https://script.google.com/macros/s/AKfycbwHotNyiz7tLL0Y1vuVhDIeL3yK94GuVldG1i2bjLyw9tBJQ2UQh6AmcJ1SXix74mszNg/exec';
+const ADMIN_U="admin",ADMIN_P="admin123";
 let currentUser=null,isAdmin=false,products=[],cart=[],wishlist=[],recentViews=[],salesHistory=[],userPurchases=[],registeredUsers=[];
 let selectedColors={},currentCat="todos",currentSearch="",nextId=1,loginLogoClicks=0,adminAttempts=0;
 let tempColors=[],tempAllImages=[],modalProduct=null,modalColor=null,modalImgs=[],modalImgIdx=0,currentLang='es';
 let coupons={},languages={es:'Español',en:'English',pt:'Português'};
-let editProductId=null, editProductImage=null, debounceTimers={};
+let editProductId=null,editProductImage=null,debounceTimers={};
 let userAddresses=[],userNotifications=[],accountCurrentTab='dashboard';
-
 const colorPalette=['#1a1a2e','#ffffff','#ff0000','#0000ff','#008000','#ffff00','#ff6b35','#ff2e2e','#f7c948','#10b981','#3b82f6','#8b5cf6','#ec4899','#f59e0b','#06b6d4','#84cc16','#ef4444','#6366f1','#000000','#808080','#c0c0c0','#800000','#ffc0cb','#ffd700'];
+const translations={es:{topBar:"🎉 OFERTAS IMPERDIBLES | PAGO CONTRAENTREGA | ENVÍO GRATIS > $100.000",light:"Claro",dark:"Oscuro",login:"Ingresar",logout:"Salir",loginTab:"Ingresar",registerTab:"Registrarse",loginSubtitle:"🔥 Ingresa para una experiencia personalizada",registerSubtitle:"✨ Crea tu cuenta y recibe ofertas exclusivas",emailLabel:"* Correo electrónico",nameLabel:"* Nombre completo",loginBtn:"Ingresar",createAccount:"Crear cuenta",emailOffer:"Recibirás ofertas exclusivas por correo",or:"o",guest:"Continuar como Invitado",adminAccess:"Acceso Administrador",access:"Acceder",cancel:"Cancelar",searchPlaceholder:"🔍 Buscar productos...",noProducts:"No se encontraron productos",productDetail:"Detalle del Producto",addToCart:"Carrito",buyNow:"WhatsApp",editProduct:"Editar Producto",pasteImage:"Pega una imagen aquí (Ctrl+V)",pasteImages:"Pega imágenes (Ctrl+V)",mainImage:"Imagen principal",galleryHint:"Primera = principal",saveChanges:"Guardar cambios",home:"Inicio",search:"Buscar",cart:"Carrito",account:"Cuenta",myCart:"Mi Carrito",total:"Total",finishPurchase:"Finalizar compra",cartEmpty:"🛒 Vacío",heroSubtitle:"Descubre una nueva forma de comprar",footer:"🇨🇴 NF NEXUS | 📧 hola@nfnexus.com | 💵 Pago contraentrega",adminPanel:"Panel de Administración",dashboard:"Dashboard",products:"Productos",users:"Usuarios",sales:"Ventas",coupons:"Cupones",notifications:"Notificaciones",config:"Configuración",totalProducts:"Productos",soldProducts:"Vendidos",revenue:"Ganancias",registeredUsers:"Usuarios",productManagement:"Gestión de Productos",addProduct:"Agregar Producto",productName:"Nombre",price:"Precio",oldPrice:"Precio anterior",stock:"Stock",category:"Categoría",icon:"Icono",colors:"Colores",pickColor:"Elegir color",productList:"Lista de Productos",action:"Acción",userDatabase:"Base de Datos de Usuarios",name:"Nombre",memberSince:"Miembro desde",purchases:"Compras",salesRecord:"Registro de Ventas",date:"Fecha",product:"Producto",quantity:"Cant.",buyer:"Comprador",couponManagement:"Gestión de Cupones",createCoupon:"Crear Cupón",couponCode:"Código",type:"Tipo",value:"Valor",minPurchase:"Compra mínima",message:"Mensaje",expiry:"Vence",createAndNotify:"Crear y Notificar",activeCoupons:"Cupones Activos",sendNotification:"Enviar Notificación",subject:"Asunto",sendToAll:"Enviar a TODOS",globalConfig:"Configuración Global",languages:"Idiomas",myAccount:"Mi Cuenta",myOrders:"Mis Pedidos",wishlist:"Lista de Deseos",addresses:"Direcciones",profile:"Perfil",myNotifications:"Mis Notificaciones",myDashboard:"Mi Dashboard",totalOrders:"Pedidos Totales",activeOrders:"Pedidos Activos",totalSpent:"Total Gastado",wishlistItems:"En Deseos",recentOrders:"Pedidos Recientes",recommended:"Recomendado para ti",noOrders:"No has hecho ningún pedido aún",emptyWishlist:"Tu lista de deseos está vacía",addAddress:"Agregar Dirección",newAddress:"Nueva Dirección",addressLabel:"Etiqueta",fullAddress:"Dirección completa",city:"Ciudad",phone:"Teléfono",save:"Guardar",birthdate:"Fecha de nacimiento",noNotifications:"No tienes notificaciones",catTodos:"todos",catElectronica:"electrónica",catModa:"moda",catHogar:"hogar",catAccesorios:"accesorios",catBelleza:"belleza",stockOut:"Agotado",stockLow:"¡Solo",stockMedium:"disponibles",stockHigh:"en stock",selectColor:"Selecciona un color",addedToCart:"agregado al carrito",cartEmptyToast:"Carrito vacío",orderSent:"¡Pedido enviado!",welcomeBack:"¡Bienvenido/a",welcomeNew:"¡Cuenta creada! Bienvenido/a",sessionClosed:"Sesión cerrada",userNotFound:"Usuario no encontrado. ¿Quieres registrarte?",emailExists:"Este email ya está registrado. Inicia sesión.",invalidEmail:"Ingresa un email válido",nameRequired:"Nombre obligatorio",emailRequired:"Email válido obligatorio",namePriceRequired:"Nombre y precio obligatorios",codeValueRequired:"Código y valor obligatorios",completeSubjectMessage:"Completa asunto y mensaje",noUsersEmail:"No hay usuarios con email",couponCreated:"Cupón creado",notificationSent:"Notificación enviada a",productAdded:"agregado con",productUpdated:"actualizado",productDeleted:"Eliminado",couponDeleted:"Cupón eliminado",languageAdded:"Idioma agregado",languageRemoveError:"No se puede eliminar español",soldOut:"Agotado",colorRequired:"Selecciona un color",statusPending:"Pendiente",statusProcessing:"Procesando",statusShipped:"Enviado",statusDelivered:"Entregado",statusCancelled:"Cancelado"},en:{topBar:"🎉 AMAZING OFFERS | CASH ON DELIVERY | FREE SHIPPING",light:"Light",dark:"Dark",login:"Login",logout:"Logout",loginTab:"Login",registerTab:"Register",loginSubtitle:"🔥 Login for a personalized experience",registerSubtitle:"✨ Create your account and get exclusive offers",emailLabel:"* Email address",nameLabel:"* Full name",loginBtn:"Login",createAccount:"Create Account",emailOffer:"You'll receive exclusive offers by email",or:"or",guest:"Continue as Guest",adminAccess:"Admin Access",access:"Access",cancel:"Cancel",searchPlaceholder:"🔍 Search products...",noProducts:"No products found",productDetail:"Product Detail",addToCart:"Cart",buyNow:"WhatsApp",editProduct:"Edit Product",pasteImage:"Paste image (Ctrl+V)",pasteImages:"Paste images (Ctrl+V)",mainImage:"Main image",galleryHint:"First = main",saveChanges:"Save changes",home:"Home",search:"Search",cart:"Cart",account:"Account",myCart:"My Cart",total:"Total",finishPurchase:"Checkout",cartEmpty:"🛒 Empty",heroSubtitle:"Discover a new way to shop",footer:"🇨🇴 NF NEXUS | 📧 hello@nfnexus.com | 💵 Cash on delivery",adminPanel:"Admin Panel",dashboard:"Dashboard",products:"Products",users:"Users",sales:"Sales",coupons:"Coupons",notifications:"Notifications",config:"Settings",totalProducts:"Products",soldProducts:"Sold",revenue:"Revenue",registeredUsers:"Users",productManagement:"Product Management",addProduct:"Add Product",productName:"Name",price:"Price",oldPrice:"Old Price",stock:"Stock",category:"Category",icon:"Icon",colors:"Colors",pickColor:"Pick color",productList:"Product List",action:"Action",userDatabase:"User Database",name:"Name",memberSince:"Member since",purchases:"Purchases",salesRecord:"Sales Record",date:"Date",product:"Product",quantity:"Qty",buyer:"Buyer",couponManagement:"Coupon Management",createCoupon:"Create Coupon",couponCode:"Code",type:"Type",value:"Value",minPurchase:"Min Purchase",message:"Message",expiry:"Expiry",createAndNotify:"Create & Notify",activeCoupons:"Active Coupons",sendNotification:"Send Notification",subject:"Subject",sendToAll:"Send to all",globalConfig:"Global Settings",languages:"Languages",myAccount:"My Account",myOrders:"My Orders",wishlist:"Wishlist",addresses:"Addresses",profile:"Profile",myNotifications:"My Notifications",myDashboard:"My Dashboard",totalOrders:"Total Orders",activeOrders:"Active Orders",totalSpent:"Total Spent",wishlistItems:"Wishlist Items",recentOrders:"Recent Orders",recommended:"Recommended for you",noOrders:"No orders yet",emptyWishlist:"Your wishlist is empty",addAddress:"Add Address",newAddress:"New Address",addressLabel:"Label",fullAddress:"Full Address",city:"City",phone:"Phone",save:"Save",birthdate:"Birthdate",noNotifications:"No notifications",catTodos:"all",catElectronica:"electronics",catModa:"fashion",catHogar:"home",catAccesorios:"accessories",catBelleza:"beauty",stockOut:"Out of stock",stockLow:"Only",stockMedium:"available",stockHigh:"in stock",selectColor:"Select a color",addedToCart:"added to cart",cartEmptyToast:"Empty cart",orderSent:"Order sent!",welcomeBack:"Welcome back",welcomeNew:"Account created! Welcome",sessionClosed:"Logged out",userNotFound:"User not found. Want to register?",emailExists:"This email is already registered. Login instead.",invalidEmail:"Enter a valid email",nameRequired:"Name required",emailRequired:"Valid email required",namePriceRequired:"Name and price required",codeValueRequired:"Code and value required",completeSubjectMessage:"Complete subject and message",noUsersEmail:"No users with email",couponCreated:"Coupon created",notificationSent:"Notification sent to",productAdded:"added with",productUpdated:"updated",productDeleted:"Deleted",couponDeleted:"Coupon deleted",languageAdded:"Language added",languageRemoveError:"Cannot remove Spanish",soldOut:"Sold out",colorRequired:"Select a color",statusPending:"Pending",statusProcessing:"Processing",statusShipped:"Shipped",statusDelivered:"Delivered",statusCancelled:"Cancelled"},pt:{topBar:"🎉 OFERTAS IMPERDÍVEIS | PAGAMENTO NA ENTREGA | FRETE GRÁTIS",light:"Claro",dark:"Escuro",login:"Entrar",logout:"Sair",loginTab:"Entrar",registerTab:"Registrar",loginSubtitle:"🔥 Entre para uma experiência personalizada",registerSubtitle:"✨ Crie sua conta e receba ofertas exclusivas",emailLabel:"* Email",nameLabel:"* Nome completo",loginBtn:"Entrar",createAccount:"Criar Conta",emailOffer:"Você receberá ofertas exclusivas por email",or:"ou",guest:"Continuar como Convidado",adminAccess:"Acesso Admin",access:"Acessar",cancel:"Cancelar",searchPlaceholder:"🔍 Buscar produtos...",noProducts:"Nenhum produto",productDetail:"Detalhe do Produto",addToCart:"Carrinho",buyNow:"WhatsApp",editProduct:"Editar Produto",pasteImage:"Colar imagem (Ctrl+V)",pasteImages:"Colar imagens (Ctrl+V)",mainImage:"Imagem principal",galleryHint:"Primeira = principal",saveChanges:"Salvar alterações",home:"Início",search:"Buscar",cart:"Carrinho",account:"Conta",myCart:"Meu Carrinho",total:"Total",finishPurchase:"Finalizar compra",cartEmpty:"🛒 Vazio",heroSubtitle:"Descubra uma nova forma de comprar",footer:"🇨🇴 NF NEXUS | 📧 ola@nfnexus.com | 💵 Pagamento na entrega",adminPanel:"Painel Admin",dashboard:"Dashboard",products:"Produtos",users:"Usuários",sales:"Vendas",coupons:"Cupons",notifications:"Notificações",config:"Configurações",totalProducts:"Produtos",soldProducts:"Vendidos",revenue:"Receita",registeredUsers:"Usuários",productManagement:"Gestão de Produtos",addProduct:"Adicionar Produto",productName:"Nome",price:"Preço",oldPrice:"Preço Antigo",stock:"Estoque",category:"Categoria",icon:"Ícone",colors:"Cores",pickColor:"Escolher cor",productList:"Lista",action:"Ação",userDatabase:"Banco de Usuários",name:"Nome",memberSince:"Membro desde",purchases:"Compras",salesRecord:"Registro de Vendas",date:"Data",product:"Produto",quantity:"Qtd",buyer:"Comprador",couponManagement:"Gestão de Cupons",createCoupon:"Criar Cupom",couponCode:"Código",type:"Tipo",value:"Valor",minPurchase:"Compra Mínima",message:"Mensagem",expiry:"Validade",createAndNotify:"Criar e Notificar",activeCoupons:"Cupons Ativos",sendNotification:"Enviar Notificação",subject:"Assunto",sendToAll:"Enviar para todos",globalConfig:"Configurações Globais",languages:"Idiomas",myAccount:"Minha Conta",myOrders:"Meus Pedidos",wishlist:"Lista de Desejos",addresses:"Endereços",profile:"Perfil",myNotifications:"Minhas Notificações",myDashboard:"Meu Dashboard",totalOrders:"Total de Pedidos",activeOrders:"Pedidos Ativos",totalSpent:"Total Gasto",wishlistItems:"Na Lista",recentOrders:"Pedidos Recentes",recommended:"Recomendado para você",noOrders:"Nenhum pedido ainda",emptyWishlist:"Sua lista de desejos está vazia",addAddress:"Adicionar Endereço",newAddress:"Novo Endereço",addressLabel:"Etiqueta",fullAddress:"Endereço completo",city:"Cidade",phone:"Telefone",save:"Salvar",birthdate:"Data de nascimento",noNotifications:"Sem notificações",catTodos:"todos",catElectronica:"eletrônicos",catModa:"moda",catHogar:"casa",catAccesorios:"acessórios",catBelleza:"beleza",stockOut:"Esgotado",stockLow:"Apenas",stockMedium:"disponíveis",stockHigh:"em estoque",selectColor:"Selecione uma cor",addedToCart:"adicionado ao carrinho",cartEmptyToast:"Carrinho vazio",orderSent:"Pedido enviado!",welcomeBack:"Bem-vindo de volta",welcomeNew:"Conta criada! Bem-vindo",sessionClosed:"Sessão encerrada",userNotFound:"Usuário não encontrado. Quer se registrar?",emailExists:"Este email já está registrado. Faça login.",invalidEmail:"Digite um email válido",nameRequired:"Nome obrigatório",emailRequired:"Email válido obrigatório",namePriceRequired:"Nome e preço obrigatórios",codeValueRequired:"Código e valor obrigatórios",completeSubjectMessage:"Complete assunto e mensagem",noUsersEmail:"Nenhum usuário com email",couponCreated:"Cupom criado",notificationSent:"Notificação enviada para",productAdded:"adicionado com",productUpdated:"atualizado",productDeleted:"Excluído",couponDeleted:"Cupom excluído",languageAdded:"Idioma adicionado",languageRemoveError:"Não é possível remover espanhol",soldOut:"Esgotado",colorRequired:"Selecione uma cor",statusPending:"Pendente",statusProcessing:"Processando",statusShipped:"Enviado",statusDelivered:"Entregue",statusCancelled:"Cancelado"}};
+function t(k){return translations[currentLang]?.[k]||translations['es'][k]||k}
 
-const translations={es:{topBar:"🎉 OFERTAS IMPERDIBLES | PAGO CONTRAENTREGA | ENVÍO GRATIS > $100.000",light:"Claro",dark:"Oscuro",login:"Ingresar",logout:"Salir",loginTab:"Ingresar",registerTab:"Registrarse",loginSubtitle:"🔥 Ingresa para una experiencia personalizada",registerSubtitle:"✨ Crea tu cuenta y recibe ofertas exclusivas",emailLabel:"* Correo electrónico",nameLabel:"* Nombre completo",loginBtn:"Ingresar",createAccount:"Crear cuenta",emailOffer:"Recibirás ofertas exclusivas por correo",or:"o",guest:"Continuar como Invitado",adminAccess:"Acceso Administrador",access:"Acceder",cancel:"Cancelar",searchPlaceholder:"🔍 Buscar productos...",noProducts:"No se encontraron productos",productDetail:"Detalle del Producto",addToCart:"Carrito",buyNow:"WhatsApp",editProduct:"Editar Producto",pasteImage:"Pega una imagen aquí (Ctrl+V)",pasteImages:"Pega imágenes (Ctrl+V)",mainImage:"Imagen principal",galleryHint:"Primera = principal",saveChanges:"Guardar cambios",home:"Inicio",search:"Buscar",cart:"Carrito",account:"Cuenta",myCart:"Mi Carrito",total:"Total",finishPurchase:"Finalizar compra",cartEmpty:"🛒 Vacío",heroSubtitle:"Descubre una nueva forma de comprar",footer:"🇨🇴 NF NEXUS | 📧 hola@nfnexus.com | 💵 Pago contraentrega",adminPanel:"Panel de Administración",dashboard:"Dashboard",products:"Productos",users:"Usuarios",sales:"Ventas",coupons:"Cupones",notifications:"Notificaciones",config:"Configuración",totalProducts:"Productos",soldProducts:"Vendidos",revenue:"Ganancias",registeredUsers:"Usuarios",productManagement:"Gestión de Productos",addProduct:"Agregar Producto",productName:"Nombre",price:"Precio",oldPrice:"Precio anterior",stock:"Stock",category:"Categoría",icon:"Icono",colors:"Colores",pickColor:"Elegir color",productList:"Lista de Productos",action:"Acción",userDatabase:"Base de Datos de Usuarios",name:"Nombre",memberSince:"Miembro desde",purchases:"Compras",salesRecord:"Registro de Ventas",date:"Fecha",product:"Producto",quantity:"Cant.",buyer:"Comprador",couponManagement:"Gestión de Cupones",createCoupon:"Crear Cupón",couponCode:"Código",type:"Tipo",value:"Valor",minPurchase:"Compra mínima",message:"Mensaje",expiry:"Vence",createAndNotify:"Crear y Notificar",activeCoupons:"Cupones Activos",sendNotification:"Enviar Notificación",subject:"Asunto",sendToAll:"Enviar a TODOS",globalConfig:"Configuración Global",languages:"Idiomas",myAccount:"Mi Cuenta",myOrders:"Mis Pedidos",wishlist:"Lista de Deseos",addresses:"Direcciones",profile:"Perfil",myNotifications:"Mis Notificaciones",myDashboard:"Mi Dashboard",totalOrders:"Pedidos Totales",activeOrders:"Pedidos Activos",totalSpent:"Total Gastado",wishlistItems:"En Deseos",recentOrders:"Pedidos Recientes",recommended:"Recomendado para ti",noOrders:"No has hecho ningún pedido aún",startShopping:"Empezar a comprar",emptyWishlist:"Tu lista de deseos está vacía",addAddress:"Agregar Dirección",newAddress:"Nueva Dirección",addressLabel:"Etiqueta",fullAddress:"Dirección completa",city:"Ciudad",phone:"Teléfono",save:"Guardar",birthdate:"Fecha de nacimiento",noNotifications:"No tienes notificaciones",catTodos:"todos",catElectronica:"electrónica",catModa:"moda",catHogar:"hogar",catAccesorios:"accesorios",catBelleza:"belleza",stockOut:"Agotado",stockLow:"¡Solo",stockMedium:"disponibles",stockHigh:"en stock",selectColor:"Selecciona un color",addedToCart:"agregado al carrito",cartEmptyToast:"Carrito vacío",orderSent:"¡Pedido enviado!",welcomeBack:"¡Bienvenido/a",welcomeNew:"¡Cuenta creada! Bienvenido/a",sessionClosed:"Sesión cerrada",userNotFound:"Usuario no encontrado. ¿Quieres registrarte?",emailExists:"Este email ya está registrado. Inicia sesión.",invalidEmail:"Ingresa un email válido",nameRequired:"Nombre obligatorio",emailRequired:"Email válido obligatorio",namePriceRequired:"Nombre y precio obligatorios",codeValueRequired:"Código y valor obligatorios",completeSubjectMessage:"Completa asunto y mensaje",noUsersEmail:"No hay usuarios con email",couponCreated:"Cupón creado",notificationSent:"Notificación enviada a",productAdded:"agregado con",productUpdated:"actualizado",productDeleted:"Eliminado",couponDeleted:"Cupón eliminado",languageAdded:"Idioma agregado",languageRemoveError:"No se puede eliminar español",soldOut:"Agotado",colorRequired:"Selecciona un color",statusPending:"Pendiente",statusProcessing:"Procesando",statusShipped:"Enviado",statusDelivered:"Entregado",statusCancelled:"Cancelado"},en:{topBar:"🎉 AMAZING OFFERS | CASH ON DELIVERY | FREE SHIPPING",light:"Light",dark:"Dark",login:"Login",logout:"Logout",loginTab:"Login",registerTab:"Register",loginSubtitle:"🔥 Login for a personalized experience",registerSubtitle:"✨ Create your account and get exclusive offers",emailLabel:"* Email address",nameLabel:"* Full name",loginBtn:"Login",createAccount:"Create Account",emailOffer:"You'll receive exclusive offers by email",or:"or",guest:"Continue as Guest",adminAccess:"Admin Access",access:"Access",cancel:"Cancel",searchPlaceholder:"🔍 Search products...",noProducts:"No products found",productDetail:"Product Detail",addToCart:"Cart",buyNow:"WhatsApp",editProduct:"Edit Product",pasteImage:"Paste image (Ctrl+V)",pasteImages:"Paste images (Ctrl+V)",mainImage:"Main image",galleryHint:"First = main",saveChanges:"Save changes",home:"Home",search:"Search",cart:"Cart",account:"Account",myCart:"My Cart",total:"Total",finishPurchase:"Checkout",cartEmpty:"🛒 Empty",heroSubtitle:"Discover a new way to shop",footer:"🇨🇴 NF NEXUS | 📧 hello@nfnexus.com | 💵 Cash on delivery",adminPanel:"Admin Panel",dashboard:"Dashboard",products:"Products",users:"Users",sales:"Sales",coupons:"Coupons",notifications:"Notifications",config:"Settings",totalProducts:"Products",soldProducts:"Sold",revenue:"Revenue",registeredUsers:"Users",productManagement:"Product Management",addProduct:"Add Product",productName:"Name",price:"Price",oldPrice:"Old Price",stock:"Stock",category:"Category",icon:"Icon",colors:"Colors",pickColor:"Pick color",productList:"Product List",action:"Action",userDatabase:"User Database",name:"Name",memberSince:"Member since",purchases:"Purchases",salesRecord:"Sales Record",date:"Date",product:"Product",quantity:"Qty",buyer:"Buyer",couponManagement:"Coupon Management",createCoupon:"Create Coupon",couponCode:"Code",type:"Type",value:"Value",minPurchase:"Min Purchase",message:"Message",expiry:"Expiry",createAndNotify:"Create & Notify",activeCoupons:"Active Coupons",sendNotification:"Send Notification",subject:"Subject",sendToAll:"Send to all",globalConfig:"Global Settings",languages:"Languages",myAccount:"My Account",myOrders:"My Orders",wishlist:"Wishlist",addresses:"Addresses",profile:"Profile",myNotifications:"My Notifications",myDashboard:"My Dashboard",totalOrders:"Total Orders",activeOrders:"Active Orders",totalSpent:"Total Spent",wishlistItems:"Wishlist Items",recentOrders:"Recent Orders",recommended:"Recommended for you",noOrders:"No orders yet",startShopping:"Start shopping",emptyWishlist:"Your wishlist is empty",addAddress:"Add Address",newAddress:"New Address",addressLabel:"Label",fullAddress:"Full Address",city:"City",phone:"Phone",save:"Save",birthdate:"Birthdate",noNotifications:"No notifications",catTodos:"all",catElectronica:"electronics",catModa:"fashion",catHogar:"home",catAccesorios:"accessories",catBelleza:"beauty",stockOut:"Out of stock",stockLow:"Only",stockMedium:"available",stockHigh:"in stock",selectColor:"Select a color",addedToCart:"added to cart",cartEmptyToast:"Empty cart",orderSent:"Order sent!",welcomeBack:"Welcome back",welcomeNew:"Account created! Welcome",sessionClosed:"Logged out",userNotFound:"User not found. Want to register?",emailExists:"This email is already registered. Login instead.",invalidEmail:"Enter a valid email",nameRequired:"Name required",emailRequired:"Valid email required",namePriceRequired:"Name and price required",codeValueRequired:"Code and value required",completeSubjectMessage:"Complete subject and message",noUsersEmail:"No users with email",couponCreated:"Coupon created",notificationSent:"Notification sent to",productAdded:"added with",productUpdated:"updated",productDeleted:"Deleted",couponDeleted:"Coupon deleted",languageAdded:"Language added",languageRemoveError:"Cannot remove Spanish",soldOut:"Sold out",colorRequired:"Select a color",statusPending:"Pending",statusProcessing:"Processing",statusShipped:"Shipped",statusDelivered:"Delivered",statusCancelled:"Cancelled"},pt:{topBar:"🎉 OFERTAS IMPERDÍVEIS | PAGAMENTO NA ENTREGA | FRETE GRÁTIS",light:"Claro",dark:"Escuro",login:"Entrar",logout:"Sair",loginTab:"Entrar",registerTab:"Registrar",loginSubtitle:"🔥 Entre para uma experiência personalizada",registerSubtitle:"✨ Crie sua conta e receba ofertas exclusivas",emailLabel:"* Email",nameLabel:"* Nome completo",loginBtn:"Entrar",createAccount:"Criar Conta",emailOffer:"Você receberá ofertas exclusivas por email",or:"ou",guest:"Continuar como Convidado",adminAccess:"Acesso Admin",access:"Acessar",cancel:"Cancelar",searchPlaceholder:"🔍 Buscar produtos...",noProducts:"Nenhum produto",productDetail:"Detalhe do Produto",addToCart:"Carrinho",buyNow:"WhatsApp",editProduct:"Editar Produto",pasteImage:"Colar imagem (Ctrl+V)",pasteImages:"Colar imagens (Ctrl+V)",mainImage:"Imagem principal",galleryHint:"Primeira = principal",saveChanges:"Salvar alterações",home:"Início",search:"Buscar",cart:"Carrinho",account:"Conta",myCart:"Meu Carrinho",total:"Total",finishPurchase:"Finalizar compra",cartEmpty:"🛒 Vazio",heroSubtitle:"Descubra uma nova forma de comprar",footer:"🇨🇴 NF NEXUS | 📧 ola@nfnexus.com | 💵 Pagamento na entrega",adminPanel:"Painel Admin",dashboard:"Dashboard",products:"Produtos",users:"Usuários",sales:"Vendas",coupons:"Cupons",notifications:"Notificações",config:"Configurações",totalProducts:"Produtos",soldProducts:"Vendidos",revenue:"Receita",registeredUsers:"Usuários",productManagement:"Gestão de Produtos",addProduct:"Adicionar Produto",productName:"Nome",price:"Preço",oldPrice:"Preço Antigo",stock:"Estoque",category:"Categoria",icon:"Ícone",colors:"Cores",pickColor:"Escolher cor",productList:"Lista",action:"Ação",userDatabase:"Banco de Usuários",name:"Nome",memberSince:"Membro desde",purchases:"Compras",salesRecord:"Registro de Vendas",date:"Data",product:"Produto",quantity:"Qtd",buyer:"Comprador",couponManagement:"Gestão de Cupons",createCoupon:"Criar Cupom",couponCode:"Código",type:"Tipo",value:"Valor",minPurchase:"Compra Mínima",message:"Mensagem",expiry:"Validade",createAndNotify:"Criar e Notificar",activeCoupons:"Cupons Ativos",sendNotification:"Enviar Notificação",subject:"Assunto",sendToAll:"Enviar para todos",globalConfig:"Configurações Globais",languages:"Idiomas",myAccount:"Minha Conta",myOrders:"Meus Pedidos",wishlist:"Lista de Desejos",addresses:"Endereços",profile:"Perfil",myNotifications:"Minhas Notificações",myDashboard:"Meu Dashboard",totalOrders:"Total de Pedidos",activeOrders:"Pedidos Ativos",totalSpent:"Total Gasto",wishlistItems:"Na Lista",recentOrders:"Pedidos Recentes",recommended:"Recomendado para você",noOrders:"Nenhum pedido ainda",startShopping:"Começar a comprar",emptyWishlist:"Sua lista de desejos está vazia",addAddress:"Adicionar Endereço",newAddress:"Novo Endereço",addressLabel:"Etiqueta",fullAddress:"Endereço completo",city:"Cidade",phone:"Telefone",save:"Salvar",birthdate:"Data de nascimento",noNotifications:"Sem notificações",catTodos:"todos",catElectronica:"eletrônicos",catModa:"moda",catHogar:"casa",catAccesorios:"acessórios",catBelleza:"beleza",stockOut:"Esgotado",stockLow:"Apenas",stockMedium:"disponíveis",stockHigh:"em estoque",selectColor:"Selecione uma cor",addedToCart:"adicionado ao carrinho",cartEmptyToast:"Carrinho vazio",orderSent:"Pedido enviado!",welcomeBack:"Bem-vindo de volta",welcomeNew:"Conta criada! Bem-vindo",sessionClosed:"Sessão encerrada",userNotFound:"Usuário não encontrado. Quer se registrar?",emailExists:"Este email já está registrado. Faça login.",invalidEmail:"Digite um email válido",nameRequired:"Nome obrigatório",emailRequired:"Email válido obrigatório",namePriceRequired:"Nome e preço obrigatórios",codeValueRequired:"Código e valor obrigatórios",completeSubjectMessage:"Complete assunto e mensagem",noUsersEmail:"Nenhum usuário com email",couponCreated:"Cupom criado",notificationSent:"Notificação enviada para",productAdded:"adicionado com",productUpdated:"atualizado",productDeleted:"Excluído",couponDeleted:"Cupom excluído",languageAdded:"Idioma adicionado",languageRemoveError:"Não é possível remover espanhol",soldOut:"Esgotado",colorRequired:"Selecione uma cor",statusPending:"Pendente",statusProcessing:"Processando",statusShipped:"Enviado",statusDelivered:"Entregue",statusCancelled:"Cancelado"}};
-function t(k){return translations[currentLang]?.[k] || translations['es'][k] || k;}
+// ===== FUNCIONES CORREGIDAS =====
 
-// ✅ CAMBIO 3: Nueva función para clics en logo del modal
-function handleLoginLogoClick(){
-    loginLogoClicks++;
-    const hint=document.getElementById('secretHint');
-    if(loginLogoClicks===1){hint.classList.add('visible');hint.textContent='Sigue haciendo clic... (2 más para admin)';}
-    else if(loginLogoClicks===2){hint.textContent='¡Uno más! (1 clic para admin)';}
-    else if(loginLogoClicks>=3){loginLogoClicks=0;hint.classList.remove('visible');hint.textContent='Sigue haciendo clic... (3 clics para admin)';closeLoginModal();setTimeout(()=>{document.getElementById('adminSecretModal').classList.add('show');},300);toast('🔐 Acceso administrador');va('event','admin_secret_modal_open');}
-    clearTimeout(window._loginLogoTimeout);
-    window._loginLogoTimeout=setTimeout(()=>{if(loginLogoClicks<3){loginLogoClicks=0;hint.classList.remove('visible');hint.textContent='Sigue haciendo clic... (3 clics para admin)';}},2000);
+// ✅ LOGIN CORREGIDO: Busca en Firebase + Sheets
+async function loginUser(){
+    const email=document.getElementById('loginEmailInput').value.trim();
+    document.getElementById('loginError').textContent='';
+    if(!email||!email.includes('@')){document.getElementById('loginError').textContent=`⚠️ ${t('invalidEmail')}`;return}
+    let userFound=null;
+    // 1. Firebase
+    try{
+        const userDoc=await new Promise((resolve,reject)=>{
+            const unsub=onSnapshot(doc(db,"users",email),docSnap=>{unsub();resolve(docSnap.exists()?docSnap.data():null);},error=>{unsub();reject(error);});
+            setTimeout(()=>{unsub();resolve(null);},3000);
+        });
+        if(userDoc)userFound={...userDoc,isAdmin:userDoc.isAdmin||false};
+    }catch(e){console.log('Firebase lookup, trying local:',e.message);}
+    // 2. Sheets (registeredUsers)
+    if(!userFound){const localUser=registeredUsers.find(u=>u.email===email);if(localUser)userFound={...localUser,isAdmin:localUser.isAdmin||false};}
+    // 3. No encontrado
+    if(!userFound){document.getElementById('loginError').textContent=`⚠️ ${t('userNotFound')}`;return}
+    // 4. Login exitoso
+    currentUser=userFound;isAdmin=userFound.isAdmin||false;
+    localStorage.setItem('nfCurrentUser',JSON.stringify(currentUser));localStorage.setItem('nfIsAdmin',String(isAdmin));
+    try{const sessionRef=await addDoc(collection(db,"sessions"),{...currentUser,isAdmin,createdAt:new Date().toISOString()});localStorage.setItem('nfSessionId',sessionRef.id);}catch(e){console.log('Session error:',e.message);}
+    updateUserUI();closeLoginModal();toast(`✅ ${t('welcomeBack')} ${currentUser.name}!`);va('event','login',{email:currentUser.email});
+    if(isAdmin)setTimeout(()=>openAdminPage(),500);
 }
 
+// ✅ REGISTRO: Verifica duplicados correctamente
+async function registerUser(){
+    const n=document.getElementById('registerName').value.trim(),e=document.getElementById('registerEmail').value.trim();
+    document.getElementById('registerError').textContent='';
+    if(!n){document.getElementById('registerError').textContent=`⚠️ ${t('nameRequired')}`;return}
+    if(!e||!e.includes('@')){document.getElementById('registerError').textContent=`⚠️ ${t('emailRequired')}`;return}
+    const exists=registeredUsers.find(u=>u.email===e);
+    if(exists){document.getElementById('registerError').textContent=`⚠️ ${t('emailExists')}`;return}
+    currentUser={name:n,email:e,memberSince:new Date().toLocaleDateString('es-CO'),isAdmin:false};
+    localStorage.setItem('nfCurrentUser',JSON.stringify(currentUser));localStorage.setItem('nfIsAdmin','false');
+    // Guardar en ambas fuentes
+    registeredUsers.push(currentUser);
+    await dualSave('users',e,currentUser,'addUser');
+    try{const sessionRef=await addDoc(collection(db,"sessions"),{...currentUser,isAdmin:false,createdAt:new Date().toISOString()});localStorage.setItem('nfSessionId',sessionRef.id);}catch(e){}
+    updateUserUI();closeLoginModal();toast(`✅ ${t('welcomeNew')} ${n}!`);va('event','register',{email:e});
+}
+
+// ✅ RESTORE SESSION CORREGIDO
+function restoreSession(){
+    const u=localStorage.getItem('nfCurrentUser');
+    const a=localStorage.getItem('nfIsAdmin');
+    const p=localStorage.getItem('nfCurrentPage');
+    const saved=localStorage.getItem('nfSessionId');
+    if(u){currentUser=JSON.parse(u);isAdmin=a==='true';updateUserUI();
+        if(saved&&currentUser.email){try{setDoc(doc(db,"sessions",saved),{...currentUser,isAdmin,lastActive:new Date().toISOString()}).catch(()=>{});}catch(e){}}
+        if(p==='account'&&!isAdmin)setTimeout(()=>openAccountPage(),300);
+        if(p==='admin'&&isAdmin)setTimeout(()=>openAdminPage(),300);
+    }
+}
+
+// ✅ CARGA DE SHEETS SIN BLOQUEAR
+function loadLocal(){cart=JSON.parse(localStorage.getItem('nfCart')||'[]');wishlist=JSON.parse(localStorage.getItem('nfWish')||'[]');recentViews=JSON.parse(localStorage.getItem('nfRecent')||'[]');currentLang=localStorage.getItem('nfLang')||'es';userAddresses=JSON.parse(localStorage.getItem('nfAddresses')||'[]');userNotifications=JSON.parse(localStorage.getItem('nfNotifications')||'[]');if(localStorage.getItem('nfTheme')==='dark'){document.body.classList.add('dark-mode');document.getElementById('themeLabel').textContent=t('dark');document.getElementById('themeIcon')?.classList.replace('fa-sun','fa-moon');}updateCartUI();}
+
+async function loadProductsFromSheets(){
+    const r=await sheetsCall('getProducts');
+    if(r.success&&r.data&&r.data.length>0){products=r.data;nextId=Math.max(...products.map(p=>p.id))+1;Promise.all(products.map(p=>setDoc(doc(db,"products",String(p.id)),p).catch(()=>{}))).catch(()=>{});}
+    else{products=getDefaults();nextId=products.length+1;for(const p of products){await sheetsCall('addProduct',p);await setDoc(doc(db,"products",String(p.id)),p).catch(()=>{})}}
+    const u=await sheetsCall('getUsers');
+    if(u.success&&u.data){registeredUsers=u.data;Promise.all(u.data.map(user=>setDoc(doc(db,"users",user.email||String(user.id)),user).catch(()=>{}))).catch(()=>{});}
+    const s=await sheetsCall('getSales');if(s.success&&s.data){salesHistory=s.data;for(const sale of s.data)await addDoc(collection(db,"sales"),sale).catch(()=>{})}
+    loadLocal();renderAll();updateAllTexts();restoreSession();
+}
+
+// ===== DEMÁS FUNCIONES (se mantienen igual) =====
+function handleLoginLogoClick(){loginLogoClicks++;const hint=document.getElementById('secretHint');if(loginLogoClicks===1){hint.classList.add('visible');hint.textContent='Sigue haciendo clic... (2 más para admin)';}else if(loginLogoClicks===2){hint.textContent='¡Uno más! (1 clic para admin)';}else if(loginLogoClicks>=3){loginLogoClicks=0;hint.classList.remove('visible');hint.textContent='Sigue haciendo clic... (3 clics para admin)';closeLoginModal();setTimeout(()=>{document.getElementById('adminSecretModal').classList.add('show');},300);toast('🔐 Acceso administrador');va('event','admin_secret_modal_open');}clearTimeout(window._loginLogoTimeout);window._loginLogoTimeout=setTimeout(()=>{if(loginLogoClicks<3){loginLogoClicks=0;hint.classList.remove('visible');hint.textContent='Sigue haciendo clic... (3 clics para admin)';}},2000);}
 function updateAllTexts(){document.querySelectorAll('[data-i18n]').forEach(el=>{const key=el.dataset.i18n;const tr=t(key);if(tr)el.textContent=tr;});document.getElementById('currentLangLabel').textContent=currentLang.toUpperCase();const isDark=document.body.classList.contains('dark-mode');document.getElementById('themeLabel').textContent=isDark?t('dark'):t('light');document.getElementById('searchInput').placeholder=t('searchPlaceholder');if(cart.length===0)document.getElementById('cartItems').innerHTML=`<div class="cart-empty">${t('cartEmpty')}</div>`;if(document.getElementById('noResults').style.display==='block')document.getElementById('noResults').textContent=t('noProducts');renderCategories();renderProducts();if(document.getElementById('adminPage').classList.contains('show'))updateAdminPanel();if(document.getElementById('accountPage').classList.contains('show'))updateAccountPanel();document.querySelector('footer p').textContent=t('footer');}
 function setLanguage(l){if(!translations[l]){toast('Idioma no disponible','error');return;}currentLang=l;localStorage.setItem('nfLang',l);document.getElementById('langDropdown').style.display='none';updateAllTexts();toast(`${languages[l]} activado`);va('event','change_language',{language:l});}
 function toggleLanguage(){const d=document.getElementById('langDropdown');d.style.display=d.style.display==='none'?'block':'none';}
@@ -441,13 +430,10 @@ document.addEventListener('click',e=>{if(!e.target.closest('.hdr-btn'))document.
 function toast(m,type='success'){const e=document.createElement('div');e.className=`toast ${type}`;e.innerHTML=m;document.body.appendChild(e);setTimeout(()=>e.remove(),2500);}
 function debounce(key,fn,delay=300){if(debounceTimers[key])clearTimeout(debounceTimers[key]);debounceTimers[key]=setTimeout(()=>{fn();delete debounceTimers[key]},delay);}
 async function sheetsCall(action,data=null){try{let u=`${SHEETS_URL}?action=${action}`;if(data)u+=`&data=${encodeURIComponent(JSON.stringify(data))}`;const r=await fetch(u);return await r.json();}catch(e){return{success:false,message:e.message}}}
-async function dualSave(collectionName,id,data,sheetsAction){try{const ref=id?doc(db,collectionName,String(id)):doc(collection(db,collectionName));await setDoc(ref,data);}catch(e){console.log('Firebase save error:',e.message)}if(sheetsAction)try{await sheetsCall(sheetsAction,data);}catch(e){console.log('Sheets save error:',e.message)}}
-async function dualAdd(collectionName,data,sheetsAction){try{await addDoc(collection(db,collectionName),data);}catch(e){console.log('Firebase add error:',e.message)}if(sheetsAction)try{await sheetsCall(sheetsAction,data);}catch(e){console.log('Sheets add error:',e.message)}}
-function setupFirebase(){onSnapshot(collection(db,"products"),snap=>{if(!snap.empty){products=[];snap.forEach(d=>products.push({id:parseInt(d.id),...d.data()}));products.sort((a,b)=>a.id-b.id);nextId=products.length?Math.max(...products.map(p=>p.id))+1:1;renderAll();}},error=>console.log('Products error:',error));onSnapshot(collection(db,"users"),snap=>{registeredUsers=[];snap.forEach(d=>registeredUsers.push({id:d.id,...d.data()}))});onSnapshot(collection(db,"sales"),snap=>{salesHistory=[];snap.forEach(d=>salesHistory.push(d.data()))});onSnapshot(collection(db,"purchases"),snap=>{userPurchases=[];snap.forEach(d=>userPurchases.push(d.data()))});onSnapshot(collection(db,"coupons"),snap=>{coupons={};snap.forEach(d=>coupons[d.id]=d.data())});onSnapshot(collection(db,"sessions"),snap=>{snap.forEach(d=>{if(d.data().email===currentUser?.email){currentUser=d.data();isAdmin=d.data().isAdmin||false;updateUserUI();}})});}
-async function loadProductsFromSheets(){const r=await sheetsCall('getProducts');if(r.success&&r.data&&r.data.length>0){products=r.data;nextId=Math.max(...products.map(p=>p.id))+1;const batch=[];for(const p of products)batch.push(setDoc(doc(db,"products",String(p.id)),p).catch(()=>{}));await Promise.all(batch);}else{products=getDefaults();nextId=products.length+1;for(const p of products){await sheetsCall('addProduct',p);await setDoc(doc(db,"products",String(p.id)),p).catch(()=>{})}}const u=await sheetsCall('getUsers');if(u.success&&u.data){registeredUsers=u.data;for(const user of u.data)await setDoc(doc(db,"users",user.email||user.id),user).catch(()=>{})}const s=await sheetsCall('getSales');if(s.success&&s.data){salesHistory=s.data;for(const sale of s.data)await addDoc(collection(db,"sales"),sale).catch(()=>{})}loadLocal();renderAll();updateAllTexts();restoreSession();}
+async function dualSave(collectionName,id,data,sheetsAction){try{const ref=id?doc(db,collectionName,String(id)):doc(collection(db,collectionName));await setDoc(ref,data);}catch(e){}if(sheetsAction)try{await sheetsCall(sheetsAction,data);}catch(e){}}
+async function dualAdd(collectionName,data,sheetsAction){try{await addDoc(collection(db,collectionName),data);}catch(e){}if(sheetsAction)try{await sheetsCall(sheetsAction,data);}catch(e){}}
+function setupFirebase(){onSnapshot(collection(db,"products"),snap=>{if(!snap.empty){products=[];snap.forEach(d=>products.push({id:parseInt(d.id),...d.data()}));products.sort((a,b)=>a.id-b.id);nextId=products.length?Math.max(...products.map(p=>p.id))+1:1;renderAll();}});onSnapshot(collection(db,"users"),snap=>{registeredUsers=[];snap.forEach(d=>registeredUsers.push({id:d.id,...d.data()}))});onSnapshot(collection(db,"sales"),snap=>{salesHistory=[];snap.forEach(d=>salesHistory.push(d.data()))});onSnapshot(collection(db,"purchases"),snap=>{userPurchases=[];snap.forEach(d=>userPurchases.push(d.data()))});onSnapshot(collection(db,"coupons"),snap=>{coupons={};snap.forEach(d=>coupons[d.id]=d.data())});onSnapshot(collection(db,"sessions"),snap=>{snap.forEach(d=>{if(d.data().email===currentUser?.email){currentUser=d.data();isAdmin=d.data().isAdmin||false;updateUserUI();}})});}
 function getDefaults(){return[{id:1,name:"Audífonos Bluetooth 40h",category:"electronica",price:49900,oldPrice:129900,stock:25,sold:1250,rating:4.8,icon:"🎧",image:"",gallery:[],colors:[{name:"Negro",code:"#1a1a2e"},{name:"Blanco",code:"#ffffff"}]},{id:2,name:"Camiseta Deportiva",category:"moda",price:28900,oldPrice:79900,stock:42,sold:3450,rating:4.9,icon:"👕",image:"",gallery:[],colors:[{name:"Negro",code:"#1a1a2e"},{name:"Blanco",code:"#ffffff"}]},{id:3,name:"Lámpara LED",category:"hogar",price:15900,oldPrice:45900,stock:5,sold:920,rating:4.7,icon:"💡",image:"",gallery:[],colors:[{name:"Blanco",code:"#ffffff"}]},{id:4,name:"Smartwatch Deportivo",category:"electronica",price:89900,oldPrice:199900,stock:15,sold:2300,rating:4.6,icon:"⌚",image:"",gallery:[],colors:[{name:"Negro",code:"#1a1a2e"}]}]}
-function restoreSession(){const saved=localStorage.getItem('nfSessionId');if(saved&&currentUser){setDoc(doc(db,"sessions",saved),{...currentUser,isAdmin,lastActive:new Date().toISOString()}).catch(()=>{})}const u=localStorage.getItem('nfCurrentUser');const a=localStorage.getItem('nfIsAdmin');const p=localStorage.getItem('nfCurrentPage');if(u){currentUser=JSON.parse(u);isAdmin=a==='true';updateUserUI();if(p==='account'&&!isAdmin)setTimeout(()=>openAccountPage(),300);if(p==='admin'&&isAdmin)setTimeout(()=>openAdminPage(),300)}}
-function loadLocal(){cart=JSON.parse(localStorage.getItem('nfCart')||'[]');wishlist=JSON.parse(localStorage.getItem('nfWish')||'[]');recentViews=JSON.parse(localStorage.getItem('nfRecent')||'[]');currentLang=localStorage.getItem('nfLang')||'es';userAddresses=JSON.parse(localStorage.getItem('nfAddresses')||'[]');userNotifications=JSON.parse(localStorage.getItem('nfNotifications')||'[]');if(localStorage.getItem('nfTheme')==='dark'){document.body.classList.add('dark-mode');document.getElementById('themeLabel').textContent=t('dark');document.getElementById('themeIcon')?.classList.replace('fa-sun','fa-moon');}updateCartUI();}
 function saveLocal(){localStorage.setItem('nfCart',JSON.stringify(cart));localStorage.setItem('nfWish',JSON.stringify(wishlist));localStorage.setItem('nfRecent',JSON.stringify(recentViews.slice(0,30)));localStorage.setItem('nfLang',currentLang);localStorage.setItem('nfAddresses',JSON.stringify(userAddresses));localStorage.setItem('nfNotifications',JSON.stringify(userNotifications));}
 function getStockClass(stock){if(stock<=0)return'stock-out';if(stock<=5)return'stock-low';if(stock<=15)return'stock-medium';return'stock-high';}
 function getStockLabel(stock){if(stock<=0)return t('stockOut');if(stock<=5)return `${t('stockLow')} ${stock}!`;if(stock<=15)return `${stock} ${t('stockMedium')}`;return `${stock} ${t('stockHigh')}`;}
@@ -469,7 +455,6 @@ function cancelAddress(){document.getElementById('addressForm').style.display='n
 function saveAddress(){const label=document.getElementById('addrLabel').value.trim()||'Principal';const full=document.getElementById('addrFull').value.trim();const city=document.getElementById('addrCity').value.trim();const phone=document.getElementById('addrPhone').value.trim();if(!full||!city){toast('Completa dirección y ciudad','error');return;}userAddresses.push({label,full,city,phone});saveLocal();cancelAddress();updateAccountPanel();toast('✅ Dirección guardada');}
 function deleteAddress(i){userAddresses.splice(i,1);saveLocal();updateAccountPanel();toast('Dirección eliminada');}
 function saveProfile(){const name=document.getElementById('profName').value.trim();const phone=document.getElementById('profPhone').value.trim();const birthdate=document.getElementById('profBirthdate').value;if(!name){toast(t('nameRequired'),'error');return;}currentUser.name=name;currentUser.phone=phone;currentUser.birthdate=birthdate;localStorage.setItem('nfCurrentUser',JSON.stringify(currentUser));dualSave('users',currentUser.email,currentUser,'addUser');updateUserUI();updateAccountPanel();toast('✅ Perfil actualizado');}
-
 async function addToCart(pid){const p=products.find(x=>x.id===pid);const c=selectedColors[pid]||p.colors?.[0];if(!c){toast(`⚠️ ${t('selectColor')}`,'warning');return}if(p.stock<=0){toast(`❌ ${t('soldOut')}`,'error');return}const ex=cart.find(i=>i.id===pid&&i.color===c.name);ex?ex.qty++:cart.push({id:pid,name:p.name,color:c.name,price:p.price,qty:1});p.stock--;p.sold=(p.sold||0)+1;debounce(`updateStock_${pid}`,async()=>{await updateDoc(doc(db,"products",String(pid)),{stock:p.stock,sold:p.sold}).catch(()=>{});await sheetsCall('updateProduct',p);},500);saveLocal();updateCartUI();renderProducts();toast(`✅ ${p.name} ${t('addedToCart')}`);}
 function updateCartUI(){document.getElementById('cartCount').textContent=cart.reduce((s,i)=>s+i.qty,0);const d=document.getElementById('cartItems'),f=document.getElementById('cartFooter');if(!cart.length){d.innerHTML=`<div class="cart-empty">${t('cartEmpty')}</div>`;f.style.display='none';return}f.style.display='block';let s=0;d.innerHTML=cart.map((it,idx)=>{s+=it.price*it.qty;return`<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);"><div><strong>${it.name}</strong><br>$${it.price.toLocaleString('es-CO')}</div><div style="display:flex;align-items:center;gap:3px;"><button onclick="modQty(${idx},-1)" style="background:var(--primary);color:white;border:none;width:20px;height:20px;border-radius:50%;cursor:pointer;">-</button><span>${it.qty}</span><button onclick="modQty(${idx},1)" style="background:var(--primary);color:white;border:none;width:20px;height:20px;border-radius:50%;cursor:pointer;">+</button><button onclick="remItem(${idx})" style="background:var(--danger);color:white;border:none;padding:2px 5px;border-radius:6px;cursor:pointer;">🗑️</button></div></div>`}).join('');document.getElementById('cartTotal').textContent=`$${s.toLocaleString('es-CO')}`;}
 async function modQty(idx,d){if(!cart[idx])return;const n=cart[idx].qty+d,p=products.find(x=>x.id===cart[idx].id);if(n<=0){if(p){p.stock+=cart[idx].qty;await updateDoc(doc(db,"products",String(p.id)),{stock:p.stock}).catch(()=>{})}cart.splice(idx,1);}else{cart[idx].qty=n}saveLocal();updateCartUI();renderProducts();}
@@ -483,12 +468,8 @@ function openCart(){document.getElementById('cartPanel').classList.add('show');d
 function closeCart(){document.getElementById('cartPanel').classList.remove('show');document.getElementById('cartOverlay').classList.remove('show');}
 function toggleTheme(){document.body.classList.toggle('dark-mode');const d=document.body.classList.contains('dark-mode');localStorage.setItem('nfTheme',d?'dark':'light');document.getElementById('themeLabel').textContent=d?t('dark'):t('light');const icon=document.getElementById('themeIcon');if(icon)icon.className=d?'fas fa-moon':'fas fa-sun';va('event','toggle_theme',{theme:d?'dark':'light'});}
 function switchAuthTab(tab){document.querySelectorAll('.auth-tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.auth-form').forEach(f=>f.classList.remove('active'));if(tab==='login'){document.querySelector('.auth-tab:nth-child(1)').classList.add('active');document.getElementById('loginForm').classList.add('active');}else{document.querySelector('.auth-tab:nth-child(2)').classList.add('active');document.getElementById('registerForm').classList.add('active');}document.getElementById('loginError').textContent='';document.getElementById('registerError').textContent='';}
-// ✅ CAMBIO 4: openLoginModal resetea clics
 function openLoginModal(){loginLogoClicks=0;document.getElementById('secretHint').classList.remove('visible');document.getElementById('secretHint').textContent='Sigue haciendo clic... (3 clics para admin)';document.getElementById('loginModal').classList.add('show');switchAuthTab('login');updateAllTexts();}
-// ✅ CAMBIO 5: closeLoginModal resetea clics
 function closeLoginModal(){loginLogoClicks=0;document.getElementById('loginModal').classList.remove('show');document.getElementById('loginError').textContent='';document.getElementById('registerError').textContent='';document.getElementById('secretHint').classList.remove('visible');}
-async function loginUser(){const email=document.getElementById('loginEmailInput').value.trim();document.getElementById('loginError').textContent='';if(!email||!email.includes('@')){document.getElementById('loginError').textContent=`⚠️ ${t('invalidEmail')}`;return}const userDoc=await new Promise(resolve=>{const unsub=onSnapshot(doc(db,"users",email),docSnap=>{unsub();resolve(docSnap.exists()?docSnap.data():null);},()=>{unsub();resolve(null);});});if(userDoc){currentUser={...userDoc,isAdmin:userDoc.isAdmin||false};isAdmin=userDoc.isAdmin||false;}else{const localUser=registeredUsers.find(u=>u.email===email);if(localUser){currentUser={...localUser,isAdmin:false};isAdmin=false}else{document.getElementById('loginError').textContent=`⚠️ ${t('userNotFound')}`;return}}localStorage.setItem('nfCurrentUser',JSON.stringify(currentUser));localStorage.setItem('nfIsAdmin',String(isAdmin));const sessionRef=await addDoc(collection(db,"sessions"),{...currentUser,isAdmin,createdAt:new Date().toISOString()});localStorage.setItem('nfSessionId',sessionRef.id);updateUserUI();closeLoginModal();toast(`✅ ${t('welcomeBack')} ${currentUser.name}!`);va('event','login',{email:currentUser.email});}
-async function registerUser(){const n=document.getElementById('registerName').value.trim(),e=document.getElementById('registerEmail').value.trim();document.getElementById('registerError').textContent='';if(!n){document.getElementById('registerError').textContent=`⚠️ ${t('nameRequired')}`;return}if(!e||!e.includes('@')){document.getElementById('registerError').textContent=`⚠️ ${t('emailRequired')}`;return}const exists=registeredUsers.find(u=>u.email===e);if(exists){document.getElementById('registerError').textContent=`⚠️ ${t('emailExists')}`;return}currentUser={name:n,email:e,memberSince:new Date().toLocaleDateString('es-CO'),isAdmin:false};localStorage.setItem('nfCurrentUser',JSON.stringify(currentUser));localStorage.setItem('nfIsAdmin','false');await dualSave('users',e,currentUser,'addUser');const sessionRef=await addDoc(collection(db,"sessions"),{...currentUser,isAdmin:false,createdAt:new Date().toISOString()});localStorage.setItem('nfSessionId',sessionRef.id);updateUserUI();closeLoginModal();toast(`✅ ${t('welcomeNew')} ${n}!`);va('event','register',{email:e});}
 function continueAsGuest(){currentUser={name:'Invitado',email:'',memberSince:'',isAdmin:false};updateUserUI();closeLoginModal();}
 function updateUserUI(){if(currentUser){document.getElementById('loginBtn').style.display='none';document.getElementById('userInfo').style.display='flex';document.getElementById('logoutBtn').style.display='inline-block';document.getElementById('displayUserName').textContent=currentUser.name;document.getElementById('adminBadge').style.display=isAdmin?'inline-block':'none';document.getElementById('userInfo').onclick=function(){if(isAdmin)openAdminPage();else openAccountPage();};}else{document.getElementById('loginBtn').style.display='flex';document.getElementById('userInfo').style.display='none';document.getElementById('logoutBtn').style.display='none';isAdmin=false;}}
 function logout(){const sessionId=localStorage.getItem('nfSessionId');if(sessionId)deleteDoc(doc(db,"sessions",sessionId)).catch(()=>{});currentUser=null;isAdmin=false;localStorage.removeItem('nfCurrentUser');localStorage.removeItem('nfIsAdmin');localStorage.removeItem('nfCurrentPage');localStorage.removeItem('nfSessionId');updateUserUI();closeAdminPage();closeAccountPage();document.getElementById('mainStore').style.display='block';toast(`👋 ${t('sessionClosed')}`);va('event','logout');}
@@ -520,7 +501,6 @@ async function adminSendEmailNotification(){const s=document.getElementById('not
 function adminAddLang(){const v=document.getElementById('newLangInput').value.trim();if(!v.includes(':')){toast('Formato: código:Nombre','error');return}const[c,n]=v.split(':');languages[c]=n.trim();updateAdminPanel();toast(`${t('languageAdded')}: ${n}`);document.getElementById('newLangInput').value='';}
 function adminRemoveLang(c){if(c==='es'){toast(t('languageRemoveError'),'error');return}delete languages[c];updateAdminPanel();}
 
-// ✅ CAMBIO 6: Agregar handleLoginLogoClick al objeto global
 Object.assign(window,{toggleTheme,toggleLanguage,setLanguage,handleAccountClick,handleLoginLogoClick,openLoginModal,closeLoginModal,switchAuthTab,loginUser,registerUser,continueAsGuest,closeSecretModal,loginAsAdmin,logout,openAdminPage,closeAdminPage,switchAdminTab,openAccountPage,closeAccountPage,switchAccountTab,removeFromWishlist,addNewAddress,cancelAddress,saveAddress,deleteAddress,saveProfile,scrollToTop:()=>window.scrollTo({top:0,behavior:'smooth'}),filterProducts,filterByCat,addToCart,modQty,remItem,checkout,openCart,closeCart,pickColor,buyNow,openProdModal,closeProdModal,prevModalImg:()=>{if(!modalImgs.length)return;modalImgIdx=modalImgIdx>0?modalImgIdx-1:modalImgs.length-1;document.getElementById('modalSlides').scrollTo({left:modalImgIdx*document.getElementById('modalSlides').clientWidth,behavior:'smooth'});},nextModalImg:()=>{if(!modalImgs.length)return;modalImgIdx=modalImgIdx<modalImgs.length-1?modalImgIdx+1:0;document.getElementById('modalSlides').scrollTo({left:modalImgIdx*document.getElementById('modalSlides').clientWidth,behavior:'smooth'});},goToModalImg:(i)=>{modalImgIdx=i;document.getElementById('modalSlides').scrollTo({left:i*document.getElementById('modalSlides').clientWidth,behavior:'smooth'});},selectModalColor:(pid,name,code,idx)=>{modalColor={name,code,index:idx};selectedColors[pid]=modalColor;document.querySelectorAll('.modal-color').forEach((c,i)=>c.classList.toggle('selected',i===idx));renderProducts();},modalAddToCart:()=>{if(!modalProduct||!modalColor){toast(t('colorRequired'),'warning');return}addToCart(modalProduct.id);closeProdModal();},modalBuyNow:()=>{if(!modalProduct||!modalColor){toast(t('colorRequired'),'warning');return}buyNow(modalProduct.id);closeProdModal();},openEditProductModal,closeEditModal,saveEditedProduct,adminAddProduct,adminDeleteProduct,adminAddCoupon,adminDeleteCoupon,adminSendEmailNotification,adminAddLang,adminRemoveLang,toggleColorPicker,pickPaletteColor,addColorToProduct,removeTempColor,previewAllImages,handleEditImage});
 
 setupFirebase();
